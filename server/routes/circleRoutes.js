@@ -1,20 +1,15 @@
 import express from "express";
 import {
   createCircle,
-  getAllCircles,
   joinCircle,
+  getMyCircles,
 } from "../controllers/circleController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import protect from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Create a circle (mentor only — enforced in controller)
 router.post("/", protect, createCircle);
-
-// Get all circles
-router.get("/", protect, getAllCircles);
-
-// Join a circle
-router.post("/:circleId/join", protect, joinCircle);
+router.post("/:id/join", protect, joinCircle);
+router.get("/my", protect, getMyCircles);
 
 export default router;

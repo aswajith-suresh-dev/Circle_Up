@@ -11,7 +11,6 @@ const circleSchema = new mongoose.Schema(
     description: {
       type: String,
       required: true,
-      trim: true,
     },
 
     topic: {
