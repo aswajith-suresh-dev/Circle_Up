@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 // Routes
 import authRoutes from "./routes/authRoutes.js";
+import circleRoutes from "./routes/circleRoutes.js";
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ app.get("/", (req, res) => {
 // API Routes
 // ───────────────────────────
 app.use("/api/auth", authRoutes);
-
+app.use("/api/circles", circleRoutes);
 // ───────────────────────────
 // MongoDB Connection
 // ───────────────────────────
