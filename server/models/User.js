@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
     },
 
     photo: {
-      type: String, // URL
+      type: String,
       default: "",
     },
 
@@ -37,6 +37,27 @@ const userSchema = new mongoose.Schema(
       default: "learner",
     },
 
+    
+
+    replyUpvotesCount: {
+      type: Number,
+      default: 0,
+    },
+
+    solvedRepliesCount: {
+      type: Number,
+      default: 0,
+    },
+
+    // 🧭 Track circles where user contributed
+    contributorCircles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Circle",
+      },
+    ],
+
+    // 🌱 Personal consistency (separate from contributor logic)
     activityStreak: {
       type: Number,
       default: 0,
@@ -47,11 +68,10 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
   },
-  {
-    timestamps: true, // adds createdAt & updatedAt
-  }
+  { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+// ✅ Safe model export (prevents overwrite error)
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;
