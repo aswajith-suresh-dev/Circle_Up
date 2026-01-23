@@ -76,6 +76,7 @@ export const getPostWithReplies = async (req, res) => {
 export const toggleLikePost = async (req, res) => {
   try {
     const { postId } = req.params;
+    const userId = req.user._id;
 
     const post = await Post.findById(postId);
     if (!post) {
@@ -89,18 +90,19 @@ export const toggleLikePost = async (req, res) => {
         .json({ message: "Only discussion posts can be liked" });
     }
 
-    const userId = req.user._id;
+    // 🚫 Prevent self-like (CORRECT PLACE)
+    if (post.author.toString() === userId.toString()) {
+      return res
+        .status(400)
+        .json({ message: "You cannot like your own post" });
+    }
 
     const alreadyLiked = post.likes.includes(userId);
 
     if (alreadyLiked) {
-      // Unlike
-      post.likes = post.likes.filter(
-        (id) => id.toString() !== userId.toString()
-      );
+      post.likes.pull(userId); // unlike
     } else {
-      // Like
-      post.likes.push(userId);
+      post.likes.push(userId); // like
     }
 
     await post.save();
@@ -113,10 +115,4 @@ export const toggleLikePost = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
-  // Prevent self-like
-if (post.author.toString() === req.user._id.toString()) {
-  return res
-    .status(400)
-    .json({ message: "You cannot like your own post" });
-}
 };

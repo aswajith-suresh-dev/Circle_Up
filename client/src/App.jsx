@@ -11,7 +11,7 @@ import PersonalSpace from "./pages/PersonalSpace";
 import CircleDetail from "./pages/circles/CircleDetail";
 import PostDetail from "./pages/posts/PostDetail";
 import Profile from "./pages/Profile";
-
+import CreatePost from "./pages/posts/CreatePosts";
 function App() {
   return (
   
@@ -66,7 +66,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+<Route
+  path="/circles/:circleId/create-post"
+  element={
+    <ProtectedRoute>
+      <CreatePost />
+    </ProtectedRoute>
+  }
+/>
         <Route
           path="/posts/:postId"
           element={
