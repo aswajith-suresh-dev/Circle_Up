@@ -8,7 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import circleRoutes from "./routes/circleRoutes.js";
 import replyRoutes from "./routes/replyRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
-
+import feedRoutes from "./routes/feedRoutes.js";
 
 dotenv.config();
 
@@ -34,6 +34,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/circles", circleRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/replies", replyRoutes);
+app.use("/api/feed", feedRoutes);
 // ───────────────────────────
 // MongoDB Connection
 // ───────────────────────────
