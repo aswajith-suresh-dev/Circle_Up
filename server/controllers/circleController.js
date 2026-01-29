@@ -7,6 +7,11 @@ import Circle from "../models/Circle.js";
  */
 export const createCircle = async (req, res) => {
   try {
+    if (req.user.role !== "mentor") {
+      return res.status(403).json({
+        message: "Only mentors can create circles",
+      });
+    }
     const { name, description, topic, level } = req.body;
 
     if (!name || !description || !topic || !level) {

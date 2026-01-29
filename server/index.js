@@ -9,7 +9,7 @@ import circleRoutes from "./routes/circleRoutes.js";
 import replyRoutes from "./routes/replyRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import feedRoutes from "./routes/feedRoutes.js";
-
+import challengeRoutes from "./routes/challengeRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -35,6 +35,7 @@ app.use("/api/circles", circleRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/replies", replyRoutes);
 app.use("/api/feed", feedRoutes);
+app.use("/api/challenges", challengeRoutes);
 // ───────────────────────────
 // MongoDB Connection
 // ───────────────────────────
