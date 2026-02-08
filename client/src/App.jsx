@@ -91,7 +91,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/challenges"
+  element={
+    <ProtectedRoute>
+      <ChallengeList />
+    </ProtectedRoute>
+  }
+/>
       </Routes>
+      
   
   );
 }
