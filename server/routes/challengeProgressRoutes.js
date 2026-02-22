@@ -4,7 +4,7 @@ import protect from "../middlewares/authMiddleware.js";
 import { getMyChallenges } from "../controllers/challengeProgressController.js";
 import { checkInToday } from "../controllers/challengeProgressController.js";
 import { getChallengeProgress } from "../controllers/challengeProgressController.js";
-
+import { purchaseChallenge } from "../controllers/challengeProgressController.js";
 const router = express.Router();
 
 // get user's challenges
@@ -20,4 +20,5 @@ router.post(
   protect,
   checkInToday
 );
+router.post("/:challengeId/purchase", protect, purchaseChallenge);
 export default router;

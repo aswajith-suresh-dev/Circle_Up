@@ -32,7 +32,13 @@ const challengeSchema = new mongoose.Schema(
       enum: ["free", "paid"],
       default: "free",
     },
-
+price: {
+  type: Number,
+  required: function () {
+    return this.type === "paid";
+  },
+  default: 0,
+},
     totalDays: {
       type: Number,
       required: true,

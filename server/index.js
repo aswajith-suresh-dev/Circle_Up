@@ -38,6 +38,7 @@ app.use("/api/replies", replyRoutes);
 app.use("/api/feed", feedRoutes);
 app.use("/api/challenges", challengeProgressRoutes);
 app.use("/api/challenges", challengeRoutes);
+
 // ───────────────────────────
 // MongoDB Connection
 // ───────────────────────────

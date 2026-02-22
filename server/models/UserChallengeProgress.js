@@ -38,7 +38,10 @@ const userChallengeProgressSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-
+isPaid: {
+  type: Boolean,
+  default: false,
+},
     lastCheckInAt: {
       type: Date,
       default: null,

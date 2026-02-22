@@ -13,6 +13,8 @@ import PostDetail from "./pages/posts/PostDetail";
 import Profile from "./pages/Profile";
 import CreatePost from "./pages/posts/CreatePosts";
 import ChallengeDays from "./pages/challenges/ChallengeDays";
+import PaymentPage from "./pages/PaymentPage";
+import PaymentSuccess from "./pages/PaymentSuccess";
 function App() {
   return (
   
@@ -57,7 +59,22 @@ function App() {
     </ProtectedRoute>
   }
 />
-
+<Route
+  path="/payment/:challengeId"
+  element={
+    <ProtectedRoute>
+      <PaymentPage />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/payment-success"
+  element={
+    <ProtectedRoute>
+      <PaymentSuccess />
+    </ProtectedRoute>
+  }
+/>
         <Route
           path="/space"
           element={

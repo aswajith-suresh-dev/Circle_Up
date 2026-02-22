@@ -7,22 +7,11 @@ export const joinChallenge = async (req, res) => {
     const { challengeId } = req.params;
     const userId = req.user._id;
 
-    // 1️⃣ Check challenge exists
     const challenge = await Challenge.findById(challengeId);
     if (!challenge) {
       return res.status(404).json({ message: "Challenge not found" });
     }
 
-    // 2️⃣ Check if user is member of the circle
-    const circle = await Circle.findById(challenge.circle);
-
-    if (!circle.members.includes(userId)) {
-      return res.status(403).json({
-        message: "You must join the circle before joining this challenge",
-      });
-    }
-
-    // 3️⃣ Check if already joined
     const existingProgress = await UserChallengeProgress.findOne({
       user: userId,
       challenge: challengeId,
@@ -34,7 +23,13 @@ export const joinChallenge = async (req, res) => {
       });
     }
 
-    // 4️⃣ Create progress
+    // 🚨 If challenge is paid → block join
+    if (challenge.type === "paid") {
+      return res.status(403).json({
+        message: "This is a paid challenge. Please purchase first.",
+      });
+    }
+
     const progress = await UserChallengeProgress.create({
       user: userId,
       challenge: challengeId,
@@ -43,6 +38,7 @@ export const joinChallenge = async (req, res) => {
       streak: 0,
       isBroken: false,
       startedAt: new Date(),
+      isPaid: false,
     });
 
     res.status(201).json({
@@ -54,8 +50,7 @@ export const joinChallenge = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Failed to join challenge" });
   }
-};
-export const getMyChallenges = async (req, res) => {
+};export const getMyChallenges = async (req, res) => {
   try {
     const progress = await UserChallengeProgress.find({
       user: req.user._id,
@@ -194,5 +189,54 @@ export const getChallengeProgress = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to load progress" });
+  }
+};
+export const purchaseChallenge = async (req, res) => {
+  try {
+    const { challengeId } = req.params;
+    const userId = req.user._id;
+
+    const challenge = await Challenge.findById(challengeId);
+    if (!challenge) {
+      return res.status(404).json({ message: "Challenge not found" });
+    }
+
+    if (challenge.type !== "paid") {
+      return res.status(400).json({
+        message: "This challenge is free",
+      });
+    }
+
+    const existing = await UserChallengeProgress.findOne({
+      user: userId,
+      challenge: challengeId,
+    });
+
+    if (existing) {
+      return res.status(400).json({
+        message: "Already purchased",
+      });
+    }
+
+    // 🔥 Simulate payment success
+    const progress = await UserChallengeProgress.create({
+      user: userId,
+      challenge: challengeId,
+      isPaid: true,
+      currentDay: 1,
+      completedDays: [],
+      streak: 0,
+      isBroken: false,
+      startedAt: new Date(),
+    });
+
+    res.status(200).json({
+      message: "Payment successful. Challenge unlocked.",
+      progress,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Purchase failed" });
   }
 };

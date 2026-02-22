@@ -2,8 +2,7 @@ import Challenge from "../models/Challenge.js";
 
 export const createChallenge = async (req, res) => {
   try {
-    const { title, description, type, totalDays, days, circleId } = req.body;
-
+const { title, description, type, price, totalDays, days, circleId } = req.body;
     // basic validation
     if (!title || !description || !totalDays || !days || !circleId) {
       return res.status(400).json({ message: "All fields are required" });
@@ -23,11 +22,16 @@ export const createChallenge = async (req, res) => {
         });
       }
     }
-
+if (type === "paid" && (!price || price <= 0)) {
+  return res.status(400).json({
+    message: "Paid challenges must have a valid price",
+  });
+}
     const challenge = await Challenge.create({
       title,
       description,
       type,
+      price,
       totalDays,
       days,
       circle: circleId,
@@ -113,7 +117,7 @@ export const getAllChallenges = async (req, res) => {
   try {
     const challenges = await Challenge.find()
       .populate("mentor", "name")
-      .select("title description totalDays type")
+      .select("title description totalDays type price circle mentor")
       .populate("circle", "name")
       .sort({ createdAt: -1 });
 
