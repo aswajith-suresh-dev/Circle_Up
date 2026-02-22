@@ -109,3 +109,17 @@ export const getMyChallenges = async (req, res) => {
     res.status(500).json({ message: "Failed to load challenges" });
   }
 };
+export const getAllChallenges = async (req, res) => {
+  try {
+    const challenges = await Challenge.find()
+      .populate("mentor", "name")
+      .select("title description totalDays type")
+      .populate("circle", "name")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(challenges);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch challenges" });
+  }
+};

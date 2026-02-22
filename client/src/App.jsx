@@ -12,6 +12,7 @@ import CircleDetail from "./pages/circles/CircleDetail";
 import PostDetail from "./pages/posts/PostDetail";
 import Profile from "./pages/Profile";
 import CreatePost from "./pages/posts/CreatePosts";
+import ChallengeDays from "./pages/challenges/ChallengeDays";
 function App() {
   return (
   
@@ -48,6 +49,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/challenges/:challengeId"
+  element={
+    <ProtectedRoute>
+      <ChallengeDays />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/space"
@@ -91,14 +100,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
   path="/challenges"
   element={
     <ProtectedRoute>
       <ChallengeList />
     </ProtectedRoute>
   }
-/>
+/> */}
       </Routes>
       
   

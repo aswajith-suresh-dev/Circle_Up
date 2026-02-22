@@ -3,14 +3,16 @@ import { joinChallenge } from "../controllers/challengeProgressController.js";
 import protect from "../middlewares/authMiddleware.js";
 import { getMyChallenges } from "../controllers/challengeProgressController.js";
 import { checkInToday } from "../controllers/challengeProgressController.js";
+import { getChallengeProgress } from "../controllers/challengeProgressController.js";
+
 const router = express.Router();
-
-// user joins challenge
-router.post("/:challengeId/join", protect, joinChallenge);
-
 
 // get user's challenges
 router.get("/my", protect, getMyChallenges);
+// user joins challenge
+router.post("/:challengeId/join", protect, joinChallenge);
+
+router.get("/:challengeId/progress", protect, getChallengeProgress);
 
 //user checks in for the day
 router.post(
