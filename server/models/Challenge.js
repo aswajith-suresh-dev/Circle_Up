@@ -10,6 +10,12 @@ const challengeDaySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    resources: [
+      {
+        title: String,
+        url: String,
+      },
+    ],
   },
   { _id: false }
 );
@@ -61,6 +67,7 @@ price: {
       required: true,
     },
   },
+  
   { timestamps: true }
 );
 
