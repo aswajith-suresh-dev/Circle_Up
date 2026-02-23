@@ -78,3 +78,36 @@ export const getMyCircles = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch circles" });
   }
 };
+export const searchCircles = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    const circles = await Circle.find({
+      name: { $regex: query, $options: "i" },
+    }).populate("mentor", "name");
+
+    res.status(200).json(circles);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Search failed" });
+  }
+};
+export const getCircleById = async (req, res) => {
+  try {
+    const { circleId } = req.params;
+
+    const circle = await Circle.findById(circleId)
+      .populate("mentor", "name")
+      .populate("members", "_id");
+
+    if (!circle) {
+      return res.status(404).json({ message: "Circle not found" });
+    }
+
+    res.status(200).json(circle);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to load circle" });
+  }
+};
