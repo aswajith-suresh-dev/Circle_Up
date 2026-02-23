@@ -97,17 +97,30 @@ export const getCircleById = async (req, res) => {
     const { circleId } = req.params;
 
     const circle = await Circle.findById(circleId)
-      .populate("mentor", "name")
-      .populate("members", "_id");
+      .populate("mentor", "name");
 
     if (!circle) {
-      return res.status(404).json({ message: "Circle not found" });
+      return res.status(404).json({
+        message: "Circle not found",
+      });
     }
 
-    res.status(200).json(circle);
+    // 🔥 CHECK IF USER IS MEMBER
+    const isMember = circle.members.some(
+      (member) =>
+        member.toString() ===
+        req.user._id.toString()
+    );
+
+    res.status(200).json({
+      ...circle._doc,
+      isMember,
+    });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to load circle" });
+    res.status(500).json({
+      message: "Failed to load circle",
+    });
   }
 };

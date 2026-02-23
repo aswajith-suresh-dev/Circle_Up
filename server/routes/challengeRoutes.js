@@ -5,6 +5,7 @@ import { mentorOnly } from "../middlewares/mentorMiddleware.js";
 import { getChallengeDetail } from "../controllers/challengeController.js";
 import { getMyChallenges } from "../controllers/challengeController.js";
 import { getAllChallenges } from "../controllers/challengeController.js";
+import { getChallengesByCircle } from "../controllers/challengeController.js";
 const router = express.Router();
 
 // mentor creates challenge
@@ -12,4 +13,9 @@ const router = express.Router();
 router.post("/", protect, mentorOnly, createChallenge);
 router.get("/all", protect, getAllChallenges);
 router.get("/:challengeId", protect, getChallengeDetail);
+router.get(
+  "/circle/:circleId",
+  protect,
+  getChallengesByCircle
+);
 export default router;

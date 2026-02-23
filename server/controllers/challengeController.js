@@ -127,3 +127,22 @@ export const getAllChallenges = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch challenges" });
   }
 };
+// controllers/challengeController.js
+
+export const getChallengesByCircle = async (req, res) => {
+  try {
+    const { circleId } = req.params;
+
+    const challenges = await Challenge.find({
+      circle: circleId,
+    })
+      .populate("mentor", "name")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(challenges);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch challenges" });
+  }
+};
