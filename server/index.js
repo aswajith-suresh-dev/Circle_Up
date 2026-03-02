@@ -14,6 +14,7 @@ import challengeRoutes from "./routes/challengeRoutes.js";
 import mentorRoutes from "./routes/mentorRoutes.js";
 import challengeProgressRoutes from "./routes/challengeProgressRoutes.js";
 import supportRoutes from "./routes/supportRoutes.js";
+import personalRoutes from "./routes/personalRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -45,6 +46,7 @@ app.use("/api/challenges", challengeProgressRoutes);
 app.use("/api/challenges", challengeRoutes);
 app.use("/api/mentor", mentorRoutes);
 app.use("/api/support", supportRoutes);
+app.use("/api/personal", personalRoutes);
 
 // ───────────────────────────
 // MongoDB Connection
