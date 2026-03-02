@@ -1,5 +1,6 @@
 import Post from "../models/Post.js";
 import Reply from "../models/Reply.js";
+import Circle from "../models/Circle.js";
 
 // ➕ Create a post
 export const createPost = async (req, res) => {
@@ -31,19 +32,45 @@ export const createPost = async (req, res) => {
   }
 };
 // 📄 Get posts of a circle
+// 
 export const getPostsByCircle = async (req, res) => {
   try {
     const { circleId } = req.params;
+    const userId = req.user._id;
 
+    // 🔥 Check if circle exists
+    const circle = await Circle.findById(circleId);
+
+    if (!circle) {
+      return res.status(404).json({
+        message: "Circle not found",
+      });
+    }
+
+    // 🔒 Check membership
+    const isMember = circle.members.some(
+      (member) =>
+        member.toString() === userId.toString()
+    );
+
+    if (!isMember) {
+      return res.status(403).json({
+        message: "Access denied. Join the circle first.",
+      });
+    }
+
+    // ✅ If member → allow posts
     const posts = await Post.find({ circle: circleId })
-      .sort({ createdAt: -1 }) // newest first
-      .populate("author", "name photo")
-      .populate("circle", "name topic");
+      .populate("author", "name")
+      .sort({ createdAt: -1 });
 
     res.status(200).json(posts);
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({
+      message: "Failed to load posts",
+    });
   }
 };
 // 📌 Get single post with replies
@@ -79,38 +106,42 @@ export const toggleLikePost = async (req, res) => {
     const userId = req.user._id;
 
     const post = await Post.findById(postId);
+
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    // Only discussion posts can be liked
     if (post.type !== "discussion") {
       return res
         .status(400)
         .json({ message: "Only discussion posts can be liked" });
     }
 
-    // 🚫 Prevent self-like (CORRECT PLACE)
     if (post.author.toString() === userId.toString()) {
       return res
         .status(400)
         .json({ message: "You cannot like your own post" });
     }
 
-    const alreadyLiked = post.likes.includes(userId);
+    const alreadyLiked = post.likes.some(
+      (id) => id.toString() === userId.toString()
+    );
 
     if (alreadyLiked) {
-      post.likes.pull(userId); // unlike
+      post.likes.pull(userId);
     } else {
-      post.likes.push(userId); // like
+      post.likes.push(userId);
     }
 
     await post.save();
 
-    res.status(200).json({
-      message: alreadyLiked ? "Post unliked" : "Post liked",
-      likesCount: post.likes.length,
-    });
+    // 🔥 IMPORTANT: Return fully populated post
+    const updatedPost = await Post.findById(postId)
+      .populate("author", "name")
+      .populate("circle", "name");
+
+    res.status(200).json(updatedPost);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

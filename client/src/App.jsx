@@ -11,10 +11,12 @@ import PersonalSpace from "./pages/PersonalSpace";
 import CircleDetail from "./pages/circles/CircleDetail";
 import PostDetail from "./pages/posts/PostDetail";
 import Profile from "./pages/Profile";
+import CreateCircle from "./pages/circles/CreateCircle";
 import CreatePost from "./pages/posts/CreatePosts";
 import ChallengeDays from "./pages/challenges/ChallengeDays";
 import PaymentPage from "./pages/PaymentPage";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import MyCircles from "./pages/circles/MyCircles";
 function App() {
   return (
   
@@ -83,6 +85,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+<Route
+  path="/create-circle"
+  element={<CreateCircle />}
+/>
 
         <Route
           path="/circles/:circleId"
@@ -100,6 +106,7 @@ function App() {
     </ProtectedRoute>
   }
 />
+<Route path="/my-circles" element={<MyCircles />} />
         <Route
           path="/posts/:postId"
           element={

@@ -8,13 +8,16 @@ const CircleDetail = () => {
   const { circleId } = useParams();
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?._id;
+
   const [circle, setCircle] = useState(null);
   const [posts, setPosts] = useState([]);
   const [challenges, setChallenges] = useState([]);
   const [isMember, setIsMember] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch Circle
+  // 🔹 Fetch Circle Info
   const fetchCircle = async () => {
     try {
       const res = await api.get(`/circles/${circleId}`);
@@ -25,7 +28,7 @@ const CircleDetail = () => {
     }
   };
 
-  // 🔹 Fetch Posts (only if member)
+  // 🔹 Fetch Posts
   const fetchPosts = async () => {
     try {
       const res = await api.get(`/posts/circle/${circleId}`);
@@ -35,34 +38,32 @@ const CircleDetail = () => {
     }
   };
 
-  // 🔹 Fetch Challenges (only if member)
+  // 🔹 Fetch Challenges
   const fetchChallenges = async () => {
     try {
-      const res = await api.get(
-        `/challenges/circle/${circleId}`
-      );
+      const res = await api.get(`/challenges/circle/${circleId}`);
       setChallenges(res.data);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // 🔹 Load Data
+  // 🔹 Initial Load
   useEffect(() => {
-    const loadData = async () => {
+    const load = async () => {
       await fetchCircle();
-
-      // Only load posts/challenges if member
-      if (isMember) {
-        await fetchPosts();
-        await fetchChallenges();
-      }
-
       setLoading(false);
     };
+    load();
+  }, [circleId]);
 
-    loadData();
-  }, [circleId, isMember]);
+  // 🔹 Load content only when member
+  useEffect(() => {
+    if (isMember) {
+      fetchPosts();
+      fetchChallenges();
+    }
+  }, [isMember]);
 
   // 🔹 Join Circle
   const handleJoin = async () => {
@@ -70,30 +71,32 @@ const CircleDetail = () => {
       await api.post(`/circles/${circleId}/join`);
       await fetchCircle(); // refresh membership
     } catch (err) {
-      console.error(
-        err.response?.data?.message || err.message
-      );
+      console.error(err.response?.data?.message || err.message);
     }
   };
 
-  // 🔹 Like Post
+  // 🔹 Toggle Like (SYNC WITH BACKEND)
   const handleLike = async (postId) => {
     try {
-      await api.put(`/posts/like/${postId}`);
-      fetchPosts();
+      const res = await api.put(`/posts/like/${postId}`);
+
+      // Backend must return updated full post
+      const updatedPost = res.data.post;
+
+      setPosts((prev) =>
+        prev.map((p) => (p._id === postId ? updatedPost : p))
+      );
     } catch (err) {
-      console.error(err);
+      console.error(err.response?.data?.message || err.message);
     }
   };
-
-  const getPostTag = (post) =>
-    post.type === "doubt" ? "Doubt" : "Discussion";
 
   if (loading) return <p>Loading circle...</p>;
   if (!circle) return <p>Circle not found</p>;
 
   return (
     <div style={{ padding: "20px", maxWidth: "750px" }}>
+      
       {/* 🔵 Circle Header */}
       <div
         style={{
@@ -106,13 +109,11 @@ const CircleDetail = () => {
       >
         <h2>{circle.name}</h2>
         <p>{circle.description}</p>
-
         <p>📚 Topic: {circle.topic}</p>
         <p>📊 Level: {circle.level}</p>
         <p>👨‍🏫 Mentor: {circle.mentor?.name}</p>
-        <p>👥 Members: {circle.members.length}</p>
+        <p>👥 Members: {circle.members?.length}</p>
 
-        {/* 🔥 Join Button */}
         {!isMember && (
           <button
             onClick={handleJoin}
@@ -131,7 +132,7 @@ const CircleDetail = () => {
         )}
       </div>
 
-      {/* 🔒 If NOT Member */}
+      {/* 🔒 Restricted Section */}
       {!isMember ? (
         <div
           style={{
@@ -141,10 +142,7 @@ const CircleDetail = () => {
           }}
         >
           <h3>🔒 Members Only</h3>
-          <p>
-            You must join this circle to access
-            posts and challenges.
-          </p>
+          <p>You must join this circle to access posts and challenges.</p>
         </div>
       ) : (
         <>
@@ -154,9 +152,7 @@ const CircleDetail = () => {
 
             <button
               onClick={() =>
-                navigate(
-                  `/circles/${circleId}/create-post`
-                )
+                navigate(`/circles/${circleId}/create-post`)
               }
               style={{
                 marginBottom: "15px",
@@ -165,6 +161,7 @@ const CircleDetail = () => {
                 border: "none",
                 background: "#3b82f6",
                 color: "white",
+                cursor: "pointer",
               }}
             >
               Create Post
@@ -185,29 +182,58 @@ const CircleDetail = () => {
                 >
                   <h3
                     style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      navigate(`/posts/${post._id}`)
-                    }
+                    onClick={() => navigate(`/posts/${post._id}`)}
                   >
                     {post.title}
                   </h3>
 
                   <p>{post.description}</p>
 
-                  {post.type ===
-                    "discussion" && (
+                  {/* 🔗 Optional Link */}
+                  {post.links && post.links.length > 0 && (
+  <div style={{ marginTop: "6px" }}>
+    {post.links.map((link, index) => (
+      <div key={index}>
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            color: "#2563eb",
+            textDecoration: "underline",
+            fontSize: "14px",
+          }}
+        >
+          🔗 Visit Link {index + 1}
+        </a>
+      </div>
+    ))}
+  </div>
+)}                  {/* 👍 Like Button (Discussion Only) */}
+                  {post.type === "discussion" && (
                     <button
-                      onClick={() =>
-                        handleLike(post._id)
-                      }
+                      onClick={() => handleLike(post._id)}
+                      style={{
+                        marginTop: "6px",
+                        padding: "4px 10px",
+                        borderRadius: "6px",
+                        border: "1px solid #ccc",
+                        background: post.likes?.some(
+                          (id) => id.toString() === userId
+                        )
+                          ? "#dbeafe"
+                          : "#f3f4f6",
+                        cursor: "pointer",
+                      }}
                     >
-                      👍 {post.likes.length}
+                      👍 {post.likes?.length || 0}
                     </button>
                   )}
 
-                  <small>
-                    By {post.author?.name}
-                  </small>
+                  <div style={{ marginTop: "6px" }}>
+                    <small>By {post.author?.name}</small>
+                  </div>
                 </div>
               ))
             )}
@@ -215,13 +241,11 @@ const CircleDetail = () => {
 
           <hr style={{ margin: "30px 0" }} />
 
-          {/* 🔵 Challenges */}
+          {/* 🔵 Challenges Section */}
           <h3>Challenges</h3>
 
           {challenges.length === 0 ? (
-            <p>
-              No challenges in this circle yet.
-            </p>
+            <p>No challenges in this circle yet.</p>
           ) : (
             challenges.map((challenge) => (
               <div
@@ -243,11 +267,7 @@ const CircleDetail = () => {
                 </span>
 
                 <div style={{ marginTop: "8px" }}>
-                  <button
-                    onClick={() =>
-                      navigate("/challenges")
-                    }
-                  >
+                  <button onClick={() => navigate("/challenges")}>
                     View in Challenges
                   </button>
                 </div>

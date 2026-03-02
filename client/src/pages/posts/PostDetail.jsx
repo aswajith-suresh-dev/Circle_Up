@@ -94,8 +94,7 @@ const handleUpvote = async (replyId) => {
         {isDoubt && isPostAuthor && !alreadySolved && (
           <button
   disabled={reply.author._id === user?.id}
-  onClick={() => handleUpvote(reply._id)}
-  style={{
+onClick={() => handleSolve(reply._id)}  style={{
     opacity: reply.author._id === user?.id ? 0.5 : 1,
     cursor: reply.author._id === user?.id ? "not-allowed" : "pointer",
   }}

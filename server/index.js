@@ -4,12 +4,14 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 // Routes
+import adminRoutes from "./routes/adminRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import circleRoutes from "./routes/circleRoutes.js";
 import replyRoutes from "./routes/replyRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import feedRoutes from "./routes/feedRoutes.js";
 import challengeRoutes from "./routes/challengeRoutes.js";
+import mentorRoutes from "./routes/mentorRoutes.js";
 import challengeProgressRoutes from "./routes/challengeProgressRoutes.js";
 dotenv.config();
 
@@ -31,6 +33,8 @@ app.get("/", (req, res) => {
 // ───────────────────────────
 // API Routes
 // ───────────────────────────
+
+app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/circles", circleRoutes);
 app.use("/api/posts", postRoutes);
@@ -38,6 +42,7 @@ app.use("/api/replies", replyRoutes);
 app.use("/api/feed", feedRoutes);
 app.use("/api/challenges", challengeProgressRoutes);
 app.use("/api/challenges", challengeRoutes);
+app.use("/api/mentor", mentorRoutes);
 
 // ───────────────────────────
 // MongoDB Connection

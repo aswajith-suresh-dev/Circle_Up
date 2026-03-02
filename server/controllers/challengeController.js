@@ -1,5 +1,5 @@
 import Challenge from "../models/Challenge.js";
-
+import Circle from "../models/Circle.js";
 export const createChallenge = async (req, res) => {
   try {
 const { title, description, type, price, totalDays, days, circleId } = req.body;
@@ -129,20 +129,42 @@ export const getAllChallenges = async (req, res) => {
 };
 // controllers/challengeController.js
 
+
 export const getChallengesByCircle = async (req, res) => {
   try {
     const { circleId } = req.params;
+    const userId = req.user._id;
+
+    const circle = await Circle.findById(circleId);
+
+    if (!circle) {
+      return res.status(404).json({
+        message: "Circle not found",
+      });
+    }
+
+    // 🔒 Membership check
+    const isMember = circle.members.some(
+      (member) =>
+        member.toString() === userId.toString()
+    );
+
+    if (!isMember) {
+      return res.status(403).json({
+        message: "Access denied. Join the circle first.",
+      });
+    }
 
     const challenges = await Challenge.find({
       circle: circleId,
-    })
-      .populate("mentor", "name")
-      .sort({ createdAt: -1 });
+    }).populate("mentor", "name");
 
     res.status(200).json(challenges);
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to fetch challenges" });
+    res.status(500).json({
+      message: "Failed to load challenges",
+    });
   }
 };
