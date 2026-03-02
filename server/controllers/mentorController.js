@@ -2,6 +2,7 @@ import MentorApplication from "../models/MentorApplication.js";
 import  {checkMentorEligibility}  from "../utils/roleEligibility.js";
 import User from "../models/User.js";
 
+
 export const applyForMentor = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -120,5 +121,40 @@ export const rejectApplication = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const checkEligibility = async (req, res) => {
+  try {
+    const eligible = await checkMentorEligibility(
+      req.user._id
+    );
+
+    res.status(200).json({ eligible });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
+export const getAllMentors = async (req, res) => {
+  try {
+    const mentors = await MentorApplication.find({
+      status: "approved",
+    })
+      .populate({
+        path: "user",
+        select:
+          "name solvedRepliesCount replyUpvotesCount contributorCircles createdAt",
+      })
+      .sort({ updatedAt: -1 });
+
+    res.status(200).json(mentors);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to load mentors",
+    });
   }
 };

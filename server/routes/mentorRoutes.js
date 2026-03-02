@@ -7,9 +7,17 @@ import {
   approveApplication,
   rejectApplication
 } from "../controllers/mentorController.js";
+import { checkEligibility } from "../controllers/mentorController.js";
+import { getAllMentors } from "../controllers/mentorController.js";
+
 
 const router = express.Router();
 
+router.get(
+  "/check-eligibility",
+  protect,
+  checkEligibility
+);
 router.post("/apply", protect, applyForMentor);
 
 // Admin routes
@@ -33,4 +41,6 @@ router.put(
   adminOnly,
   rejectApplication
 );
+
+router.get("/all", getAllMentors);
 export default router;

@@ -17,6 +17,9 @@ import ChallengeDays from "./pages/challenges/ChallengeDays";
 import PaymentPage from "./pages/PaymentPage";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import MyCircles from "./pages/circles/MyCircles";
+import AdminPanel from "./pages/admin/AdminPanel";
+import ApplyMentor from "./pages/mentor/ApplyMentor";
+import Mentors from "./pages/mentor/Mentors";
 function App() {
   return (
   
@@ -36,6 +39,7 @@ function App() {
           }
         />
 
+<Route path="/admin" element={<AdminPanel />} />
         <Route
           path="/search"
           element={
@@ -45,6 +49,7 @@ function App() {
           }
         />
 
+<Route path="/mentors" element={<Mentors />} />
         <Route
           path="/challenges"
           element={
@@ -77,6 +82,8 @@ function App() {
     </ProtectedRoute>
   }
 />
+
+<Route path="/apply-mentor" element={<ApplyMentor />} />
         <Route
           path="/space"
           element={
