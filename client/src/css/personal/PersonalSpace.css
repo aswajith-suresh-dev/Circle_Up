@@ -1,0 +1,68 @@
+.personal-container {
+  padding: 20px;
+  max-width: 800px;
+}
+
+.folder-card {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: 0.2s ease;
+}
+
+.folder-card.active {
+  background: #eef2ff;
+}
+
+.folder-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.folder-name {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.icon-group {
+  display: flex;
+  gap: 16px;
+}
+
+.icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon-wrapper svg {
+  transition: 0.2s ease;
+}
+
+.icon-wrapper:hover svg {
+  transform: scale(1.1);
+}
+
+.icon-wrapper::after {
+  content: attr(data-label);
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.icon-wrapper:hover::after {
+  opacity: 1;
+}

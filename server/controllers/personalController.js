@@ -34,7 +34,45 @@ export const getMyFolders = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// 🔹 Update Folder Name
+export const updateFolder = async (req, res) => {
+  try {
+    const { folderId } = req.params;
+    const { name } = req.body;
 
+    if (!name) {
+      return res.status(400).json({
+        message: "Folder name is required",
+      });
+    }
+
+    const folder = await PersonalFolder.findById(folderId);
+
+    if (!folder) {
+      return res.status(404).json({
+        message: "Folder not found",
+      });
+    }
+
+    // 🔐 Ownership check
+    if (folder.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Unauthorized",
+      });
+    }
+
+    folder.name = name;
+    await folder.save();
+
+    res.status(200).json({
+      message: "Folder updated successfully",
+      folder,
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 // 🔹 Delete Folder
 export const deleteFolder = async (req, res) => {
   try {
@@ -116,6 +154,58 @@ export const getTasksByFolder = async (req, res) => {
     }).sort({ createdAt: -1 });
 
     res.status(200).json(tasks);
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+// 🔹 Update Task
+export const updateTask = async (req, res) => {
+  try {
+    const { title, description, sources } = req.body;
+    const { taskId } = req.params;
+
+    const task = await PersonalTask.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    if (task.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    task.title = title || task.title;
+    task.description = description || task.description;
+    task.sources = sources || task.sources;
+
+    await task.save();
+
+    res.status(200).json(task);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+// 🔹 Delete Task
+export const deleteTask = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+
+    const task = await PersonalTask.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    if (task.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    await task.deleteOne();
+
+    res.status(200).json({
+      message: "Task deleted successfully",
+    });
 
   } catch (error) {
     res.status(500).json({ message: "Server error" });

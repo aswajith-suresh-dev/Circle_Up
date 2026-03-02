@@ -7,7 +7,6 @@ import Signup from "./pages/auth/Signup";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
 import Challenges from "./pages/Challenges";
-import PersonalSpace from "./pages/PersonalSpace";
 import CircleDetail from "./pages/circles/CircleDetail";
 import PostDetail from "./pages/posts/PostDetail";
 import Profile from "./pages/Profile";
@@ -24,6 +23,8 @@ import Complaint from "./pages/support/Complaint";
 import AdminComplaints from "./pages/admin/AdminComplaints";
 import Feedback from "./pages/support/Feedback";
 import AdminFeedback from "./pages/support/AdminFeedback";
+import PersonalSpace from "./pages/personal/PersonalSpace";
+import FolderDetail from "./pages/personal/FolderDetail";
 function App() {
   return (
     <Routes>
@@ -87,14 +88,14 @@ function App() {
       />
 
       <Route path="/apply-mentor" element={<ApplyMentor />} />
-      <Route
+      {/* <Route
         path="/space"
         element={
           <ProtectedRoute>
             <PersonalSpace />
           </ProtectedRoute>
         }
-      />
+      /> */}
       <Route path="/create-circle" element={<CreateCircle />} />
 
       <Route
@@ -137,6 +138,11 @@ function App() {
       <Route path="/admin/complaints" element={<AdminComplaints />} />
       <Route path="/feedback" element={<Feedback />} />
       <Route path="/admin/feedback" element={<AdminFeedback />} />
+      <Route path="/personal" element={<PersonalSpace />} />
+<Route
+  path="/personal/folder/:folderId"
+  element={<FolderDetail />}
+/>
       {/* <Route
   path="/challenges"
   element={
