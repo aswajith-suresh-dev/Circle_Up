@@ -15,9 +15,9 @@ import { updateTask, deleteTask } from "../controllers/personalController.js";
 
 const router = express.Router();
 
-router.post("/folder", protect, createFolder);
+router.post("/folders", protect, createFolder);
 router.get("/folders", protect, getMyFolders);
-router.put("/folder/:folderId", protect, updateFolder);
+router.put("/folders/:folderId", protect, updateFolder);
 router.delete("/folders/:folderId", protect, deleteFolder);
 router.post("/task", protect, createTask);
 router.get("/tasks/:folderId", protect, getTasksByFolder);

@@ -117,7 +117,7 @@ const [editTaskDescription, setEditTaskDescription] = useState("");
               <button
                 onClick={async () => {
                   if (!editName.trim()) return;
-                  await api.put(`/personal/folder/${folder._id}`, {
+                  await api.put(`/personal/folders/${folder._id}`, {
                     name: editName,
                   });
                   setEditingFolderId(null);
@@ -143,7 +143,7 @@ const [editTaskDescription, setEditTaskDescription] = useState("");
               <div
                 className="folder-name"
                 onClick={() => {
-                  navigate(`/personal/folder/${folder._id}`);
+                  navigate(`/personal/folders/${folder._id}`);
                 }}
               >
                 {folder.name}

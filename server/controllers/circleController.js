@@ -124,3 +124,36 @@ export const getCircleById = async (req, res) => {
     });
   }
 };
+export const getSuggestedCircles = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user.topics || user.topics.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    const circles = await Circle.find({
+      topic: {
+        $in: user.topics.map(
+          (t) => new RegExp(`^${t}$`, "i")
+        ),
+      },
+    }).limit(5);
+
+    const formatted = circles.map((circle) => ({
+  ...circle._doc,
+  isMember: circle.members.some(
+    (memberId) =>
+      memberId.toString() === req.user._id.toString()
+  ),
+}));
+
+    res.status(200).json(formatted);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};

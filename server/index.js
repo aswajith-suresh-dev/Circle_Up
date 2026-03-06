@@ -15,6 +15,7 @@ import mentorRoutes from "./routes/mentorRoutes.js";
 import challengeProgressRoutes from "./routes/challengeProgressRoutes.js";
 import supportRoutes from "./routes/supportRoutes.js";
 import personalRoutes from "./routes/personalRoutes.js";
+import path from "path";
 dotenv.config();
 
 const app = express();
@@ -35,7 +36,7 @@ app.get("/", (req, res) => {
 // ───────────────────────────
 // API Routes
 // ───────────────────────────
-
+app.use("/uploads", express.static("uploads"));
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/circles", circleRoutes);

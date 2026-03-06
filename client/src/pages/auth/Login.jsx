@@ -7,6 +7,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -16,20 +17,26 @@ const Login = () => {
     setError("");
 
     try {
+      setLoading(true);
+
       const res = await api.post("/auth/login", {
         email,
         password,
       });
 
-      // Save user & token using context
-      login(res.data.user, res.data.token);
+      const { user, token } = res.data;
 
-      // Go to home
-      navigate("/home");
+      // Save user & token in context + localStorage
+      login(user, token);
+
+      // Just go to home
+      navigate("/");
+
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Login failed. Try again."
-      );
+      console.log("LOGIN ERROR:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,7 +44,9 @@ const Login = () => {
     <div style={{ maxWidth: "400px", margin: "60px auto" }}>
       <h2>Login</h2>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && (
+        <p style={{ color: "red" }}>{error}</p>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -48,6 +57,7 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            style={{ width: "100%", padding: "8px" }}
           />
         </div>
 
@@ -61,12 +71,23 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            style={{ width: "100%", padding: "8px" }}
           />
         </div>
 
         <br />
 
-        <button type="submit">Login</button>
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            width: "100%",
+            padding: "10px",
+            cursor: "pointer",
+          }}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

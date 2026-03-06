@@ -24,8 +24,13 @@ const Signup = () => {
       });
 
       // login after signup
-      login(res.data.user, res.data.token);
-      navigate("/login");
+     login(res.data.user, res.data.token);
+
+if (!res.data.user.topics || res.data.user.topics.length === 0) {
+  navigate("/select-topics");
+} else {
+  navigate("/");
+}
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
     }

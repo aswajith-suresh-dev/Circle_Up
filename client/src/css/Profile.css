@@ -1,0 +1,28 @@
+.profile-edit-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.profile-tooltip {
+  position: absolute;
+  right: 25px;
+  background: #111827;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(5px);
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.profile-edit-icon:hover .profile-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}

@@ -16,13 +16,16 @@ const CircleDetail = () => {
   const [challenges, setChallenges] = useState([]);
   const [isMember, setIsMember] = useState(false);
   const [loading, setLoading] = useState(true);
-
+useEffect(() => {
+  console.log("Circle ID from URL:", circleId);
+}, [circleId]);
   // 🔹 Fetch Circle Info
   const fetchCircle = async () => {
     try {
       const res = await api.get(`/circles/${circleId}`);
       setCircle(res.data);
       setIsMember(res.data.isMember);
+      
     } catch (err) {
       console.error(err);
     }

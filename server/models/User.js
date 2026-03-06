@@ -37,7 +37,10 @@ const userSchema = new mongoose.Schema(
       default: "learner",
     },
 
-    
+    topics: {
+  type: [String],
+  default: [],
+},
 
     replyUpvotesCount: {
       type: Number,
