@@ -1,7 +1,7 @@
 import Post from "../models/Post.js";
 import Reply from "../models/Reply.js";
 import Circle from "../models/Circle.js";
-
+import { createNotification } from "../utils/createNotification.js";
 // ➕ Create a post
 export const createPost = async (req, res) => {
   try {
@@ -131,6 +131,15 @@ export const toggleLikePost = async (req, res) => {
       post.likes.pull(userId);
     } else {
       post.likes.push(userId);
+      // 🔔 Notify post author
+if (post.author.toString() !== req.user._id.toString()) {
+  await createNotification({
+    user: post.author,
+    type: "postLike",
+    message: `${req.user.name} liked your discussion`,
+    link: `/posts/${post._id}`,
+  });
+}
     }
 
     await post.save();

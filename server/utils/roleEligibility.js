@@ -5,6 +5,10 @@ export const checkMentorEligibility = async (userId) => {
     const user = await User.findById(userId);
 
     if (!user) return false;
+    console.log("ROLE:", user.role);
+    console.log("Solved Replies:", user.solvedRepliesCount);
+    console.log("Reply Upvotes:", user.replyUpvotesCount);
+    console.log("Contributor Circles:", user.contributorCircles.length);
     if (user.role !== "contributor") return false;
 
     const meetsQualityDepth =

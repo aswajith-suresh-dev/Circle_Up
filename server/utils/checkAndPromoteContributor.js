@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-
+import { createNotification } from "./createNotification.js";
 export const checkAndPromoteContributor = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -8,15 +8,20 @@ export const checkAndPromoteContributor = async (userId) => {
     if (user.role === "contributor") return;
 
     const hasQualitySignal =
-  user.solvedRepliesCount >= 5 ||
-  user.replyUpvotesCount >= 10;
+  user.solvedRepliesCount >= 1 &&
+  user.replyUpvotesCount >= 1;
 
-const hasCircleDiversity = user.contributorCircles.length >= 2;
+const hasCircleDiversity = user.contributorCircles.length >= 1;
 
 if (hasQualitySignal && hasCircleDiversity) {
   user.role = "contributor";
   await user.save();
-
+await createNotification({
+    user: user._id,
+    type: "rolePromotion",
+    message: "🎉 Congratulations! You are now a Contributor.",
+    link: "/profile",
+  });
   console.log(`🎉 User ${user.email} promoted to CONTRIBUTOR`);
 }
   } catch (error) {

@@ -33,6 +33,7 @@ import SuggestedCircles from "./pages/circles/SuggestedCircles";
 import Profile from "./pages/personal/Profile";
 import DemoNavbar from "./components/DemoNavbar";
 import AdminMentorRequests from "./pages/admin/AdminMentorRequests";
+import Notifications from "./pages/notifications/Notifications";  
 
 function App() {
   const { user } = useAuth();
@@ -47,7 +48,15 @@ function App() {
     <Routes>
       {/* <Route path="/" element={<Navigate to="/home" />} /> */}
       {/* Public routes */}
-      
+      <Route path="/circles/create" element={<CreateCircle />} />
+      <Route
+  path="/notifications"
+  element={
+    <ProtectedRoute>
+      <Notifications />
+    </ProtectedRoute>
+  }
+/>
       <Route
   path="/profile"
   element={

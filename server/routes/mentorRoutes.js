@@ -43,4 +43,5 @@ router.put(
 );
 
 router.get("/all", getAllMentors);
+
 export default router;

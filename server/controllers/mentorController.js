@@ -1,5 +1,6 @@
 import MentorApplication from "../models/MentorApplication.js";
 import  {checkMentorEligibility}  from "../utils/roleEligibility.js";
+import { createNotification } from "../utils/createNotification.js";
 import User from "../models/User.js";
 
 
@@ -91,6 +92,14 @@ export const approveApplication = async (req, res) => {
 
     application.status = "approved";
     await application.save();
+
+    // 🔔 Create notification
+    await createNotification({
+      user: application.user,
+      type: "mentorApproved",
+      message: "🎉 Your mentor application was approved! You are now a mentor.",
+      link: "/profile",
+    });
 
     res.status(200).json({
       message: "Application approved. User promoted to mentor.",

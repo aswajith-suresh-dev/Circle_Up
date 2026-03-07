@@ -80,19 +80,37 @@ export const getMyCircles = async (req, res) => {
 };
 export const searchCircles = async (req, res) => {
   try {
-    const { query } = req.query;
+    const { query, topic, level } = req.query;
 
-    const circles = await Circle.find({
-      name: { $regex: query, $options: "i" },
-    }).populate("mentor", "name");
+    let filter = {};
+
+    // 🔍 search by circle name
+    if (query) {
+      filter.name = { $regex: query, $options: "i" };
+    }
+
+    // 🏷 filter by topic (case-insensitive)
+    if (topic) {
+      filter.topic = { $regex: `^${topic}$`, $options: "i" };
+    }
+
+    // 📚 filter by level (case-insensitive)
+    if (level) {
+      filter.level = { $regex: `^${level}$`, $options: "i" };
+    }
+
+    const circles = await Circle.find(filter)
+      .populate("mentor", "name");
 
     res.status(200).json(circles);
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Search failed" });
+    res.status(500).json({
+      message: "Search failed",
+    });
   }
-};
-export const getCircleById = async (req, res) => {
+};export const getCircleById = async (req, res) => {
   try {
     const { circleId } = req.params;
 

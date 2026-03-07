@@ -1,11 +1,23 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import { useEffect, useState } from "react";
+import api from "../api/axios";
 const DemoNavbar = () => {
   const { user } = useAuth();
-
+const [count, setCount] = useState(0);
   if (!user) return null;
+const fetchUnread = async () => {
+  try {
+    const res = await api.get("/notifications/unread-count");
+    setCount(res.data.count);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
+useEffect(() => {
+  fetchUnread();
+}, []);
   return (
     <div
       style={{
@@ -25,6 +37,9 @@ const DemoNavbar = () => {
       <Link style={linkStyle} to="/profile">Profile</Link>
       <Link style={linkStyle} to="/mentors">Mentors</Link>
       <Link style={linkStyle} to="/apply-mentor">Apply Mentor</Link>
+      <Link style={linkStyle} to="/notifications">
+  🔔 {count > 0 && `(${count})`}
+</Link>
 
       {/* 🔹 User Support */}
       <Link style={linkStyle} to="/complaint">Submit Complaint</Link>

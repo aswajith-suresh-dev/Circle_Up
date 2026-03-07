@@ -11,7 +11,7 @@ const ApplyMentor = () => {
   const [expertise, setExpertise] = useState("");
   const [portfolioLink, setPortfolioLink] = useState("");
 
-  const [eligible, setEligible] = useState(false);
+  const [eligible, setEligible] = useState(null);
   const [message, setMessage] = useState("");
 
   // 🔒 Only contributors can access
@@ -31,9 +31,11 @@ const ApplyMentor = () => {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
+  if (user) {
     checkEligibility();
-  }, []);
+  }
+}, [user]);
 
   const handleSubmit = async () => {
     try {
@@ -51,51 +53,50 @@ const ApplyMentor = () => {
     }
   };
 
-  return (
-    <div style={{ padding: "20px", maxWidth: "600px" }}>
-      <h2>Apply for Mentor</h2>
+if (eligible === null) {
+  return <p>Checking eligibility...</p>;
+}
 
-      {!eligible ? (
-        <p>
-          ❌ You do not meet the mentor eligibility criteria yet.
-        </p>
-      ) : (
-        <>
-          <textarea
-            rows="4"
-            placeholder="Write your bio..."
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            style={{ width: "100%", marginBottom: "10px" }}
-          />
+return (
+  <div style={{ padding: "20px", maxWidth: "600px" }}>
+    <h2>Apply for Mentor</h2>
 
-          <input
-            type="text"
-            placeholder="Your expertise..."
-            value={expertise}
-            onChange={(e) => setExpertise(e.target.value)}
-            style={{ width: "100%", marginBottom: "10px" }}
-          />
+    {!eligible ? (
+      <p>❌ You do not meet the mentor eligibility criteria yet.</p>
+    ) : (
+      <>
+        <textarea
+          rows="4"
+          placeholder="Write your bio..."
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          style={{ width: "100%", marginBottom: "10px" }}
+        />
 
-          <input
-            type="text"
-            placeholder="Portfolio link (optional)"
-            value={portfolioLink}
-            onChange={(e) => setPortfolioLink(e.target.value)}
-            style={{ width: "100%", marginBottom: "10px" }}
-          />
+        <input
+          type="text"
+          placeholder="Your expertise..."
+          value={expertise}
+          onChange={(e) => setExpertise(e.target.value)}
+          style={{ width: "100%", marginBottom: "10px" }}
+        />
 
-          <button onClick={handleSubmit}>
-            Submit Application
-          </button>
-        </>
-      )}
+        <input
+          type="text"
+          placeholder="Portfolio link (optional)"
+          value={portfolioLink}
+          onChange={(e) => setPortfolioLink(e.target.value)}
+          style={{ width: "100%", marginBottom: "10px" }}
+        />
 
-      {message && (
-        <p style={{ marginTop: "10px" }}>{message}</p>
-      )}
-    </div>
-  );
-};
+        <button onClick={handleSubmit}>
+          Submit Application
+        </button>
+      </>
+    )}
+
+    {message && <p style={{ marginTop: "10px" }}>{message}</p>}
+  </div>
+);};
 
 export default ApplyMentor;

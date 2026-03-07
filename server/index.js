@@ -15,6 +15,8 @@ import mentorRoutes from "./routes/mentorRoutes.js";
 import challengeProgressRoutes from "./routes/challengeProgressRoutes.js";
 import supportRoutes from "./routes/supportRoutes.js";
 import personalRoutes from "./routes/personalRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
+
 import path from "path";
 dotenv.config();
 
@@ -49,6 +51,8 @@ app.use("/api/mentor", mentorRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/personal", personalRoutes);
 
+
+app.use("/api/notifications", notificationRoutes);
 // ───────────────────────────
 // MongoDB Connection
 // ───────────────────────────
