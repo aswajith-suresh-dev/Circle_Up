@@ -1,0 +1,149 @@
+/* SECTION */
+
+.cta-section{
+padding:120px 20px;
+background:#f9fafb;
+display:flex;
+justify-content:center;
+}
+
+
+/* CARD */
+
+.cta-card{
+width:1300px;
+
+background:white;
+padding:70px 90px;
+
+border-radius:24px;
+
+box-shadow:0 30px 60px rgba(0,0,0,0.08);
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+position:relative;
+
+/* important */
+overflow:hidden;
+}
+
+
+/* LEFT CONTENT */
+
+.cta-left h2{
+font-size:34px;
+margin-bottom:16px;
+line-height:1.3;
+}
+
+.cta-left p{
+color:#6b7280;
+max-width:420px;
+margin-bottom:24px;
+line-height:1.6;
+}
+
+
+/* BUTTON */
+
+.cta-btn{
+background:#0f172a;
+color:white;
+
+padding:12px 26px;
+
+border-radius:10px;
+
+text-decoration:none;
+font-weight:600;
+
+transition:.25s;
+}
+
+.cta-btn:hover{
+background:#1e293b;
+transform:translateY(-2px);
+}
+
+
+/* BIG CIRCLE */
+
+.cta-right{
+position:absolute;
+
+/* only quarter visible */
+top:-220px;
+right:-220px;
+}
+
+.cta-ring{
+width:520px;
+height:520px;
+
+border-radius:50%;
+border:50px solid #0f172a;
+
+position:relative;
+}
+
+
+/* SMALL LEFT RING */
+
+/* LEFT SMALL RING */
+
+.cta-left-circle{
+position:absolute;
+
+top:-120px;
+left:-120px;
+}
+
+
+
+
+
+/* PERSON ICON BASE */
+
+/* PERSON ICON BASE */
+
+.ring-person{
+position:absolute;
+
+font-size:60px;
+color:#0f172a;
+
+background:white;
+border-radius:50%;
+
+padding:6px;
+
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+border:2px solid #0f172a;
+}
+
+
+/* ICON POSITIONS INSIDE ARC */
+
+.person-center{
+    bottom:160px;
+    left:170px;
+}
+.person-top{
+bottom:160px;
+left:40px;
+}
+.mentor-icon{
+color:#f59e0b;
+}
+.person-middle{
+bottom:80px;
+left:80px;
+}
+
+.person-bottom{
+bottom:20px;
+left:140px;
+}

@@ -1,234 +1,306 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 import PrivateRoute from "./components/PrivateRoute";
-import { useEffect } from "react";
-import { useAuth } from "./context/AuthContext";
-import { useNavigate } from "react-router-dom";         
-// pages
+import LeftSidebar from "./components/layout/LeftSidebar";
+
+/* ---------------- PAGES ---------------- */
+
+// Auth
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
+import ChangePassword from "./pages/auth/ChangePassword";
+import SelectTopics from "./pages/auth/SelectTopics";
+
+// Main
 import Home from "./pages/Home";
 import Search from "./pages/Search";
 import Challenges from "./pages/Challenges";
+import Notifications from "./pages/notifications/Notifications";
+import Landing from "./pages/Landing";
+
+// Circles
 import CircleDetail from "./pages/circles/CircleDetail";
-import PostDetail from "./pages/posts/PostDetail";
 import CreateCircle from "./pages/circles/CreateCircle";
+import MyCircles from "./pages/circles/MyCircles";
+import SuggestedCircles from "./pages/circles/SuggestedCircles";
+
+// Posts
 import CreatePost from "./pages/posts/CreatePosts";
+import PostDetail from "./pages/posts/PostDetail";
+
+// Challenges
 import ChallengeDays from "./pages/challenges/ChallengeDays";
+
+// Payments
 import PaymentPage from "./pages/PaymentPage";
 import PaymentSuccess from "./pages/PaymentSuccess";
-import MyCircles from "./pages/circles/MyCircles";
-import AdminPanel from "./pages/admin/AdminPanel";
+
+// Mentor
 import ApplyMentor from "./pages/mentor/ApplyMentor";
 import Mentors from "./pages/mentor/Mentors";
-import Complaint from "./pages/support/Complaint";
+
+// Admin
+import AdminPanel from "./pages/admin/AdminPanel";
+import AdminMentorRequests from "./pages/admin/AdminMentorRequests";
 import AdminComplaints from "./pages/admin/AdminComplaints";
-import Feedback from "./pages/support/Feedback";
 import AdminFeedback from "./pages/support/AdminFeedback";
+
+// Support
+import Complaint from "./pages/support/Complaint";
+import Feedback from "./pages/support/Feedback";
+
+// Personal Space
 import PersonalSpace from "./pages/personal/PersonalSpace";
 import FolderDetail from "./pages/personal/FolderDetail";
-import ChangePassword from "./pages/auth/ChangePassword";
-import SelectTopics from "./pages/auth/SelectTopics";
-import SuggestedCircles from "./pages/circles/SuggestedCircles";
 import Profile from "./pages/personal/Profile";
-import DemoNavbar from "./components/DemoNavbar";
-import AdminMentorRequests from "./pages/admin/AdminMentorRequests";
-import Notifications from "./pages/notifications/Notifications";  
 
 function App() {
   const { user } = useAuth();
-  const navigate = useNavigate();
-// useEffect(() => {
-//   if (user && (!user.topics || user.topics.length === 0)) {
-//     navigate("/select-topics");
-//   }
-// }, [user, navigate]);
+  const location = useLocation();
+
+  // Hide sidebar on auth pages
+  const hideSidebar =
+    location.pathname === "/login" ||
+    location.pathname === "/signup";
+
   return (
-    <>    <DemoNavbar />
-    <Routes>
-      {/* <Route path="/" element={<Navigate to="/home" />} /> */}
-      {/* Public routes */}
-      <Route path="/circles/create" element={<CreateCircle />} />
-      <Route
-  path="/notifications"
-  element={
-    <ProtectedRoute>
-      <Notifications />
-    </ProtectedRoute>
-  }
-/>
-      <Route
-  path="/profile"
-  element={
-    <ProtectedRoute>
-      <Profile />
-    </ProtectedRoute>
-  }
-/>
-        <Route
-        path="/"
-        element={
-          <PrivateRoute>
-            <Home />
-          </PrivateRoute>
-        }/>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route
-  path="/select-topics"
-  element={
-    <PrivateRoute>
-      <SelectTopics />
-    </PrivateRoute>
-  }
-/>
-<Route
-  path="/suggested-circles"
-  element={
-    <PrivateRoute>
-      <SuggestedCircles />
-    </PrivateRoute>
-  }
-/>
-<Route
-  path="/change-password"
-  element={
-    <PrivateRoute>
-      <ChangePassword />
-    </PrivateRoute>
-  }
-/>      {/* Protected routes */}
-      <Route
-        path="/home"
-        element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        }
-      />
+    <div className="app-layout">
 
-      <Route path="/admin" element={<AdminPanel />} />
-      <Route
-        path="/search"
-        element={
-          <ProtectedRoute>
-            <Search />
-          </ProtectedRoute>
-        }
-      />
+      {/* Sidebar */}
+      {!hideSidebar && user && <LeftSidebar />}
 
-      <Route path="/mentors" element={<Mentors />} />
-      <Route
-        path="/challenges"
-        element={
-          <ProtectedRoute>
-            <Challenges />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/challenges/:challengeId"
-        element={
-          <ProtectedRoute>
-            <ChallengeDays />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/payment/:challengeId"
-        element={
-          <ProtectedRoute>
-            <PaymentPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/payment-success"
-        element={
-          <ProtectedRoute>
-            <PaymentSuccess />
-          </ProtectedRoute>
-        }
-      />
+      {/* Main Content */}
+      <div className="main-content">
 
-      <Route path="/apply-mentor" element={
-          <ProtectedRoute>
-            <ApplyMentor />
-          </ProtectedRoute>} />
-      {/* <Route
-        path="/space"
-        element={
-          <ProtectedRoute>
-            <PersonalSpace />
-          </ProtectedRoute>
-        }
-      /> */}
-      <Route path="/create-circle" element={<CreateCircle />} />
+        <Routes>
 
-      <Route
-        path="/circles/:circleId"
-        element={
-          <ProtectedRoute>
-            <CircleDetail />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/circles/:circleId/create-post"
-        element={
-          <ProtectedRoute>
-            <CreatePost />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="/my-circles" element={<MyCircles />} />
-      <Route
-        path="/posts/:postId"
-        element={
-          <ProtectedRoute>
-            <PostDetail />
-          </ProtectedRoute>
-        }
-      />
+          {/* Root redirect */}
+          {/* <Route
+            path="/"
+            element={
+              user
+                ? <Navigate to="/home" replace />
+                : <Navigate to="/login" replace />
+            }
+          /> */}
+          <Route path="/" element={<Landing />} />
 
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
+          {/* AUTH ROUTES */}
+          <Route
+            path="/login"
+            element={
+              user
+                ? <Navigate to="/home" replace />
+                : <Login />
+            }
+          />
 
-<Route
-  path="/admin/mentor-requests"
-  element={
-    <ProtectedRoute>
-      <AdminMentorRequests />
-    </ProtectedRoute>
-  }
-/>
-      <Route path="/complaint" element={<Complaint />} />
+          <Route
+            path="/signup"
+            element={
+              user
+                ? <Navigate to="/home" replace />
+                : <Signup />
+            }
+          />
 
-      <Route path="/admin/complaints" element={<AdminComplaints />} />
-      <Route path="/feedback" element={<Feedback />} />
-      <Route path="/admin/feedback" element={<AdminFeedback />} />
-      <Route path="/personal" element={<PersonalSpace />} />
-<Route
-  path="/personal/folders/:folderId"
-  element={<FolderDetail />}
-/>
-      {/* <Route
-  path="/challenges"
-  element={
-    <ProtectedRoute>
-      <ChallengeList />
-    </ProtectedRoute>
-  }
-/> */}
-    </Routes>
-    </>
+          {/* PRIVATE ROUTES */}
 
+          <Route
+            path="/select-topics"
+            element={
+              <PrivateRoute>
+                <SelectTopics />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/suggested-circles"
+            element={
+              <PrivateRoute>
+                <SuggestedCircles />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/change-password"
+            element={
+              <PrivateRoute>
+                <ChangePassword />
+              </PrivateRoute>
+            }
+          />
+
+          {/* PROTECTED ROUTES */}
+
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/search"
+            element={
+              <ProtectedRoute>
+                <Search />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <Notifications />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/challenges"
+            element={
+              <ProtectedRoute>
+                <Challenges />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/challenges/:challengeId"
+            element={
+              <ProtectedRoute>
+                <ChallengeDays />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/payment/:challengeId"
+            element={
+              <ProtectedRoute>
+                <PaymentPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/payment-success"
+            element={
+              <ProtectedRoute>
+                <PaymentSuccess />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* CIRCLES */}
+
+          <Route path="/create-circle" element={<CreateCircle />} />
+
+          <Route
+            path="/circles/:circleId"
+            element={
+              <ProtectedRoute>
+                <CircleDetail />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/circles/:circleId/create-post"
+            element={
+              <ProtectedRoute>
+                <CreatePost />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/my-circles"
+            element={
+              <ProtectedRoute>
+                <MyCircles />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* POSTS */}
+
+          <Route
+            path="/posts/:postId"
+            element={
+              <ProtectedRoute>
+                <PostDetail />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* PROFILE */}
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* MENTORS */}
+
+          <Route path="/mentors" element={<Mentors />} />
+
+          <Route
+            path="/apply-mentor"
+            element={
+              <ProtectedRoute>
+                <ApplyMentor />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ADMIN */}
+
+          <Route path="/admin" element={<AdminPanel />} />
+
+          <Route
+            path="/admin/mentor-requests"
+            element={
+              <ProtectedRoute>
+                <AdminMentorRequests />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/admin/complaints" element={<AdminComplaints />} />
+
+          <Route path="/admin/feedback" element={<AdminFeedback />} />
+
+          {/* SUPPORT */}
+
+          <Route path="/complaint" element={<Complaint />} />
+          <Route path="/feedback" element={<Feedback />} />
+
+          {/* PERSONAL SPACE */}
+
+          <Route path="/personal" element={<PersonalSpace />} />
+
+          <Route
+            path="/personal/folders/:folderId"
+            element={<FolderDetail />}
+          />
+
+        </Routes>
+
+      </div>
+    </div>
   );
 }
 

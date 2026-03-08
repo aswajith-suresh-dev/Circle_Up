@@ -30,8 +30,7 @@ const Login = () => {
       login(user, token);
 
       // Just go to home
-      navigate("/");
-
+navigate("/home", { replace: true });
     } catch (err) {
       console.log("LOGIN ERROR:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Login failed");

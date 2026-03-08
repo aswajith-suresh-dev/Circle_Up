@@ -4,8 +4,17 @@ import { useAuth } from "../context/AuthContext";
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
-  if (loading) return <p>Loading...</p>;
+  // Wait until AuthContext finishes loading
+  if (loading) {
+    return null; // or a spinner
+  }
 
-return user ? children : <Navigate to="/login" replace />;};
+  // If no user → redirect
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
 
 export default ProtectedRoute;

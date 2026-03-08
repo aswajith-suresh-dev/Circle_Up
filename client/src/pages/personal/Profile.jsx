@@ -9,57 +9,66 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState("");
   const [photoFile, setPhotoFile] = useState(null);
-const { logout } = useAuth();
+const { logout, updateUser } = useAuth();
   const navigate = useNavigate();
 
   // 🔹 Fetch profile
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await api.get("/auth/profile");
-        setData(res.data);
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const res = await api.get("/auth/profile");
 
-        // ✅ Set initial editable values correctly
-        setDescription(res.data.user.description || "");
-      } catch (err) {
-        console.error(err);
-      }
-    };
+      setData(res.data);
+      setDescription(res.data.user.description || "");
 
-    fetchProfile();
-  }, []);
+      // ⭐ sync sidebar user
+      updateUser(res.data.user);
 
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  fetchProfile();
+}, []);
   if (!data) return <p>Loading...</p>;
 
   const { user, stats } = data;
 
   // 🔹 Save profile changes
   const handleSave = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("description", description);
+  try {
+    const formData = new FormData();
+    formData.append("description", description);
 
-      if (photoFile) {
-        formData.append("photo", photoFile);
-      }
-
-      const res = await api.put("/auth/profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      setData((prev) => ({
-        ...prev,
-        user: res.data.user,
-      }));
-
-      setIsEditing(false);
-      setPhotoFile(null);
-    } catch (err) {
-      console.error(err);
+    if (photoFile) {
+      formData.append("photo", photoFile);
     }
-  };
+
+    const res = await api.put("/auth/profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    const updatedUser = res.data.user;
+
+    // update profile page
+    setData((prev) => ({
+      ...prev,
+      user: updatedUser,
+    }));
+
+    // ⭐ update AuthContext (this updates sidebar avatar)
+    updateUser(updatedUser);
+
+    setIsEditing(false);
+    setPhotoFile(null);
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 const handleLogout = () => {
   logout();
   navigate("/login");

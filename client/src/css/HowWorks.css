@@ -1,0 +1,132 @@
+.how-section{
+padding:120px 80px;
+background:#ffffff;
+}
+
+.how-container{
+max-width:1200px;
+margin:auto;
+
+display:grid;
+grid-template-columns:1fr 1.2fr;
+gap:80px;
+align-items:center;
+}
+
+/* LEFT VISUAL */
+
+.how-visual{
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.visual-box{
+width:340px;
+height:340px;
+
+border-radius:20px;
+
+background:linear-gradient(135deg,#f3f4f6,#e5e7eb);
+
+position:relative;
+}
+
+.visual-card{
+position:absolute;
+
+background:white;
+padding:12px 18px;
+border-radius:10px;
+
+font-size:14px;
+font-weight:600;
+
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.card1{
+top:40px;
+left:-40px;
+}
+
+.card2{
+top:-30px;
+right:-30px;
+}
+
+.card3{
+bottom:-30px;
+left:40px;
+}
+
+/* RIGHT CONTENT */
+
+.how-label{
+font-size:13px;
+letter-spacing:2px;
+color:#6b7280;
+}
+
+.how-content h2{
+font-size:36px;
+margin-top:10px;
+margin-bottom:16px;
+}
+
+.how-content p{
+color:#6b7280;
+line-height:1.6;
+max-width:520px;
+}
+
+/* GRID */
+
+.how-grid{
+margin-top:40px;
+
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+/* CARDS */
+
+.how-card{
+background:#f9fafb;
+
+padding:22px;
+border-radius:12px;
+
+border:1px solid #eee;
+
+transition:all .25s ease;
+}
+
+.how-card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 30px rgba(0,0,0,0.06);
+}
+
+.how-icon{
+font-size:22px;
+margin-bottom:10px;
+}
+
+.how-card h3{
+font-size:18px;
+margin-bottom:6px;
+}
+
+.how-card p{
+font-size:14px;
+color:#6b7280;
+}
+.step-number{
+font-size:13px;
+font-weight:700;
+color:#9ca3af;
+
+display:block;
+margin-bottom:8px;
+}
