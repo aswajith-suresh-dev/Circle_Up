@@ -126,11 +126,18 @@ await user.save();
 };
 export const changePassword = async (req, res) => {
   try {
-    const { currentPassword, newPassword } = req.body;
 
-    if (!currentPassword || !newPassword) {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
       return res.status(400).json({
         message: "All fields are required",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        message: "New passwords do not match",
       });
     }
 
@@ -146,20 +153,36 @@ export const changePassword = async (req, res) => {
         message: "Current password is incorrect",
       });
     }
+if (await bcrypt.compare(newPassword, user.password)) {
+  return res.status(400).json({
+    message: "New password must be different from current password",
+  });
+}
+    // Optional security check
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters",
+      });
+    }
 
     const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(
-      newPassword,
-      salt
-    );
+
+    user.password = await bcrypt.hash(newPassword, salt);
 
     await user.save();
 
     res.status(200).json({
       message: "Password changed successfully",
     });
+
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server error",
+    });
+
   }
 };
 export const completeOnboarding = async (req, res) => {
@@ -244,12 +267,26 @@ export const getProfile = async (req, res) => {
 };
 export const updateProfile = async (req, res) => {
   try {
+
     const user = await User.findById(req.user._id);
 
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // Update name
+    if (req.body.name !== undefined) {
+      user.name = req.body.name;
+    }
+
+    // Update description
     if (req.body.description !== undefined) {
       user.description = req.body.description;
     }
 
+    // Update photo
     if (req.file) {
       user.photo = `/uploads/${req.file.filename}`;
     }
@@ -262,6 +299,12 @@ export const updateProfile = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server error",
+    });
+
   }
 };
