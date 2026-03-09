@@ -1,10 +1,18 @@
 import { useEffect,useState } from "react";
 import api from "../../api/axios";
-
+import { useNavigate } from "react-router-dom"; 
 const MentorChallenges = () => {
 
 const [challenges,setChallenges] = useState([]);
-
+const navigate = useNavigate();
+const editButton = {
+  padding: "6px 12px",
+  border: "none",
+  borderRadius: "6px",
+  background: "#3b82f6",
+  color: "white",
+  cursor: "pointer"
+};
 const fetchChallenges = async () => {
 
 try{
@@ -117,6 +125,12 @@ cursor:"pointer"
 }}
 >
 Delete Challenge
+</button>
+<button
+  onClick={() => navigate(`/edit-challenge/${challenge._id}`)}
+  style={editButton}
+>
+  Edit
 </button>
 
 </div>

@@ -241,3 +241,44 @@ export const getMyPosts = async (req,res) => {
   res.json(posts);
 
 };
+export const updatePost = async (req, res) => {
+  try {
+
+    const { postId } = req.params;
+    const { title, description } = req.body;
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found"
+      });
+    }
+
+    // Only author can edit
+    if (post.author.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Not authorized"
+      });
+    }
+
+    if (title !== undefined) post.title = title;
+    if (description !== undefined) post.description = description;
+
+    await post.save();
+
+    res.json({
+      message: "Post updated",
+      post
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Update failed"
+    });
+
+  }
+};

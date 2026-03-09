@@ -217,3 +217,53 @@ res.status(500).json({message:"Failed to load challenges"});
 }
 
 };
+export const updateChallenge = async (req, res) => {
+  try {
+
+    const { challengeId } = req.params;
+    const { title, description, level, type, price, totalDays, days } = req.body;
+
+    const challenge = await Challenge.findById(challengeId);
+
+    if (!challenge) {
+      return res.status(404).json({
+        message: "Challenge not found",
+      });
+    }
+
+    // Only mentor who created it can edit
+    if (challenge.mentor.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Not authorized",
+      });
+    }
+
+    challenge.title = title || challenge.title;
+    challenge.description = description || challenge.description;
+    challenge.level = level || challenge.level;
+    challenge.type = type || challenge.type;
+
+    if (type === "paid") {
+      challenge.price = price;
+    }
+
+    challenge.totalDays = totalDays || challenge.totalDays;
+    challenge.days = days || challenge.days;
+
+    await challenge.save();
+
+    res.status(200).json({
+      message: "Challenge updated successfully",
+      challenge,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Update failed",
+    });
+
+  }
+};

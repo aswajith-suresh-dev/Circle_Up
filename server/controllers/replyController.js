@@ -154,3 +154,43 @@ export const markReplyAsSolved = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const updateReply = async (req, res) => {
+  try {
+
+    const { replyId } = req.params;
+    const { content } = req.body;
+
+    const reply = await Reply.findById(replyId);
+
+    if (!reply) {
+      return res.status(404).json({
+        message: "Reply not found"
+      });
+    }
+
+    if (reply.author.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Not authorized"
+      });
+    }
+
+    reply.content = content;
+
+    await reply.save();
+
+    res.json({
+      message: "Reply updated",
+      reply
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Update failed"
+    });
+
+  }
+};

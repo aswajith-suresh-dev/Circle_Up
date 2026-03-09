@@ -342,6 +342,7 @@ import MyPosts from "./pages/posts/MyPosts";
 
 // Challenges
 import ChallengeDays from "./pages/challenges/ChallengeDays";
+import EditChallenge from "./pages/mentor/EditChallenge";
 
 // Payments
 import PaymentPage from "./pages/PaymentPage";
@@ -674,7 +675,10 @@ function App() {
 path="/mentor/create-challenge"
 element={<CreateChallenge />}
 />
-
+<Route
+path="/edit-challenge/:challengeId"
+element={<EditChallenge />}
+/>
 <Route
 path="/mentor/challenges"
 element={<MentorChallenges />}
