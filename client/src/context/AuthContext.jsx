@@ -6,22 +6,24 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+const login = async (userData, token) => {
+  localStorage.setItem("token", token);
 
-  const login = async (userData, token) => {
-    localStorage.setItem("token", token);
+  try {
+    const res = await api.get("/auth/profile");
+    const fullUser = res.data.user;
+console.log("PROFILE USER",res.data.user);
+    localStorage.setItem("user", JSON.stringify(fullUser));
+    setUser(fullUser);
 
-    try {
-      const res = await api.get("/auth/profile");
-      const fullUser = res.data.user;
+    return fullUser;
 
-      localStorage.setItem("user", JSON.stringify(fullUser));
-      setUser(fullUser);
-
-    } catch (err) {
-      console.error(err);
-      setUser(userData);
-    }
-  };
+  } catch (err) {
+    console.error(err);
+    setUser(userData);
+    return userData;
+  }
+};
 
   const updateUser = (newUser) => {
     localStorage.setItem("user", JSON.stringify(newUser));

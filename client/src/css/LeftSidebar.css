@@ -1,41 +1,29 @@
 /* Sidebar Container */
+
 .sidebar {
-  background: #f3f4f6;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+
   min-height: 100vh;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 15px;
-  top:0;
-  left:0;
+
+  padding: 16px;
+
+  position: relative;
+  top: 0;
+  left: 0;
+
   height: 100vh;
   overflow: hidden;
-position: relative;
-  transition: width 0.4s ease-in-out;
+
+  transition: width 0.35s ease;
 }
 
-.pinned {
-  transform: rotate(45deg);
-  transition: transform 0.2s ease;
-}
-.sidebar-pin {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  background: #f3f4f6;
-}
-
-.sidebar-pin:hover {
-  background: #e5e7eb;
-}
-
-.pinned {
-  transform: rotate(45deg);
-}
 /* Sidebar Width States */
+
 .collapsed {
   width: 70px;
 }
@@ -44,13 +32,41 @@ position: relative;
   width: 220px;
 }
 
+/* Pin Button */
+
+.sidebar-pin {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+
+  cursor: pointer;
+
+  padding: 5px;
+  border-radius: 6px;
+
+  background: #f8fafc;
+
+  transition: background 0.2s ease;
+}
+
+.sidebar-pin:hover {
+  background: #e5e7eb;
+}
+
+.pinned {
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
 /* Toggle Button */
+
 .sidebar-toggle {
   cursor: pointer;
   margin-bottom: 20px;
 }
 
 /* Profile Section */
+
 .sidebar-profile {
   display: flex;
   flex-direction: column;
@@ -58,25 +74,29 @@ position: relative;
   justify-content: center;
 
   height: 110px;
+
   border-bottom: 1px solid #e5e7eb;
+
   margin-bottom: 15px;
 }
 
-/* Profile Image */
-/* Avatar base */
+/* Avatar */
+
 .avatar {
   border-radius: 50%;
   object-fit: cover;
-  transition: all 0.41s ease;
+  transition: all 0.4s ease;
 }
 
-/* Collapsed sidebar avatar */
+/* Collapsed Avatar */
+
 .collapsed .avatar {
   width: 45px;
   height: 45px;
 }
 
-/* Expanded sidebar avatar */
+/* Expanded Avatar */
+
 .expanded .avatar {
   width: 70px;
   height: 70px;
@@ -84,10 +104,13 @@ position: relative;
 }
 
 /* Username */
+
 .username {
   margin-top: 6px;
   font-size: 14px;
   font-weight: 500;
+  color: #374151;
+
   transition: opacity 0.25s ease;
 }
 
@@ -99,7 +122,8 @@ position: relative;
   opacity: 1;
 }
 
-/* Navigation Container */
+/* Navigation */
+
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -107,22 +131,27 @@ position: relative;
 }
 
 /* Navigation Links */
+
 .sidebar-link {
   display: flex;
   align-items: center;
   gap: 12px;
 
   height: 40px;
-  padding: 0 10px;
+  padding: 0 12px;
 
-  border-radius: 6px;
+  border-radius: 8px;
+
   text-decoration: none;
-  color: #111;
+  color: #374151;
 
   overflow: hidden;
+
+  transition: all 0.2s ease;
 }
 
-/* Icon Size */
+/* Icon */
+
 .sidebar-link svg {
   width: 20px;
   height: 20px;
@@ -130,20 +159,32 @@ position: relative;
 }
 
 /* Hover State */
+
 .sidebar-link:hover {
-  background: #e0ecff;
+  background: rgba(116, 123, 255, 0.08);
+  color: #747bff;
 }
 
 /* Active Page */
+
 .sidebar-link.active {
-  background: #e0ecff;
-  color: #2563eb;
+  background: rgba(116, 123, 255, 0.15);
+  color: #747bff;
+}
+
+/* Active Icon */
+
+.sidebar-link.active svg {
+  color: #747bff;
 }
 
 /* Text Animation */
+
 .sidebar-link span {
   white-space: nowrap;
+
   opacity: 0;
+
   min-width: 120px;
 
   transition: opacity 0.2s ease 0.15s;
@@ -154,9 +195,14 @@ position: relative;
 }
 
 /* Bottom Logo */
+
 .sidebar-logo {
   text-align: center;
-  font-weight: bold;
+
+  font-weight: 600;
   font-size: 16px;
+
+  color: #1f2937;
+
   margin-top: 20px;
 }

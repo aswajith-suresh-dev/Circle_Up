@@ -365,19 +365,26 @@ import FolderDetail from "./pages/personal/FolderDetail";
 import Profile from "./pages/personal/Profile";
 
 function App() {
-  const { user } = useAuth();
+
+  const { user, loading } = useAuth();
   const location = useLocation();
 
-  // Hide sidebar on auth pages
-  const authPages = [
-  "/",
-  "/login",
-  "/signup",
-  "/select-topics",
-  "/suggested-circles"
-];
+  // Wait until AuthContext loads profile
+  if (loading) {
+    return null; // or a loading spinner
+  }
 
-const hideSidebar = authPages.includes(location.pathname);
+  /* ---------------- SIDEBAR CONTROL ---------------- */
+
+  const authPages = [
+    "/",
+    "/login",
+    "/signup",
+    "/select-topics",
+    "/suggested-circles"
+  ];
+
+  const hideSidebar = authPages.includes(location.pathname);
 
   const hasTopics = user && user.topics && user.topics.length > 0;
 
@@ -431,13 +438,13 @@ const hideSidebar = authPages.includes(location.pathname);
           {/* ONBOARDING */}
 
           <Route
-            path="/select-topics"
-            element={
-              <PrivateRoute>
-                <SelectTopics />
-              </PrivateRoute>
-            }
-          />
+  path="/select-topics"
+  element={
+    <PrivateRoute>
+      <SelectTopics />
+    </PrivateRoute>
+  }
+/>
 
           <Route
             path="/suggested-circles"
@@ -462,9 +469,11 @@ const hideSidebar = authPages.includes(location.pathname);
           <Route
             path="/home"
             element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
+              user && (!user.topics || user.topics.length === 0)
+                ? <Navigate to="/select-topics" replace />
+                : <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
             }
           />
 
@@ -622,6 +631,7 @@ const hideSidebar = authPages.includes(location.pathname);
         </Routes>
 
       </div>
+
     </div>
   );
 }

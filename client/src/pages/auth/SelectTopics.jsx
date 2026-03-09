@@ -20,7 +20,8 @@ const TOPICS = [
 const SelectTopics = () => {
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
-  const { user, login } = useAuth();
+    const { user, updateUser } = useAuth();
+
 
   const toggleTopic = (topic) => {
     if (selected.includes(topic)) {
@@ -30,25 +31,24 @@ const SelectTopics = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    try {
-      const res = await api.post("/auth/onboarding", {
-        topics: selected,
-      });
 
-      login(
-        { ...user, topics: selected },
-        localStorage.getItem("token")
-      );
+const handleSubmit = async () => {
+  try {
+    await api.post("/auth/onboarding", {
+      topics: selected,
+    });
 
-      navigate("/suggested-circles", {
-        state: { circles: res.data.circles },
-      });
+    updateUser({
+      ...user,
+      topics: selected,
+    });
 
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    navigate("/suggested-circles");
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   return (
     <div className="topics-page">

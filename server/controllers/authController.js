@@ -198,7 +198,6 @@ export const completeOnboarding = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 export const getProfile = async (req, res) => {
   try {
     const user = req.user;
@@ -217,10 +216,13 @@ export const getProfile = async (req, res) => {
 
     res.status(200).json({
       user: {
+        _id: user._id,
         name: user.name,
+        email: user.email,
         photo: user.photo,
         description: user.description,
         role: user.role,
+        topics: user.topics,   // ⭐ ADD THIS
         createdAt: user.createdAt,
         activityStreak: user.activityStreak,
         replyUpvotesCount: user.replyUpvotesCount,
@@ -232,6 +234,7 @@ export const getProfile = async (req, res) => {
         challengesJoined,
       },
     });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({
