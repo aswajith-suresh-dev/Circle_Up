@@ -6,6 +6,7 @@ import { getChallengeDetail } from "../controllers/challengeController.js";
 import { getMyChallenges } from "../controllers/challengeController.js";
 import { getAllChallenges } from "../controllers/challengeController.js";
 import { getChallengesByCircle } from "../controllers/challengeController.js";
+import { adminOnly } from "../middlewares/adminMiddleware.js";
 const router = express.Router();
 
 // mentor creates challenge

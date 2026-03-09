@@ -1,6 +1,7 @@
 import MentorApplication from "../models/MentorApplication.js";
 import  {checkMentorEligibility}  from "../utils/roleEligibility.js";
 import { createNotification } from "../utils/createNotification.js";
+import Challenge from "../models/Challenge.js";
 import User from "../models/User.js";
 
 
@@ -164,6 +165,42 @@ export const getAllMentors = async (req, res) => {
     console.error(error);
     res.status(500).json({
       message: "Failed to load mentors",
+    });
+  }
+};
+export const getMentorChallenges = async (req, res) => {
+  try {
+
+    const challenges = await Challenge.find({
+      mentor: req.user._id
+    })
+    .populate("circle", "name")
+    .sort({ createdAt: -1 });
+
+    res.status(200).json(challenges);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to load mentor challenges",
+    });
+  }
+};
+export const getChallengeParticipants = async (req, res) => {
+  try {
+
+    const { challengeId } = req.params;
+
+    const participants = await UserChallengeProgress
+      .find({ challenge: challengeId })
+      .populate("user", "name email");
+
+    res.status(200).json(participants);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to load participants",
     });
   }
 };

@@ -2,10 +2,13 @@ import Challenge from "../models/Challenge.js";
 import Circle from "../models/Circle.js";
 export const createChallenge = async (req, res) => {
   try {
-const { title, description, type, price, totalDays, days, circleId } = req.body;
-    // basic validation
+
+const { title, description, type, price, level, totalDays, days, circleId } = req.body;
+
     if (!title || !description || !totalDays || !days || !circleId) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
 
     if (days.length !== totalDays) {
@@ -14,40 +17,45 @@ const { title, description, type, price, totalDays, days, circleId } = req.body;
       });
     }
 
-    // validate day numbers
     for (let i = 0; i < days.length; i++) {
       if (days[i].dayNumber !== i + 1) {
         return res.status(400).json({
-          message: "Day numbers must be sequential starting from 1",
+          message: "Day numbers must be sequential",
         });
       }
     }
-if (type === "paid" && (!price || price <= 0)) {
-  return res.status(400).json({
-    message: "Paid challenges must have a valid price",
-  });
-}
+
+    if (type === "paid" && (!price || price <= 0)) {
+      return res.status(400).json({
+        message: "Paid challenges must have a price",
+      });
+    }
+
     const challenge = await Challenge.create({
-      title,
-      description,
-      type,
-      price,
-      totalDays,
-      days,
-      circle: circleId,
-      mentor: req.user._id,
-    });
+  title,
+  description,
+  level,
+  type,
+  price,
+  totalDays,
+  days,
+  circle: circleId,
+  mentor: req.user._id,
+  approvalStatus: type === "paid" ? "pending" : "approved",
+});
 
     res.status(201).json({
       message: "Challenge created successfully",
       challenge,
     });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to create challenge" });
+    res.status(500).json({
+      message: "Failed to create challenge",
+    });
   }
 };
-import UserChallengeProgress from "../models/UserChallengeProgress.js";
 
 export const getChallengeDetail = async (req, res) => {
   try {
@@ -113,18 +121,40 @@ export const getMyChallenges = async (req, res) => {
     res.status(500).json({ message: "Failed to load challenges" });
   }
 };
+import UserChallengeProgress from "../models/UserChallengeProgress.js";
+
 export const getAllChallenges = async (req, res) => {
   try {
-    const challenges = await Challenge.find()
-      .populate("mentor", "name")
-      .select("title description totalDays type price circle mentor")
+
+    const challenges = await Challenge.find({
+  approvalStatus: "approved",
+})
+      .populate("mentor", "name photo")
       .populate("circle", "name")
       .sort({ createdAt: -1 });
 
-    res.status(200).json(challenges);
+    const result = await Promise.all(
+      challenges.map(async (challenge) => {
+
+        const participants = await UserChallengeProgress.countDocuments({
+          challenge: challenge._id,
+        });
+
+        return {
+          ...challenge.toObject(),
+          participants,
+        };
+
+      })
+    );
+
+    res.status(200).json(result);
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to fetch challenges" });
+    res.status(500).json({
+      message: "Failed to fetch challenges",
+    });
   }
 };
 // controllers/challengeController.js
@@ -154,10 +184,10 @@ export const getChallengesByCircle = async (req, res) => {
         message: "Access denied. Join the circle first.",
       });
     }
-
-    const challenges = await Challenge.find({
-      circle: circleId,
-    }).populate("mentor", "name");
+const challenges = await Challenge.find({
+  circle: circleId,
+  approvalStatus: "approved",
+}).populate("mentor", "name");
 
     res.status(200).json(challenges);
 

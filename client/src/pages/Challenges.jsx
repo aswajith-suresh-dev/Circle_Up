@@ -148,20 +148,20 @@ const Challenges = () => {
 
             {/* META INFO */}
             <p style={metaText}>
-              Circle: {challenge.circle?.name || "N/A"}
-            </p>
+Level: {challenge.level}
+</p>
 
-            <p style={metaText}>
-              👨‍🏫 Mentor:{" "}
-              <strong>
-                {challenge.mentor?.name || "Unknown"}
-              </strong>
-            </p>
+<p style={metaText}>
+👥 {challenge.participants || 0} participants
+</p>
 
-            <p>{challenge.description}</p>
-            <p>Total Days: {challenge.totalDays}</p>
+<p style={metaText}>
+Circle: {challenge.circle?.name || "N/A"}
+</p>
 
-            {/* PROGRESS BAR */}
+<p style={metaText}>
+👨‍🏫 Mentor: <strong>{challenge.mentor?.name || "Unknown"}</strong>
+</p>            {/* PROGRESS BAR */}
             {progress && (
               <div style={{ marginTop: "10px" }}>
                 <div style={progressBarBg}>

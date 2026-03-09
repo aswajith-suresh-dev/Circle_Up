@@ -364,6 +364,10 @@ import PersonalSpace from "./pages/personal/PersonalSpace";
 import FolderDetail from "./pages/personal/FolderDetail";
 import Profile from "./pages/personal/Profile";
 
+import CreateChallenge from "./pages/mentor/CreateChallenge";
+import MentorChallenges from "./pages/mentor/MentorChallenges";
+import AdminChallenges from "./pages/admin/AdminChallenges";
+
 function App() {
 
   const { user, loading } = useAuth();
@@ -627,7 +631,20 @@ function App() {
             path="/personal/folders/:folderId"
             element={<FolderDetail />}
           />
+<Route
+path="/mentor/create-challenge"
+element={<CreateChallenge />}
+/>
 
+<Route
+path="/mentor/challenges"
+element={<MentorChallenges />}
+/>
+
+<Route
+  path="/admin/challenges"
+  element={<AdminChallenges />}
+/>
         </Routes>
 
       </div>

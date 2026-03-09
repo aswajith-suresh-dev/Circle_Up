@@ -43,7 +43,7 @@ const handleSubmit = async () => {
       topics: selected,
     });
 
-    navigate("/suggested-circles");
+    navigate("/suggested-circles",{ replace: true});
 
   } catch (err) {
     console.error(err);

@@ -40,7 +40,10 @@ export const joinChallenge = async (req, res) => {
       startedAt: new Date(),
       isPaid: false,
     });
-
+await Challenge.findByIdAndUpdate(
+  challengeId,
+  { $inc: { participantsCount: 1 } }
+);
     res.status(201).json({
       message: "Challenge joined successfully",
       progress,
@@ -229,7 +232,10 @@ export const purchaseChallenge = async (req, res) => {
       isBroken: false,
       startedAt: new Date(),
     });
-
+await Challenge.findByIdAndUpdate(
+  challengeId,
+  { $inc: { participantsCount: 1 } }
+);
     res.status(200).json({
       message: "Payment successful. Challenge unlocked.",
       progress,
@@ -238,5 +244,26 @@ export const purchaseChallenge = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Purchase failed" });
+  }
+};
+export const getMentorChallenges = async (req, res) => {
+  try {
+
+    const challenges = await Challenge.find({
+      mentor: req.user._id
+    })
+    .populate("circle","name")
+    .sort({createdAt:-1});
+
+    res.status(200).json(challenges);
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message:"Failed to fetch mentor challenges"
+    });
+
   }
 };

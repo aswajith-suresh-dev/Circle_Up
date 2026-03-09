@@ -9,6 +9,7 @@ import {
 } from "../controllers/mentorController.js";
 import { checkEligibility } from "../controllers/mentorController.js";
 import { getAllMentors } from "../controllers/mentorController.js";
+import { getMentorChallenges } from "../controllers/mentorController.js";
 
 
 const router = express.Router();
@@ -41,7 +42,7 @@ router.put(
   adminOnly,
   rejectApplication
 );
-
+router.get("/challenges", protect, getMentorChallenges);
 router.get("/all", getAllMentors);
 
 export default router;

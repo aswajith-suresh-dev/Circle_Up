@@ -38,6 +38,11 @@ const challengeSchema = new mongoose.Schema(
       enum: ["free", "paid"],
       default: "free",
     },
+    level: {
+    type: String,
+    enum: ["beginner", "intermediate", "advanced"],
+    default: "beginner",
+  },
 price: {
   type: Number,
   required: function () {
@@ -49,7 +54,17 @@ price: {
       type: Number,
       required: true,
     },
-
+approvalStatus: {
+  type: String,
+  enum: ["pending", "approved", "rejected"],
+  default: function () {
+    return this.type === "paid" ? "pending" : "approved";
+  }
+},
+  participantsCount: {
+    type: Number,
+    default: 0,
+  },
     days: {
       type: [challengeDaySchema],
       required: true,
