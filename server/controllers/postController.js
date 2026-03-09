@@ -156,3 +156,88 @@ if (post.author.toString() !== req.user._id.toString()) {
     res.status(500).json({ message: "Server error" });
   }
 };
+export const deletePost = async (req,res) => {
+
+  try{
+
+    const { postId } = req.params;
+
+    const post = await Post.findById(postId);
+
+    if(!post){
+      return res.status(404).json({
+        message:"Post not found"
+      });
+    }
+
+    if(post.author.toString() !== req.user._id.toString()){
+      return res.status(403).json({
+        message:"Not authorized"
+      });
+    }
+
+    await Post.findByIdAndDelete(postId);
+
+    res.json({
+      message:"Post deleted"
+    });
+
+  }catch(err){
+
+    console.error(err);
+
+    res.status(500).json({
+      message:"Delete failed"
+    });
+
+  }
+
+};
+export const deleteReply = async (req,res) => {
+
+  try{
+
+    const { replyId } = req.params;
+
+    const reply = await Reply.findById(replyId);
+
+    if(!reply){
+      return res.status(404).json({
+        message:"Reply not found"
+      });
+    }
+
+    if(reply.author.toString() !== req.user._id.toString()){
+      return res.status(403).json({
+        message:"Not authorized"
+      });
+    }
+
+    await Reply.findByIdAndDelete(replyId);
+
+    res.json({
+      message:"Reply deleted"
+    });
+
+  }catch(err){
+
+    console.error(err);
+
+    res.status(500).json({
+      message:"Delete failed"
+    });
+
+  }
+
+};
+export const getMyPosts = async (req,res) => {
+
+  const posts = await Post.find({
+    author: req.user._id
+  })
+  .populate("circle","name")
+  .sort({ createdAt:-1 });
+
+  res.json(posts);
+
+};

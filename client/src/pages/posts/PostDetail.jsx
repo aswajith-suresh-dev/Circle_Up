@@ -2,12 +2,27 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
+
 const PostDetail = () => {
     const { user } = useAuth();
   const { postId } = useParams();
   const [data, setData] = useState(null);
   const [replyText, setReplyText] = useState("");
+const deleteReply = async (replyId) => {
 
+  if(!window.confirm("Delete reply?")) return;
+
+  try{
+
+    await api.delete(`posts/reply/${replyId}`);
+
+    fetchPost();
+
+  }catch(err){
+    console.error(err);
+  }
+
+};
   const fetchPost = async () => {
     try {
       const res = await api.get(`/posts/${postId}`);
@@ -89,7 +104,20 @@ const handleUpvote = async (replyId) => {
         <button onClick={() => handleUpvote(reply._id)}>
           👍 {reply.upvotes.length}
         </button>
-
+<button
+onClick={()=>deleteReply(reply._id)}
+style={{
+marginLeft:"10px",
+background:"#ef4444",
+border:"none",
+color:"white",
+padding:"4px 8px",
+borderRadius:"6px",
+cursor:"pointer"
+}}
+>
+Delete
+</button>
         {/* Solve button */}
         {isDoubt && isPostAuthor && !alreadySolved && (
           <button

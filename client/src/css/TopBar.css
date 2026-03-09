@@ -1,0 +1,55 @@
+.topbar{
+  display:flex;
+  align-items:center;
+
+  gap:10px;
+
+  margin-bottom:18px;
+}
+
+/* REFRESH BUTTON */
+
+.topbar-refresh{
+  border:none;
+  background:#f3f4f6;
+
+  padding:6px 10px;
+
+  border-radius:8px;
+
+  cursor:pointer;
+}
+
+.topbar-refresh:hover{
+  background:#e5e7eb;
+}
+
+/* FILTER BUTTONS */
+
+.topbar-btn{
+
+  padding:6px 14px;
+
+  border-radius:8px;
+
+  border:1px solid #e5e7eb;
+
+  background:#f9fafb;
+
+  cursor:pointer;
+
+  font-size:14px;
+}
+
+.topbar-btn:hover{
+  background:#f3f4f6;
+}
+
+/* ACTIVE FILTER */
+
+.topbar-btn.active{
+  background:#747bff;
+  color:white;
+
+  border-color:#747bff;
+}

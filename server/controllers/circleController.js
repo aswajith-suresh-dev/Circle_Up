@@ -175,3 +175,103 @@ export const getSuggestedCircles = async (req, res) => {
     });
   }
 };
+export const getTopCircles = async (req,res) => {
+
+try{
+
+const circles = await Circle.find()
+.sort({ postCount: -1 })
+.limit(5)
+.select("name");
+
+res.status(200).json(circles);
+
+}catch(error){
+
+console.error(error);
+res.status(500).json({message:"Failed to load top circles"});
+
+}
+
+};export const deleteCircle = async (req, res) => {
+  try {
+    const { circleId } = req.params;
+
+    const circle = await Circle.findById(circleId);
+    if (!circle) {
+      return res.status(404).json({ message: "Circle not found" });
+    }
+
+    // Normalize IDs (handles req.user._id or req.user.id)
+    const userId = String(req.user?._id || req.user?.id);
+    const mentorId = String(circle.mentor);
+
+    if (mentorId !== userId) {
+      return res.status(403).json({
+        message: "You are not the mentor of this circle",
+      });
+    }
+
+    await Circle.findByIdAndDelete(circleId);
+
+    res.json({ message: "Circle deleted successfully" });
+  } catch (error) {
+    console.error("DELETE CIRCLE ERROR:", error);
+    res.status(500).json({ message: "Delete failed" });
+  }
+};
+export const getMentorCircles = async (req, res) => {
+  try {
+
+    const circles = await Circle.find({
+      mentor: req.user._id
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json(circles);
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to load mentor circles"
+    });
+
+  }
+};
+export const updateCircle = async (req, res) => {
+  try {
+    const { circleId } = req.params;
+    const { name, description, topic, level } = req.body;
+
+    const circle = await Circle.findById(circleId);
+
+    if (!circle) {
+      return res.status(404).json({
+        message: "Circle not found",
+      });
+    }
+
+    // Only mentor can edit
+    if (circle.mentor.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Not authorized",
+      });
+    }
+
+    circle.name = name || circle.name;
+    circle.description = description || circle.description;
+    circle.topic = topic || circle.topic;
+    circle.level = level || circle.level;
+
+    await circle.save();
+
+    res.json(circle);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Update failed",
+    });
+  }
+};

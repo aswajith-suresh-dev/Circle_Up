@@ -333,10 +333,12 @@ import CircleDetail from "./pages/circles/CircleDetail";
 import CreateCircle from "./pages/circles/CreateCircle";
 import MyCircles from "./pages/circles/MyCircles";
 import SuggestedCircles from "./pages/circles/SuggestedCircles";
+import EditCircle from "./pages/mentor/EditCircles";
 
 // Posts
 import CreatePost from "./pages/posts/CreatePosts";
 import PostDetail from "./pages/posts/PostDetail";
+import MyPosts from "./pages/posts/MyPosts";
 
 // Challenges
 import ChallengeDays from "./pages/challenges/ChallengeDays";
@@ -348,7 +350,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 // Mentor
 import ApplyMentor from "./pages/mentor/ApplyMentor";
 import Mentors from "./pages/mentor/Mentors";
-
+import MentorCircles from "./pages/mentor/MentorCircles";
 // Admin
 import AdminPanel from "./pages/admin/AdminPanel";
 import AdminMentorRequests from "./pages/admin/AdminMentorRequests";
@@ -368,6 +370,8 @@ import CreateChallenge from "./pages/mentor/CreateChallenge";
 import MentorChallenges from "./pages/mentor/MentorChallenges";
 import AdminChallenges from "./pages/admin/AdminChallenges";
 
+import MentorRevenue from "./pages/mentor/MentorRevenue";
+import AdminRevenue from "./pages/admin/AdminRevenue";
 function App() {
 
   const { user, loading } = useAuth();
@@ -449,7 +453,42 @@ function App() {
     </PrivateRoute>
   }
 />
-
+<Route
+  path="/mentor/revenue"
+  element={
+    <ProtectedRoute>
+      <MentorRevenue />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/my-posts"
+  element={
+    <ProtectedRoute>
+      <MyPosts />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/admin/revenue"
+  element={
+    <ProtectedRoute>
+      <AdminRevenue />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/mentor/circles"
+  element={
+    <ProtectedRoute>
+      <MentorCircles />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/edit-circle/:circleId"
+  element={<EditCircle />}
+/>
           <Route
             path="/suggested-circles"
             element={

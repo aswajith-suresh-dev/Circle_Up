@@ -224,6 +224,12 @@ style={input}
 
 {/* RESOURCES */}
 
+{/* RESOURCES (ONLY FOR PAID CHALLENGES) */}
+
+{type === "paid" && (
+
+<>
+
 {day.resources.map((res,resIndex)=>(
 
 <div key={resIndex} style={{marginTop:"10px"}}>
@@ -257,6 +263,10 @@ style={smallButton}
 >
 Add Resource
 </button>
+
+</>
+
+)}
 
 </div>
 

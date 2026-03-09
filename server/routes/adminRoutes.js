@@ -2,7 +2,8 @@ import express from "express";
 import { promoteUser } from "../controllers/adminController.js";
 import { getPendingChallenges } from "../controllers/adminController.js";
 import { approveChallenge } from "../controllers/adminController.js";
-import { rejectChallenge } from "../controllers/adminController.js";    
+import { rejectChallenge } from "../controllers/adminController.js";  
+import { getAdminRevenue } from "../controllers/adminController.js";  
 import  protect  from "../middlewares/authMiddleware.js";
 import { adminOnly } from "../middlewares/adminMiddleware.js";
 const router = express.Router();
@@ -14,4 +15,5 @@ router.get("/challenges/pending", protect, adminOnly, getPendingChallenges);
 router.patch("/challenges/:challengeId/approve", protect, adminOnly, approveChallenge);
 
 router.patch("/challenges/:challengeId/reject", protect, adminOnly, rejectChallenge);
+router.get("/revenue", protect, adminOnly, getAdminRevenue);
 export default router;

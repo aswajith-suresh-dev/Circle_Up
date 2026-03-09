@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import Challenge from "../models/Challenge.js";
+import Payment from "../models/Payment.js";
 export const promoteUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -100,4 +101,29 @@ export const rejectChallenge = async (req, res) => {
       message: "Rejection failed",
     });
   }
+};
+export const getAdminRevenue = async (req,res) => {
+
+  try{
+
+    const payments = await Payment.find();
+
+    const revenue = payments.reduce(
+      (sum,p) => sum + p.adminShare,
+      0
+    );
+
+    res.json({
+      revenue,
+      totalTransactions: payments.length
+    });
+
+  } catch(err){
+
+    res.status(500).json({
+      message:"Failed to load revenue"
+    });
+
+  }
+
 };

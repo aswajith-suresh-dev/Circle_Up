@@ -1,0 +1,96 @@
+/* PAGE LAYOUT */
+
+.home-layout{
+  display:flex;
+  justify-content:center;
+  gap:30px;
+
+  padding:20px;
+}
+
+/* FEED */
+
+.feed-container{
+  width:100%;
+  max-width:650px;
+}
+
+/* FEED CARD */
+
+.feed-card{
+  border:1px solid #e5e7eb;
+  background:white;
+
+  padding:14px;
+  margin-bottom:14px;
+
+  border-radius:10px;
+
+  cursor:pointer;
+
+  transition:box-shadow 0.2s ease;
+}
+
+.feed-card:hover{
+  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* POST META */
+
+.post-meta{
+  font-size:14px;
+  color:#6b7280;
+}
+
+/* SOLVED TAG */
+
+.solved-tag{
+  color:green;
+  font-size:12px;
+  margin-left:6px;
+}
+
+/* LINKS */
+
+.post-links a{
+  color:#2563eb;
+  text-decoration:underline;
+  font-size:14px;
+}
+
+/* LIKE BUTTON */
+
+.like-btn{
+  margin-top:8px;
+
+  padding:5px 10px;
+
+  border-radius:6px;
+  border:1px solid #e5e7eb;
+
+  background:#f3f4f6;
+
+  cursor:pointer;
+}
+
+/* AUTHOR */
+
+.post-author{
+  margin-top:6px;
+}
+
+/* MY CIRCLES BUTTON */
+
+.my-circles-btn{
+  margin-top:20px;
+
+  padding:7px 14px;
+
+  border-radius:8px;
+  border:none;
+
+  background:#747bff;
+  color:white;
+
+  cursor:pointer;
+}

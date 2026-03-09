@@ -1,6 +1,6 @@
-import Challenge from "../models/Challenge.js";
 import UserChallengeProgress from "../models/UserChallengeProgress.js";
-import Circle from "../models/Circle.js";
+import Circle from "../models/Circle.js"; 
+
 
 export const joinChallenge = async (req, res) => {
   try {
@@ -194,34 +194,60 @@ export const getChallengeProgress = async (req, res) => {
     res.status(500).json({ message: "Failed to load progress" });
   }
 };
+import Challenge from "../models/Challenge.js";
+import Payment from "../models/Payment.js";
+
 export const purchaseChallenge = async (req, res) => {
   try {
+
     const { challengeId } = req.params;
     const userId = req.user._id;
 
     const challenge = await Challenge.findById(challengeId);
+
     if (!challenge) {
-      return res.status(404).json({ message: "Challenge not found" });
+      return res.status(404).json({
+        message: "Challenge not found"
+      });
     }
 
     if (challenge.type !== "paid") {
       return res.status(400).json({
-        message: "This challenge is free",
+        message: "This challenge is free"
       });
     }
 
     const existing = await UserChallengeProgress.findOne({
       user: userId,
-      challenge: challengeId,
+      challenge: challengeId
     });
 
     if (existing) {
       return res.status(400).json({
-        message: "Already purchased",
+        message: "Already purchased"
       });
     }
 
-    // 🔥 Simulate payment success
+    /* ---------- Revenue Split ---------- */
+
+    const adminPercent = 0.2; // 20%
+
+    const adminShare = challenge.price * adminPercent;
+    const mentorShare = challenge.price - adminShare;
+
+    /* ---------- Save Payment ---------- */
+
+    await Payment.create({
+      user: userId,
+      challenge: challengeId,
+      mentor: challenge.mentor,
+      amount: challenge.price,
+      adminShare,
+      mentorShare
+    });
+
+    /* ---------- Unlock Challenge ---------- */
+
     const progress = await UserChallengeProgress.create({
       user: userId,
       challenge: challengeId,
@@ -230,20 +256,29 @@ export const purchaseChallenge = async (req, res) => {
       completedDays: [],
       streak: 0,
       isBroken: false,
-      startedAt: new Date(),
+      startedAt: new Date()
     });
-await Challenge.findByIdAndUpdate(
-  challengeId,
-  { $inc: { participantsCount: 1 } }
-);
+
+    /* ---------- Increase Participants ---------- */
+
+    await Challenge.findByIdAndUpdate(
+      challengeId,
+      { $inc: { participantsCount: 1 } }
+    );
+
     res.status(200).json({
       message: "Payment successful. Challenge unlocked.",
-      progress,
+      progress
     });
 
   } catch (error) {
+
     console.error(error);
-    res.status(500).json({ message: "Purchase failed" });
+
+    res.status(500).json({
+      message: "Purchase failed"
+    });
+
   }
 };
 export const getMentorChallenges = async (req, res) => {

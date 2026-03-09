@@ -177,13 +177,36 @@ export const getMentorChallenges = async (req, res) => {
     .populate("circle", "name")
     .sort({ createdAt: -1 });
 
-    res.status(200).json(challenges);
+    const result = [];
+
+    for (const challenge of challenges) {
+
+      const payments = await Payment.find({
+        challenge: challenge._id
+      });
+
+      const revenue = payments.reduce(
+        (sum, p) => sum + p.mentorShare,
+        0
+      );
+
+      result.push({
+        ...challenge.toObject(),
+        revenue
+      });
+
+    }
+
+    res.status(200).json(result);
 
   } catch (error) {
+
     console.error(error);
+
     res.status(500).json({
       message: "Failed to load mentor challenges",
     });
+
   }
 };
 export const getChallengeParticipants = async (req, res) => {
@@ -202,5 +225,72 @@ export const getChallengeParticipants = async (req, res) => {
     res.status(500).json({
       message: "Failed to load participants",
     });
+  }
+};
+import Payment from "../models/Payment.js";
+
+export const getMentorRevenue = async (req,res) => {
+
+  try{
+
+    const mentorId = req.user._id;
+
+    const payments = await Payment.find({
+      mentor: mentorId
+    });
+
+    const revenue = payments.reduce(
+      (sum,p) => sum + p.mentorShare,
+      0
+    );
+
+    res.json({
+      revenue,
+      totalSales: payments.length
+    });
+
+  } catch(err){
+
+    res.status(500).json({
+      message:"Failed to load revenue"
+    });
+
+  }
+
+};
+export const deleteChallenge = async (req, res) => {
+  try {
+
+    const { challengeId } = req.params;
+
+    const challenge = await Challenge.findById(challengeId);
+
+    if (!challenge) {
+      return res.status(404).json({
+        message: "Challenge not found"
+      });
+    }
+
+    // ensure mentor owns the challenge
+    if (challenge.mentor.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Not authorized"
+      });
+    }
+
+    await Challenge.findByIdAndDelete(challengeId);
+
+    res.status(200).json({
+      message: "Challenge deleted"
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Delete failed"
+    });
+
   }
 };

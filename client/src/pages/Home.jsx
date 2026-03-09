@@ -3,40 +3,47 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import RightSidebar from "../components/layout/RightSidebar";
+import TopBar from "../components/layout/TopBar";
+import "../css/Home.css";
 
 const Home = () => {
+
   const [posts, setPosts] = useState([]);
+  const [filter, setFilter] = useState("recent");
+
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id;
 
   // 🔹 Fetch Feed
+  const fetchFeed = async () => {
+    try {
+      const res = await api.get("/feed");
+      setPosts(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchFeed = async () => {
-      try {
-        const res = await api.get("/feed");
-        setPosts(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
     fetchFeed();
   }, []);
 
-  // 🔹 Toggle Like (Backend is source of truth)
+  // 🔹 Like
   const handleLike = async (e, postId) => {
-    e.stopPropagation(); // prevent card click
+    e.stopPropagation();
 
     try {
       const res = await api.put(`/posts/like/${postId}`);
 
-      // Replace entire updated post
       setPosts((prev) =>
         prev.map((post) =>
           post._id === postId ? res.data : post
         )
       );
+
     } catch (err) {
       console.error(
         err.response?.data?.message || err.message
@@ -44,116 +51,127 @@ const Home = () => {
     }
   };
 
+  // 🔹 Filter posts
+  const filteredPosts = posts.filter((post) => {
+
+    if (filter === "recent") return true;
+
+    if (filter === "discussion") {
+      return post.type === "discussion";
+    }
+
+    if (filter === "doubt") {
+      return post.type === "doubt";
+    }
+
+    return true;
+
+  });
+
   return (
-    <div style={{ padding: "16px", maxWidth: "700px" }}>
-      <h2>Home Feed</h2>
 
-      {posts.length === 0 && <p>No posts yet</p>}
+    <div className="home-layout">
 
-      {posts.map((post) => (
-        <div
-          key={post._id}
-          onClick={() => navigate(`/posts/${post._id}`)}
-          style={{
-            border: "1px solid #ddd",
-            padding: "12px",
-            marginBottom: "12px",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
-          {/* 🔹 Title */}
-          <h3>
-            {post.title}{" "}
-            {post.type === "doubt" &&
-              post.isSolved && (
-                <span
-                  style={{
-                    color: "green",
-                    fontSize: "12px",
-                  }}
-                >
+      {/* Feed */}
+      <div className="feed-container">
+
+        <TopBar
+  filter={filter}
+  setFilter={setFilter}
+/>
+
+        <h2>Home Feed</h2>
+
+        {filteredPosts.length === 0 && (
+          <p>No posts found</p>
+        )}
+
+        {filteredPosts.map((post) => (
+
+          <div
+            key={post._id}
+            className="feed-card"
+            onClick={() => navigate(`/posts/${post._id}`)}
+          >
+
+            {/* Title */}
+            <h3>
+              {post.title}
+
+              {post.type === "doubt" && post.isSolved && (
+                <span className="solved-tag">
                   ✔ Solved
                 </span>
               )}
-          </h3>
 
-          {/* 🔹 Meta */}
-          <p style={{ fontSize: "14px", color: "#6b7280" }}>
-            {post.type?.toUpperCase()} ·{" "}
-            {post.circle?.name}
-          </p>
+            </h3>
 
-          {/* 🔗 Links (Array Support) */}
-          {post.links && post.links.length > 0 && (
-            <div style={{ marginTop: "6px" }}>
-              {post.links.map((link, index) => (
-                <div key={index}>
-                  <a
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                      color: "#2563eb",
-                      textDecoration: "underline",
-                      fontSize: "14px",
-                    }}
-                  >
-                    🔗 Visit Link {index + 1}
-                  </a>
-                </div>
-              ))}
+            {/* Meta */}
+            <p className="post-meta">
+              {post.type?.toUpperCase()} · {post.circle?.name}
+            </p>
+
+            {/* Links */}
+            {post.links && post.links.length > 0 && (
+              <div className="post-links">
+
+                {post.links.map((link, index) => (
+                  <div key={index}>
+
+                    <a
+                      href={link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      🔗 Visit Link {index + 1}
+                    </a>
+
+                  </div>
+                ))}
+
+              </div>
+            )}
+
+            {/* Like */}
+            {post.type === "discussion" && (
+
+              <button
+                className="like-btn"
+                onClick={(e) => handleLike(e, post._id)}
+              >
+                👍 {post.likes?.length || 0}
+              </button>
+
+            )}
+
+            {/* Author */}
+            <div className="post-author">
+
+              <small>
+                By {post.author?.name}
+              </small>
+
             </div>
-          )}
 
-          {/* 👍 Like (Discussion Only) */}
-          {post.type === "discussion" && (
-            <button
-              onClick={(e) => handleLike(e, post._id)}
-              style={{
-                marginTop: "8px",
-                padding: "4px 10px",
-                borderRadius: "6px",
-                border: "1px solid #ccc",
-                background: post.likes?.some(
-                  (id) =>
-                    id.toString() === userId
-                )
-                  ? "#dbeafe"
-                  : "#f3f4f6",
-                cursor: "pointer",
-              }}
-            >
-              👍 {post.likes?.length || 0}
-            </button>
-          )}
-
-          {/* 🔹 Author */}
-          <div style={{ marginTop: "6px" }}>
-            <small>
-              By {post.author?.name}
-            </small>
           </div>
-        </div>
-      ))}
 
-      {/* 🔹 Navigation */}
-      <button
-        onClick={() => navigate("/my-circles")}
-        style={{
-          marginTop: "20px",
-          padding: "6px 12px",
-          borderRadius: "6px",
-          border: "none",
-          background: "#3b82f6",
-          color: "white",
-          cursor: "pointer",
-        }}
-      >
-        My Circles
-      </button>
+        ))}
+
+        <button
+          className="my-circles-btn"
+          onClick={() => navigate("/my-circles")}
+        >
+          My Circles
+        </button>
+
+      </div>
+
+      {/* Right Sidebar */}
+      <RightSidebar />
+
     </div>
+
   );
 };
 
