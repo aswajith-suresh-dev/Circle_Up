@@ -10,8 +10,11 @@
 
 body {
   font-family: "Inter", system-ui, sans-serif;
-  background: #ffffff;
   color: #111;
+  background: linear-gradient(
+    to bottom,
+    #ffffff,
+    #f8fafc);
 }
 .section-divider{
 border-top:1px solid #e5e7eb;
@@ -25,6 +28,7 @@ max-width:1200px;
   justify-content: space-between;
   align-items: center;
   padding: 8px 80px;
+  border-bottom:1px solid #f1f5f9;
 }
 
 .logo {
@@ -46,7 +50,7 @@ max-width:1200px;
 
 .join-btn {
   /* background: #2563eb; */
-  background-color: #6366f1;
+  background-color: #1F2937;
   color: white !important;
   padding: 10px 18px;
   border-radius: 8px;
@@ -54,12 +58,10 @@ max-width:1200px;
 
 /* HERO */
 
-.hero {
-  height: 620px;
+/* HERO */
 
-  background-position: bottom center;
-  background-size: 1100px auto; 
-  background-repeat: no-repeat;
+.hero {
+  min-height: 650px;
 
   display: flex;
   justify-content: center;
@@ -67,10 +69,16 @@ max-width:1200px;
 
   text-align: center;
   padding-top: 60px;
+
+  background-color: #f8fafc;
 }
 
 /* HERO TEXT */
-
+.hero-image {
+  width: 750px;
+  max-width: 95%;
+  height: auto;
+}
 .hero-content {
   max-width: 700px;
   margin-top: -70px;
@@ -99,7 +107,7 @@ max-width:1200px;
 }
 
 .primary-btn {
-  background: #6366f1;
+  background: #1F2937;
   color: white;
   padding: 14px 28px;
   border-radius: 10px;
@@ -107,8 +115,12 @@ max-width:1200px;
   font-weight: 600;
 }
 
+.primary-btn:hover {
+  background: #4f46e5;
+}
+
 .secondary-btn {
-  border: 1px solid #ddd;
+  border: 1px solid #cbd5e1;
   padding: 14px 28px;
   border-radius: 10px;
   text-decoration: none;
