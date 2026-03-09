@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Post from "../models/Post.js";
 import ChallengeProgress from "../models/UserChallengeProgress.js";
+import crypto from "crypto";
 //sign up controller
 
 export const signup = async (req, res) => {
@@ -304,6 +305,84 @@ export const updateProfile = async (req, res) => {
 
     res.status(500).json({
       message: "Server error",
+    });
+
+  }
+};
+export const forgotPassword = async (req, res) => {
+  try {
+
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    await user.save();
+
+    const resetURL =
+      `http://localhost:5173/reset-password/${resetToken}`;
+
+    res.json({
+  message: "Reset link generated",
+  resetURL
+});
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server error"
+    });
+
+  }
+};
+export const resetPassword = async (req, res) => {
+  try {
+
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Token invalid or expired"
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+
+    user.password = await bcrypt.hash(newPassword, salt);
+
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    res.json({
+      message: "Password reset successful"
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Reset failed"
     });
 
   }

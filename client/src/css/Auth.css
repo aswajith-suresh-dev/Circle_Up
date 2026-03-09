@@ -87,3 +87,7 @@
 .auth-switch a:hover{
   text-decoration:underline;
 }
+.auth-success{
+  color:#747bff;
+  text-align:center;
+}

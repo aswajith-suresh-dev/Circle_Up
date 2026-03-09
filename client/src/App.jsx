@@ -319,6 +319,8 @@ import LeftSidebar from "./components/layout/LeftSidebar";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/SignUp";
 import ChangePassword from "./pages/auth/ChangePassword";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 import SelectTopics from "./pages/auth/SelectTopics";
 
 // Main
@@ -443,7 +445,9 @@ function App() {
                 : <Signup />
             }
           />
+<Route path="/forgot-password" element={<ForgotPassword />} />
 
+<Route path="/reset-password/:token" element={<ResetPassword />} />
           {/* ONBOARDING */}
 
           <Route

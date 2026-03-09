@@ -87,6 +87,11 @@ if (!fullUser.topics || fullUser.topics.length === 0) {
             Don't have an account?
             <Link to="/signup">Sign Up</Link>
           </p>
+          <p style={{ marginTop: "10px", textAlign: "center" }}>
+  <Link to="/forgot-password">
+    Forgot Password?
+  </Link>
+</p>
         </div>
       </div>
 
