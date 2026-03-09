@@ -1,0 +1,128 @@
+/* PAGE */
+
+.suggested-page{
+  min-height:100vh;
+  background:#f8fafc;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  padding:40px;
+}
+
+/* CONTAINER */
+
+.suggested-container{
+  width:800px;
+  max-width:100%;
+  text-align:center;
+}
+
+.step{
+  color:#6b7280;
+  font-size:14px;
+  margin-bottom:10px;
+}
+
+.subtitle{
+  color:#6b7280;
+  margin-bottom:35px;
+}
+
+/* GRID */
+
+.circles-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  margin-bottom:40px;
+}
+
+/* CARD */
+
+.circle-card{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:18px;
+
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+
+  background:white;
+
+  transition:all 0.25s ease;
+}
+
+.circle-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 20px rgba(0,0,0,0.05);
+}
+
+/* TEXT */
+
+.circle-info h4{
+  margin:0;
+}
+
+/* JOIN BUTTON */
+
+.join-btn{
+  background:#1F2937;
+  color:white;
+
+  border:none;
+  padding:8px 16px;
+
+  border-radius:6px;
+  cursor:pointer;
+
+  font-weight:600;
+  transition:all 0.2s ease;
+}
+
+.join-btn:hover{
+  transform:translateY(-1px);
+}
+
+/* JOINED STATE */
+
+.join-btn.joined{
+  background:#9ca3af;
+  cursor:not-allowed;
+}
+
+/* CONTINUE BUTTON */
+
+.continue-wrapper{
+  text-align:center;
+}
+
+.continue-btn{
+  padding:12px 26px;
+
+  border:none;
+  border-radius:8px;
+
+  background:#1F2937;
+  color:white;
+
+  font-weight:600;
+  cursor:pointer;
+
+  transition:all 0.25s ease;
+}
+
+.continue-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px rgba(0,0,0,0.12);
+}
+
+/* EMPTY */
+
+.no-circles{
+  color:#6b7280;
+  margin-bottom:20px;
+}

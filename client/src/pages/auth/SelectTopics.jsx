@@ -2,21 +2,24 @@ import { useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-
+import "../../css/SelectTopics.css";
+import reactIcon from "../../assets/topic-icons/react.svg";
+import nodeIcon from "../../assets/topic-icons/node.svg";
+import jsIcon from "../../assets/topic-icons/javascript.svg";
+import pythonIcon from "../../assets/topic-icons/python.svg";
+import mongoIcon from "../../assets/topic-icons/mongodb.svg";
+import dsaIcon from "../../assets/topic-icons/dsa.svg";
 const TOPICS = [
-  "react",
-  "node",
-  "javascript",
-  "python",
-  "mongodb",
-  "dsa",
+  { name: "React", image: reactIcon },
+  { name: "Node", image: nodeIcon },
+  { name: "JavaScript", image: jsIcon },
+  { name: "Python", image: pythonIcon },
+  { name: "MongoDB", image: mongoIcon },
+  { name: "DSA", image: dsaIcon }
 ];
-
 const SelectTopics = () => {
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
-
-  // ✅ MOVE HOOK INSIDE COMPONENT
   const { user, login } = useAuth();
 
   const toggleTopic = (topic) => {
@@ -27,59 +30,78 @@ const SelectTopics = () => {
     }
   };
 
- const handleSubmit = async () => {
-  try {
-    const res = await api.post("/auth/onboarding", {
-      topics: selected,
-    });
+  const handleSubmit = async () => {
+    try {
+      const res = await api.post("/auth/onboarding", {
+        topics: selected,
+      });
 
-    login(
-      { ...user, topics: selected },
-      localStorage.getItem("token")
-    );
+      login(
+        { ...user, topics: selected },
+        localStorage.getItem("token")
+      );
 
-    navigate("/suggested-circles", {
-      state: { circles: res.data.circles },
-    });
+      navigate("/suggested-circles", {
+        state: { circles: res.data.circles },
+      });
 
-  } catch (err) {
-    console.error(err);
-  }
-};
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Select Your Interests</h2>
+    <div className="topics-page">
 
-      {TOPICS.map((topic) => (
+      <div className="topics-container">
+
+        <p className="topics-step">Step 1 of 2</p>
+
+        <h2>Select your interests</h2>
+
+        <p className="topics-subtitle">
+          Choose topics to personalize your learning feed.
+        </p>
+<div className="topics-grid">
+
+  {TOPICS.map((topic) => (
+    <div
+      key={topic.name}
+      onClick={() => toggleTopic(topic.name)}
+      className={`topic-card ${
+        selected.includes(topic.name) ? "active" : ""
+      }`}
+    >
+
+      <img src={topic.image} alt={topic.name} className="topic-avatar" />
+
+      <span>{topic.name}</span>
+
+      {selected.includes(topic.name) && (
+        <div className="checkmark">✓</div>
+      )}
+
+    </div>
+  ))}
+
+</div>
+
+        <p className="topics-count">
+          {selected.length} topics selected
+        </p>
+
         <button
-          key={topic}
-          onClick={() => toggleTopic(topic)}
-          style={{
-            margin: "5px",
-            padding: "8px 12px",
-            background: selected.includes(topic)
-              ? "#3b82f6"
-              : "#e5e7eb",
-            color: selected.includes(topic)
-              ? "white"
-              : "black",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-          }}
+          className="topics-btn"
+          onClick={handleSubmit}
+          disabled={selected.length === 0}
         >
-          {topic}
-        </button>
-      ))}
-
-      <div style={{ marginTop: "20px" }}>
-        <button onClick={handleSubmit}>
           Continue
         </button>
+
       </div>
+
     </div>
   );
 };
 
-export default SelectTopics;    
+export default SelectTopics;

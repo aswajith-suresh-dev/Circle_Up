@@ -42,7 +42,8 @@ transition: all 0.25s ease;
 .about-btn:hover {
 transform: translateY(-3px);
 box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-background: #6366f1;
+background:#111;
+color:  #6366f1;
 }
 
 /* GRID */

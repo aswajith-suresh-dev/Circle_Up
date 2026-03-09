@@ -2,6 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
+import LandingNavbar from "../../components/landing/LandingNavbar";
+import Footer from "../../components/landing/Footer";
+
+import "../../css/Auth.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -26,11 +31,10 @@ const Login = () => {
 
       const { user, token } = res.data;
 
-      // Save user & token in context + localStorage
       login(user, token);
 
-      // Just go to home
-navigate("/home", { replace: true });
+      navigate("/home", { replace: true });
+
     } catch (err) {
       console.log("LOGIN ERROR:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Login failed");
@@ -40,55 +44,59 @@ navigate("/home", { replace: true });
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "60px auto" }}>
-      <h2>Login</h2>
+    <>
+      <LandingNavbar />
 
-      {error && (
-        <p style={{ color: "red" }}>{error}</p>
-      )}
+      <div className="auth-container">
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <br />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: "100%", padding: "8px" }}
-          />
+        <div className="auth-card">
+
+          <h2>Welcome Back</h2>
+
+          {error && <p className="auth-error">{error}</p>}
+
+          <form onSubmit={handleSubmit} className="auth-form">
+
+            <div className="auth-field">
+              <label>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
+                required
+                placeholder="Enter Email"
+              />
+            </div>
+
+            <div className="auth-field">
+              <label>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
+                required placeholder="Enter Password"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="auth-btn"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+
+          </form>
+<p className="auth-switch">
+  Don't have an account? 
+  <Link to="/signup">Sign Up</Link>
+</p>
         </div>
 
-        <br />
+      </div>
 
-        <div>
-          <label>Password</label>
-          <br />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: "100%", padding: "8px" }}
-          />
-        </div>
-
-        <br />
-
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            width: "100%",
-            padding: "10px",
-            cursor: "pointer",
-          }}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-    </div>
+      <Footer />
+    </>
   );
 };
 

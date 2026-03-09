@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
 
+import LandingNavbar from "../../components/landing/LandingNavbar";
+import Footer from "../../components/landing/Footer";
+
+import "../../css/Auth.css";
+
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,47 +29,77 @@ const Signup = () => {
       });
 
       // login after signup
-     login(res.data.user, res.data.token);
+      login(res.data.user, res.data.token);
 
-if (!res.data.user.topics || res.data.user.topics.length === 0) {
-  navigate("/select-topics");
-} else {
-  navigate("/");
-}
+      if (!res.data.user.topics || res.data.user.topics.length === 0) {
+        navigate("/select-topics");
+      } else {
+        navigate("/");
+      }
+
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
     }
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
+    <>
+      <LandingNavbar />
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <div className="auth-container">
 
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <div className="auth-card">
 
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <h2>Create your account</h2>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          {error && <p className="auth-error">{error}</p>}
 
-        <button type="submit">Signup</button>
-      </form>
-    </div>
+          <form onSubmit={handleSubmit} className="auth-form">
+
+            <div className="auth-field">
+              <label>Name</label>
+              <input
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="auth-field">
+              <label>Email</label>
+              <input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="auth-field">
+              <label>Password</label>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <button type="submit" className="auth-btn">
+              Sign Up
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <Footer />
+    </>
   );
 };
 

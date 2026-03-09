@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import "../../css/SuggestedCircles.css";
+
 const SuggestedCircles = () => {
   const [circles, setCircles] = useState([]);
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
   const fetchSuggestions = async () => {
     try {
       const res = await api.get("/circles/suggestions");
@@ -20,53 +23,64 @@ const navigate = useNavigate();
   const handleJoin = async (circleId) => {
     try {
       await api.post(`/circles/${circleId}/join`);
-      fetchSuggestions(); // 🔥 refetch after join
+      fetchSuggestions();
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Suggested Circles</h2>
+    <div className="suggested-page">
 
-      {circles.length === 0 && <p>No suggestions available.</p>}
+      <div className="suggested-container">
 
-      {circles.map((circle) => (
-        <div
-          key={circle._id}
-          style={{
-            border: "1px solid #ddd",
-            padding: "10px",
-            marginBottom: "10px",
-            borderRadius: "6px",
-          }}
-        >
-          <h4>{circle.name}</h4>
+        <p className="step">Step 2 of 2</p>
 
+        <h2>Suggested Circles</h2>
+
+        <p className="subtitle">
+          Join circles related to your interests to start learning together.
+        </p>
+
+        {circles.length === 0 && (
+          <p className="no-circles">No suggestions available.</p>
+        )}
+
+        <div className="circles-grid">
+
+          {circles.map((circle) => (
+            <div key={circle._id} className="circle-card">
+
+              <div className="circle-info">
+                <h4>{circle.name}</h4>
+              </div>
+
+              <button
+                disabled={circle.isMember}
+                onClick={() => handleJoin(circle._id)}
+                className={`join-btn ${
+                  circle.isMember ? "joined" : ""
+                }`}
+              >
+                {circle.isMember ? "Joined" : "Join"}
+              </button>
+
+            </div>
+          ))}
+
+        </div>
+
+        <div className="continue-wrapper">
           <button
-            disabled={circle.isMember}
-            onClick={() => handleJoin(circle._id)}
+            className="continue-btn"
+            onClick={() => navigate("/home")}
           >
-            {circle.isMember ? "Joined" : "Join"}
+            Continue to Home
           </button>
         </div>
-      ))}
-      <div style={{ marginTop: "30px", textAlign: "center" }}>
-  <button
-    onClick={() => navigate("/")}
-    style={{
-      padding: "10px 20px",
-      background: "#3b82f6",
-      color: "white",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer",
-    }}
-  >
-    Continue to Home
-  </button>
-</div>
+
+      </div>
+
     </div>
   );
 };
