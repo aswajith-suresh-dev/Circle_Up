@@ -2,17 +2,21 @@
 
 .home-layout{
   display:flex;
-  justify-content:center;
-  gap:30px;
+  justify-content:flex-start;
 
-  padding:20px;
+  gap:40px;
+
+  margin-left:60px;
+
+  padding:20px 20px 20px 10px;
 }
 
 /* FEED */
 
 .feed-container{
   width:100%;
-  max-width:650px;
+  max-width:1000px;  
+  height: 100%;
 }
 
 /* FEED CARD */
@@ -21,10 +25,11 @@
   border:1px solid #e5e7eb;
   background:white;
 
-  padding:14px;
-  margin-bottom:14px;
+  padding:18px;      /* slightly bigger */
 
-  border-radius:10px;
+  margin-bottom:16px;
+
+  border-radius:12px;
 
   cursor:pointer;
 
@@ -32,13 +37,13 @@
 }
 
 .feed-card:hover{
-  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+  box-shadow:0 8px 22px rgba(0,0,0,0.08);
 }
 
 /* POST META */
 
 .post-meta{
-  font-size:14px;
+  font-size:15px;
   color:#6b7280;
 }
 
@@ -46,7 +51,7 @@
 
 .solved-tag{
   color:green;
-  font-size:12px;
+  font-size:13px;
   margin-left:6px;
 }
 
@@ -55,15 +60,15 @@
 .post-links a{
   color:#2563eb;
   text-decoration:underline;
-  font-size:14px;
+  font-size:15px;
 }
 
 /* LIKE BUTTON */
 
-.like-btn{
-  margin-top:8px;
+.home-feed .like-btn{
+  margin-top:10px;
 
-  padding:5px 10px;
+  padding:6px 12px;
 
   border-radius:6px;
   border:1px solid #e5e7eb;
@@ -76,7 +81,7 @@
 /* AUTHOR */
 
 .post-author{
-  margin-top:6px;
+  margin-top:8px;
 }
 
 /* MY CIRCLES BUTTON */
@@ -84,7 +89,7 @@
 .my-circles-btn{
   margin-top:20px;
 
-  padding:7px 14px;
+  padding:8px 16px;
 
   border-radius:8px;
   border:none;
@@ -93,4 +98,34 @@
   color:white;
 
   cursor:pointer;
+}
+.snackbar{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+
+  background:#1F2937;
+  color:white;
+
+  padding:12px 20px;
+
+  border-radius:8px;
+
+  font-size:14px;
+
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+
+  animation:fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translate(-50%,20px);
+  }
+  to{
+    opacity:1;
+    transform:translate(-50%,0);
+  }
 }

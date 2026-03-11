@@ -5,20 +5,27 @@ import { createNotification } from "../utils/createNotification.js";
 // ➕ Create a post
 export const createPost = async (req, res) => {
   try {
-    console.log("🚨 createPost controller HIT");
-    const { title, description, type, circleId, images, links } = req.body;
+
+    const { title, description, type, circleId, links } = req.body;
 
     if (!title || !description || !type || !circleId) {
-      return res.status(400).json({ message: "Missing required fields" });
+      return res.status(400).json({
+        message: "Missing required fields",
+      });
     }
+
+    // handle single image
+    const imagePath = req.file
+      ? `/uploads/${req.file.filename}`
+      : null;
 
     const post = await Post.create({
       title,
       description,
-      type, // "doubt" | "discussion"
+      type,
       circle: circleId,
       author: req.user._id,
-      images: images || [],
+      images: imagePath ? [imagePath] : [],
       links: links || [],
     });
 
@@ -26,9 +33,12 @@ export const createPost = async (req, res) => {
       message: "Post created successfully",
       post,
     });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({
+      message: "Server error",
+    });
   }
 };
 // 📄 Get posts of a circle
@@ -61,7 +71,7 @@ export const getPostsByCircle = async (req, res) => {
 
     // ✅ If member → allow posts
     const posts = await Post.find({ circle: circleId })
-      .populate("author", "name")
+      .populate("author", "name photo")
       .sort({ createdAt: -1 });
 
     res.status(200).json(posts);

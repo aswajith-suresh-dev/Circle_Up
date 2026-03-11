@@ -3,6 +3,20 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import "../../css/CircleDetail.css";
+import { formatDistanceToNow } from "date-fns";
+import {
+  FiGlobe,
+  FiBarChart2,
+  FiUser,
+  FiUserPlus,
+  FiMessageSquare,
+  FiLink,
+  FiUsers,
+  FiBookOpen,
+} from "react-icons/fi";
+
+import { FaHeart } from "react-icons/fa";
 
 const CircleDetail = () => {
   const { circleId } = useParams();
@@ -10,28 +24,27 @@ const CircleDetail = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id;
-
+const [snackbar, setSnackbar] = useState("");
   const [circle, setCircle] = useState(null);
   const [posts, setPosts] = useState([]);
   const [challenges, setChallenges] = useState([]);
   const [isMember, setIsMember] = useState(false);
   const [loading, setLoading] = useState(true);
-useEffect(() => {
-  console.log("Circle ID from URL:", circleId);
-}, [circleId]);
-  // 🔹 Fetch Circle Info
+  const [activeTab, setActiveTab] = useState("discussion");
+
+  // Fetch circle
   const fetchCircle = async () => {
     try {
       const res = await api.get(`/circles/${circleId}`);
+
       setCircle(res.data);
       setIsMember(res.data.isMember);
-      
     } catch (err) {
       console.error(err);
     }
   };
 
-  // 🔹 Fetch Posts
+  // Fetch posts
   const fetchPosts = async () => {
     try {
       const res = await api.get(`/posts/circle/${circleId}`);
@@ -41,7 +54,7 @@ useEffect(() => {
     }
   };
 
-  // 🔹 Fetch Challenges
+  // Fetch challenges
   const fetchChallenges = async () => {
     try {
       const res = await api.get(`/challenges/circle/${circleId}`);
@@ -51,7 +64,7 @@ useEffect(() => {
     }
   };
 
-  // 🔹 Initial Load
+  // Initial load
   useEffect(() => {
     const load = async () => {
       await fetchCircle();
@@ -60,7 +73,7 @@ useEffect(() => {
     load();
   }, [circleId]);
 
-  // 🔹 Load content only when member
+  // Load content if member
   useEffect(() => {
     if (isMember) {
       fetchPosts();
@@ -68,217 +81,355 @@ useEffect(() => {
     }
   }, [isMember]);
 
-  // 🔹 Join Circle
+  // Join circle
   const handleJoin = async () => {
     try {
       await api.post(`/circles/${circleId}/join`);
-      await fetchCircle(); // refresh membership
+      await fetchCircle();
     } catch (err) {
-      console.error(err.response?.data?.message || err.message);
+      console.error(err);
     }
   };
 
-  // 🔹 Toggle Like (SYNC WITH BACKEND)
+  // Like post
   const handleLike = async (postId) => {
-    try {
-      const res = await api.put(`/posts/like/${postId}`);
+  try {
 
-      // Backend must return updated full post
-      const updatedPost = res.data.post;
+    const res = await api.put(`/posts/like/${postId}`);
 
-      setPosts((prev) =>
-        prev.map((p) => (p._id === postId ? updatedPost : p))
-      );
-    } catch (err) {
-      console.error(err.response?.data?.message || err.message);
+    const updatedPost = res.data;
+
+    setPosts((prev) =>
+      prev.map((p) =>
+        p._id === postId ? updatedPost : p
+      )
+    );
+
+    const liked = updatedPost.likes.some(
+      (id) => id.toString() === userId.toString()
+    );
+
+    setSnackbar(liked ? "Liked the discussion ❤️" : "Like removed");
+
+    setTimeout(() => {
+      setSnackbar("");
+    }, 2000);
+
+  } catch (err) {
+
+    if (err.response?.data?.message) {
+      console.log(err.response.data.message);
+    } else {
+      console.error(err);
     }
-  };
 
-  if (loading) return <p>Loading circle...</p>;
-  if (!circle) return <p>Circle not found</p>;
+  }
+};
+
+  if (loading) return <div className="circle-page-wrapper">Loading...</div>;
+  if (!circle)
+    return <div className="circle-page-wrapper">Circle not found</div>;
 
   return (
-    <div style={{ padding: "20px", maxWidth: "750px" }}>
-      
-      {/* 🔵 Circle Header */}
-      <div
-        style={{
-          border: "1px solid #ddd",
-          padding: "20px",
-          borderRadius: "10px",
-          marginBottom: "25px",
-          background: "#fafafa",
-        }}
-      >
-        <h2>{circle.name}</h2>
-        <p>{circle.description}</p>
-        <p>📚 Topic: {circle.topic}</p>
-        <p>📊 Level: {circle.level}</p>
-        <p>👨‍🏫 Mentor: {circle.mentor?.name}</p>
-        <p>👥 Members: {circle.members?.length}</p>
+    <div className="circle-page-wrapper">
+      <div className="circle-container">
+        {/* Banner */}
 
-        {!isMember && (
-          <button
-            onClick={handleJoin}
-            style={{
-              marginTop: "15px",
-              padding: "6px 12px",
-              borderRadius: "6px",
-              border: "none",
-              background: "#3b82f6",
-              color: "white",
-              cursor: "pointer",
-            }}
-          >
-            Join Circle
-          </button>
-        )}
-      </div>
+        <div className="circle-banner">
+          <div className="banner-content">
+            <div className="circle-icon-large">
+              <FiMessageSquare color="white" size={26} />
+            </div>
 
-      {/* 🔒 Restricted Section */}
-      {!isMember ? (
-        <div
-          style={{
-            padding: "20px",
-            border: "1px dashed #ccc",
-            borderRadius: "8px",
-          }}
-        >
-          <h3>🔒 Members Only</h3>
-          <p>You must join this circle to access posts and challenges.</p>
-        </div>
-      ) : (
-        <>
-          {/* 🔵 Posts Section */}
-          <div>
-            <h3>Posts</h3>
+            <div className="banner-info">
+              <h1>{circle.name}</h1>
 
-            <button
-              onClick={() =>
-                navigate(`/circles/${circleId}/create-post`)
-              }
-              style={{
-                marginBottom: "15px",
-                padding: "6px 12px",
-                borderRadius: "6px",
-                border: "none",
-                background: "#3b82f6",
-                color: "white",
-                cursor: "pointer",
-              }}
-            >
-              Create Post
-            </button>
-
-            {posts.length === 0 ? (
-              <p>No posts yet.</p>
-            ) : (
-              posts.map((post) => (
-                <div
-                  key={post._id}
-                  style={{
-                    border: "1px solid #ccc",
-                    padding: "12px",
-                    marginBottom: "10px",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <h3
-                    style={{ cursor: "pointer" }}
-                    onClick={() => navigate(`/posts/${post._id}`)}
-                  >
-                    {post.title}
-                  </h3>
-
-                  <p>{post.description}</p>
-
-                  {/* 🔗 Optional Link */}
-                  {post.links && post.links.length > 0 && (
-  <div style={{ marginTop: "6px" }}>
-    {post.links.map((link, index) => (
-      <div key={index}>
-        <a
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            color: "#2563eb",
-            textDecoration: "underline",
-            fontSize: "14px",
-          }}
-        >
-          🔗 Visit Link {index + 1}
-        </a>
-      </div>
-    ))}
-  </div>
-)}                  {/* 👍 Like Button (Discussion Only) */}
-                  {post.type === "discussion" && (
-                    <button
-                      onClick={() => handleLike(post._id)}
-                      style={{
-                        marginTop: "6px",
-                        padding: "4px 10px",
-                        borderRadius: "6px",
-                        border: "1px solid #ccc",
-                        background: post.likes?.some(
-                          (id) => id.toString() === userId
-                        )
-                          ? "#dbeafe"
-                          : "#f3f4f6",
-                        cursor: "pointer",
-                      }}
-                    >
-                      👍 {post.likes?.length || 0}
-                    </button>
-                  )}
-
-                  <div style={{ marginTop: "6px" }}>
-                    <small>By {post.author?.name}</small>
-                  </div>
+              <div className="banner-stats">
+                <div className="banner-stat">
+                  <FiGlobe />
+                  <span>Public</span>
                 </div>
-              ))
-            )}
-          </div>
 
-          <hr style={{ margin: "30px 0" }} />
+                <div className="banner-stat">
+                  <FiUsers />
+                  <span>{circle.members?.length} members</span>
+                </div>
 
-          {/* 🔵 Challenges Section */}
-          <h3>Challenges</h3>
+                <div className="banner-stat">
+                  <FiBookOpen />
+                  <span>{circle.topic}</span>
+                </div>
 
-          {challenges.length === 0 ? (
-            <p>No challenges in this circle yet.</p>
-          ) : (
-            challenges.map((challenge) => (
-              <div
-                key={challenge._id}
-                style={{
-                  border: "1px solid #ddd",
-                  padding: "12px",
-                  marginBottom: "10px",
-                  borderRadius: "8px",
-                }}
-              >
-                <h4>{challenge.title}</h4>
-                <p>{challenge.description}</p>
-
-                <span>
-                  {challenge.type === "free"
-                    ? "Free"
-                    : `Paid ₹${challenge.price}`}
-                </span>
-
-                <div style={{ marginTop: "8px" }}>
-                  <button onClick={() => navigate("/challenges")}>
-                    View in Challenges
-                  </button>
+                <div className="banner-stat">
+                  <FiUser />
+                  <span>{circle.mentor?.name}</span>
                 </div>
               </div>
-            ))
+            </div>
+          </div>
+
+          {!isMember && (
+            <button className="join-btn" onClick={handleJoin}>
+              <FiUserPlus /> Join Circle
+            </button>
           )}
-        </>
-      )}
+        </div>
+
+        {/* Tabs */}
+
+        <div className="tabs-nav">
+          <div
+            className={`tab-item ${activeTab === "discussion" ? "active" : ""}`}
+            onClick={() => setActiveTab("discussion")}
+          >
+            Discussion
+          </div>
+
+          <div
+            className={`tab-item ${activeTab === "about" ? "active" : ""}`}
+            onClick={() => setActiveTab("about")}
+          >
+            About
+          </div>
+
+          <div
+            className={`tab-item ${activeTab === "challenges" ? "active" : ""}`}
+            onClick={() => setActiveTab("challenges")}
+          >
+            Challenges
+          </div>
+        </div>
+
+        <div className="main-content-grid">
+          {/* LEFT SIDEBAR */}
+<aside className="about-card">
+  <h3>About this space</h3>
+
+  <p>{circle.description}</p>
+
+  {/* PUBLIC */}
+
+  <div className="info-row">
+
+    <div className="info-icon">
+      <FiGlobe />
+    </div>
+
+    <div className="info-text">
+      <div className="info-title">Public space</div>
+      <div className="info-desc">Everyone can see posts</div>
+    </div>
+
+  </div>
+
+  {/* LEVEL */}
+
+  <div className="info-row">
+
+    <div className="info-icon">
+      <FiBarChart2 />
+    </div>
+
+    <div className="info-text">
+      <div className="info-title">Level</div>
+      <div className="info-desc">{circle.level}</div>
+    </div>
+
+  </div>
+
+  {/* MENTOR */}
+
+  <div className="info-row">
+
+    <div className="info-icon">
+      <FiUser />
+    </div>
+
+    <div className="info-text">
+      <div className="info-title">Mentor</div>
+      <div className="info-desc">{circle.mentor?.name}</div>
+    </div>
+
+  </div>
+
+</aside>
+
+          {/* RIGHT FEED */}
+
+          <main className="feed-container">
+            {!isMember ? (
+              <div className="post-card center">
+                <h3>🔒 Members Only</h3>
+
+                <p>Join this circle to participate.</p>
+
+                <button className="join-btn" onClick={handleJoin}>
+                  Join to Unlock
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Discussion */}
+
+                {activeTab === "discussion" && (
+                  <>
+                    <div
+                      className="create-post-box"
+                      onClick={() =>
+                        navigate(`/circles/${circleId}/create-post`)
+                      }
+                    >
+                      Ask something to the community...
+                    </div>
+
+                    {posts.length === 0 ? (
+                      <p>No posts yet.</p>
+                    ) : (
+                      posts.map((post) => (
+                        <div key={post._id} className="post-card">
+                          {/* POST HEADER */}
+                          <div className="post-header">
+                            <div className="post-avatar">
+                              {post.author?.photo ? (
+                                <img
+                                  src={`http://localhost:5000${post.author.photo}`}
+                                  alt="avatar"
+                                  className="avatar-img"
+                                />
+                              ) : (
+                                <span>{post.author?.name?.charAt(0)}</span>
+                              )}
+                            </div>
+
+                            <div className="post-meta">
+                              <div className="post-author">
+                                {post.author?.name}
+                                <span className="post-time">
+                                  •{" "}
+                                  {formatDistanceToNow(
+                                    new Date(post.createdAt),
+                                    { addSuffix: true },
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          {/* TYPE BADGE */}
+                          <div className={`post-type-badge ${post.type}`}>
+                            {post.type === "doubt" ? "Doubt" : "Discussion"}
+                          </div>
+                          {/* TITLE */}
+                          <h4 className="post-title">{post.title}</h4>
+                          {/* DESCRIPTION */}
+                          <p className="post-description">{post.description}</p>
+                          {/* IMAGE */}
+                          {post.images && post.images.length > 0 && (
+                            <div className="post-images">
+                              <img
+                                src={`http://localhost:5000${post.images[0]}`}
+                                alt="post"
+                                className="post-image"
+                              />
+                            </div>
+                          )}
+                          {/* LINKS */}
+                          {post.links?.map((link, i) => (
+                            <a
+                              key={i}
+                              href={link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="post-link"
+                            >
+                              <FiLink className="link-icon" />
+                              <span>Link {i + 1}</span>
+                            </a>
+                          ))}
+                          {/* ACTIONS */}
+                          <div className="post-actions">
+                            {post.type === "discussion" && (
+                              <button
+                                className={`like-btn ${
+                                  post.likes?.some(
+                                    (id) =>
+                                      id?.toString() === userId?.toString(),
+                                  )
+                                    ? "liked"
+                                    : ""
+                                }`}
+                                onClick={() => handleLike(post._id)}
+                              >
+                                <FaHeart className="action-icon" />
+                                <span>{post.likes?.length || 0}</span>
+                              </button>
+                            )}
+
+                            <button
+                              className="reply-btn"
+                              onClick={() => navigate(`/posts/${post._id}`)}
+                            >
+                              <FiMessageSquare className="action-icon" />
+                              <span>Reply</span>
+                            </button>
+                          </div>{" "}
+                        </div>
+                      ))
+                    )}
+                  </>
+                )}
+
+                {/* Challenges */}
+
+                {activeTab === "challenges" && (
+                  <div>
+                    <h3>Available Challenges</h3>
+
+                    {challenges.length === 0 ? (
+                      <p>No challenges yet.</p>
+                    ) : (
+                      challenges.map((ch) => (
+                        <div key={ch._id} className="challenge-card">
+                          <h4>{ch.title}</h4>
+
+                          <p>{ch.description}</p>
+
+                          <button onClick={() => navigate("/challenges")}>
+                            View Details
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+
+                {/* About */}
+
+                {activeTab === "about" && (
+                  <div className="post-card">
+                    <h3>Full Circle Details</h3>
+
+                    <p>{circle.description}</p>
+
+                    <p>
+                      <strong>Topic:</strong> {circle.topic}
+                    </p>
+
+                    <p>
+                      <strong>Difficulty:</strong> {circle.level}
+                    </p>
+                  </div>
+
+                )}
+              </>
+            )}
+          </main>
+        </div>
+      </div>
+      {snackbar && (
+  <div className="snackbar">
+    {snackbar}
+  </div>
+)}
     </div>
   );
 };

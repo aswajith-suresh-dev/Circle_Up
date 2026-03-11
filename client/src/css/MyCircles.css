@@ -1,0 +1,188 @@
+/* =========================
+   MY CIRCLES PAGE
+========================= */
+
+.mycircles-container{
+  padding:30px;
+  max-width:1300px;
+  margin:auto;
+}
+
+.mycircles-title{
+  font-size:26px;
+  font-weight:700;
+  margin-bottom:24px;
+  color:#1F2937;
+  text-align: center;
+}
+
+.empty-text{
+  color:#6b7280;
+  font-size:14px;
+}
+
+
+/* =========================
+   GRID LAYOUT
+========================= */
+
+.circles-list{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(260px, 1fr));
+  gap:24px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.circle-card{
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+
+  padding:22px;
+
+  cursor:pointer;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  transition:all 0.25s ease;
+
+  min-height:200px;
+}
+
+.circle-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 24px rgba(0,0,0,0.08);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.circle-header{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+
+  gap:10px;
+  margin-bottom:10px;
+}
+
+
+/* =========================
+   AVATAR
+========================= */
+
+.circle-avatar{
+  width:56px;
+  height:56px;
+
+  border-radius:50%;
+
+  background:#1F2937;
+  color:#747bff;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-weight:600;
+  font-size:20px;
+}
+
+
+/* =========================
+   NAME
+========================= */
+
+.circle-name{
+  margin:0;
+  font-size:17px;
+  font-weight:600;
+  color:#1F2937;
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.circle-description{
+  margin:4px 0 0;
+  font-size:13px;
+  color:#6b7280;
+}
+
+
+/* =========================
+   META INFO
+========================= */
+
+.circle-meta{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+
+  font-size:13px;
+  color:#6b7280;
+
+  margin-top:8px;
+}
+
+.circle-meta span{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.meta-icon{
+  color:#747bff;
+  font-size:14px;
+}
+
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+/* Large tablets */
+
+@media (max-width:1000px){
+
+  .circles-list{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+}
+
+
+/* Tablets */
+
+@media (max-width:750px){
+
+  .circles-list{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+
+/* Mobile */
+
+@media (max-width:480px){
+
+  .circles-list{
+    grid-template-columns:1fr;
+  }
+
+  .mycircles-container{
+    padding:20px;
+  }
+
+}

@@ -2,7 +2,7 @@
 
 .sidebar {
   background: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid #e2e8f0;
 
   min-height: 100vh;
 
@@ -44,7 +44,7 @@
   padding: 5px;
   border-radius: 6px;
 
-  background: #f8fafc;
+  background: #f2f4f6;
 
   transition: background 0.2s ease;
 }
@@ -156,28 +156,26 @@
   width: 20px;
   height: 20px;
   flex-shrink: 0;
+  transition: all 0.2s ease;
 }
 
 /* Hover State */
 
-.sidebar-link:hover {
-  background: rgba(116, 123, 255, 0.08);
-  color: #747bff;
-}
 
-/* Active Page */
+.sidebar-link:hover {
+  background: rgba(31, 41, 55, 0.08);
+  color: #1F2937;
+}
 
 .sidebar-link.active {
-  background: rgba(116, 123, 255, 0.15);
-  color: #747bff;
+  background: #1F2937;
+  color: white;
+  border-left: 3px solid #1F2937;
 }
-
-/* Active Icon */
 
 .sidebar-link.active svg {
-  color: #747bff;
+  color: white;
 }
-
 /* Text Animation */
 
 .sidebar-link span {

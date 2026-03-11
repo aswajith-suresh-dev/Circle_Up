@@ -5,6 +5,15 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import RightSidebar from "../components/layout/RightSidebar";
 import TopBar from "../components/layout/TopBar";
+import { formatDistanceToNow } from "date-fns";
+
+import {
+  FiMessageSquare,
+  FiLink
+} from "react-icons/fi";
+
+import { FaHeart } from "react-icons/fa";
+
 import "../css/Home.css";
 
 const Home = () => {
@@ -13,15 +22,17 @@ const Home = () => {
   const [filter, setFilter] = useState("recent");
 
   const navigate = useNavigate();
-
+const [snackbar, setSnackbar] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id;
 
-  // 🔹 Fetch Feed
+  // Fetch Feed
   const fetchFeed = async () => {
     try {
+
       const res = await api.get("/feed");
       setPosts(res.data);
+
     } catch (err) {
       console.error(err);
     }
@@ -31,27 +42,45 @@ const Home = () => {
     fetchFeed();
   }, []);
 
-  // 🔹 Like
+  // Like
   const handleLike = async (e, postId) => {
-    e.stopPropagation();
 
-    try {
-      const res = await api.put(`/posts/like/${postId}`);
+  e.stopPropagation();
 
-      setPosts((prev) =>
-        prev.map((post) =>
-          post._id === postId ? res.data : post
-        )
-      );
+  try {
 
-    } catch (err) {
-      console.error(
-        err.response?.data?.message || err.message
-      );
-    }
-  };
+    const res = await api.put(`/posts/like/${postId}`);
 
-  // 🔹 Filter posts
+    const updatedPost = res.data;
+
+    setPosts((prev) =>
+      prev.map((post) =>
+        post._id === postId ? updatedPost : post
+      )
+    );
+
+    // check if user liked or unliked
+    const liked = updatedPost.likes.some(
+      (id) => id.toString() === userId.toString()
+    );
+
+    setSnackbar(liked ? "Discussion liked ❤️" : "Like removed");
+
+    setTimeout(() => {
+      setSnackbar("");
+    }, 2000);
+
+  } catch (err) {
+
+    console.error(
+      err.response?.data?.message || err.message
+    );
+
+  }
+
+};
+
+  // Filter posts
   const filteredPosts = posts.filter((post) => {
 
     if (filter === "recent") return true;
@@ -72,15 +101,12 @@ const Home = () => {
 
     <div className="home-layout">
 
-      {/* Feed */}
       <div className="feed-container">
 
         <TopBar
-  filter={filter}
-  setFilter={setFilter}
-/>
-
-        <h2>Home Feed</h2>
+          filter={filter}
+          setFilter={setFilter}
+        />
 
         {filteredPosts.length === 0 && (
           <p>No posts found</p>
@@ -90,67 +116,157 @@ const Home = () => {
 
           <div
             key={post._id}
-            className="feed-card"
+            className="post-card"
             onClick={() => navigate(`/posts/${post._id}`)}
           >
 
-            {/* Title */}
-            <h3>
-              {post.title}
+            {/* POST HEADER */}
 
-              {post.type === "doubt" && post.isSolved && (
-                <span className="solved-tag">
-                  ✔ Solved
-                </span>
-              )}
+            <div className="post-header">
 
-            </h3>
+              <div className="post-avatar">
 
-            {/* Meta */}
-            <p className="post-meta">
-              {post.type?.toUpperCase()} · {post.circle?.name}
-            </p>
+                {post.author?.photo ? (
 
-            {/* Links */}
-            {post.links && post.links.length > 0 && (
-              <div className="post-links">
+                  <img
+                    src={`http://localhost:5000${post.author.photo}`}
+                    alt="avatar"
+                    className="avatar-img"
+                  />
 
-                {post.links.map((link, index) => (
-                  <div key={index}>
+                ) : (
 
-                    <a
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      🔗 Visit Link {index + 1}
-                    </a>
+                  <span>
+                    {post.author?.name?.charAt(0)}
+                  </span>
 
-                  </div>
-                ))}
+                )}
 
               </div>
+
+              <div className="post-meta">
+
+                <div className="post-author">
+
+                  {post.author?.name}
+
+                  <span className="circle-name">
+                    {" > "} {post.circle?.name}
+                  </span>
+
+                  <span className="post-time">
+                    •{" "}
+                    {formatDistanceToNow(
+                      new Date(post.createdAt),
+                      { addSuffix: true }
+                    )}
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            {/* TYPE BADGE */}
+
+            <div className={`post-type-badge ${post.type}`}>
+              {post.type === "doubt" ? "Doubt" : "Discussion"}
+            </div>
+
+
+            {/* TITLE */}
+
+            <h4 className="post-title">
+              {post.title}
+            </h4>
+
+
+            {/* DESCRIPTION */}
+
+            <p className="post-description">
+              {post.description}
+            </p>
+
+
+            {/* IMAGE */}
+
+            {post.images && post.images.length > 0 && (
+
+              <div className="post-images">
+
+                <img
+                  src={`http://localhost:5000${post.images[0]}`}
+                  alt="post"
+                  className="post-image"
+                />
+
+              </div>
+
             )}
 
-            {/* Like */}
-            {post.type === "discussion" && (
+
+            {/* LINKS */}
+
+            {post.links?.map((link, i) => (
+
+              <a
+                key={i}
+                href={link}
+                target="_blank"
+                rel="noreferrer"
+                className="post-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <FiLink className="link-icon" />
+                <span>Link {i + 1}</span>
+              </a>
+
+            ))}
+
+
+            {/* ACTIONS */}
+
+            <div className="post-actions">
+
+              {post.type === "discussion" && (
+
+                <button
+                  className={`like-btn ${
+                    post.likes?.some(
+                      (id) =>
+                        id?.toString() === userId?.toString()
+                    )
+                      ? "liked"
+                      : ""
+                  }`}
+                  onClick={(e) => handleLike(e, post._id)}
+                >
+
+                  <FaHeart className="action-icon" />
+
+                  <span>
+                    {post.likes?.length || 0}
+                  </span>
+
+                </button>
+
+              )}
 
               <button
-                className="like-btn"
-                onClick={(e) => handleLike(e, post._id)}
+                className="reply-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/posts/${post._id}`);
+                }}
               >
-                👍 {post.likes?.length || 0}
+
+                <FiMessageSquare className="action-icon" />
+
+                <span>Reply</span>
+
               </button>
-
-            )}
-
-            {/* Author */}
-            <div className="post-author">
-
-              <small>
-                By {post.author?.name}
-              </small>
 
             </div>
 
@@ -158,21 +274,18 @@ const Home = () => {
 
         ))}
 
-        <button
-          className="my-circles-btn"
-          onClick={() => navigate("/my-circles")}
-        >
-          My Circles
-        </button>
-
       </div>
 
-      {/* Right Sidebar */}
       <RightSidebar />
-
+{snackbar && (
+  <div className="snackbar">
+    {snackbar}
+  </div>
+)}
     </div>
 
   );
+
 };
 
 export default Home;
