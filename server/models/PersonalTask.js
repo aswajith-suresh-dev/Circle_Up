@@ -40,7 +40,10 @@ const personalTaskSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
+completed: {
+    type: Boolean,
+    default: false
+  },
     studyLogs: [studyLogSchema],
   },
   { timestamps: true }

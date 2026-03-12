@@ -25,11 +25,31 @@ export const createFolder = async (req, res) => {
 // 🔹 Get My Folders
 export const getMyFolders = async (req, res) => {
   try {
+
     const folders = await PersonalFolder.find({
       user: req.user._id,
     }).sort({ createdAt: -1 });
 
-    res.status(200).json(folders);
+    const foldersWithCount = await Promise.all(
+
+      folders.map(async (folder) => {
+
+        const taskCount = await PersonalTask.countDocuments({
+          folder: folder._id,
+          user: req.user._id,
+        });
+
+        return {
+          ...folder.toObject(),
+          taskCount,
+        };
+
+      })
+
+    );
+
+    res.status(200).json(foldersWithCount);
+
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -299,4 +319,42 @@ export const deleteStudyLog = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
+};
+// 🔹 Toggle Task Completion
+
+export const toggleTaskComplete = async (req, res) => {
+
+  try {
+
+    const { taskId } = req.params;
+
+    const task = await PersonalTask.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Task not found"
+      });
+    }
+
+    // ownership check
+    if (task.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Unauthorized"
+      });
+    }
+
+    task.completed = !task.completed;
+
+    await task.save();
+
+    res.status(200).json(task);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: "Server error"
+    });
+
+  }
+
 };

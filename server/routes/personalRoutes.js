@@ -12,6 +12,7 @@ import { updateStudyLog } from "../controllers/personalController.js";
 import { deleteStudyLog } from "../controllers/personalController.js";  
 import { updateFolder } from "../controllers/personalController.js";
 import { updateTask, deleteTask } from "../controllers/personalController.js";
+import { toggleTaskComplete } from "../controllers/personalController.js";
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.delete("/folders/:folderId", protect, deleteFolder);
 router.post("/task", protect, createTask);
 router.get("/tasks/:folderId", protect, getTasksByFolder);
 router.put("/task/:taskId", protect, updateTask);
+router.put("/task/:taskId/toggle", protect, toggleTaskComplete);
 router.delete("/task/:taskId", protect, deleteTask);
 router.post("/task/:taskId/log", protect, addStudyLog);
 router.put("/task/:taskId/log/:logId", protect, updateStudyLog);

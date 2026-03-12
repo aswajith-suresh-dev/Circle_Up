@@ -24,7 +24,7 @@ const CircleDetail = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id;
-const [snackbar, setSnackbar] = useState("");
+  const [snackbar, setSnackbar] = useState("");
   const [circle, setCircle] = useState(null);
   const [posts, setPosts] = useState([]);
   const [challenges, setChallenges] = useState([]);
@@ -93,38 +93,30 @@ const [snackbar, setSnackbar] = useState("");
 
   // Like post
   const handleLike = async (postId) => {
-  try {
+    try {
+      const res = await api.put(`/posts/like/${postId}`);
 
-    const res = await api.put(`/posts/like/${postId}`);
+      const updatedPost = res.data;
 
-    const updatedPost = res.data;
+      setPosts((prev) => prev.map((p) => (p._id === postId ? updatedPost : p)));
 
-    setPosts((prev) =>
-      prev.map((p) =>
-        p._id === postId ? updatedPost : p
-      )
-    );
+      const liked = updatedPost.likes.some(
+        (id) => id.toString() === userId.toString(),
+      );
 
-    const liked = updatedPost.likes.some(
-      (id) => id.toString() === userId.toString()
-    );
+      setSnackbar(liked ? "Liked the discussion ❤️" : "Like removed");
 
-    setSnackbar(liked ? "Liked the discussion ❤️" : "Like removed");
-
-    setTimeout(() => {
-      setSnackbar("");
-    }, 2000);
-
-  } catch (err) {
-
-    if (err.response?.data?.message) {
-      console.log(err.response.data.message);
-    } else {
-      console.error(err);
+      setTimeout(() => {
+        setSnackbar("");
+      }, 2000);
+    } catch (err) {
+      if (err.response?.data?.message) {
+        console.log(err.response.data.message);
+      } else {
+        console.error(err);
+      }
     }
-
-  }
-};
+  };
 
   if (loading) return <div className="circle-page-wrapper">Loading...</div>;
   if (!circle)
@@ -202,57 +194,50 @@ const [snackbar, setSnackbar] = useState("");
 
         <div className="main-content-grid">
           {/* LEFT SIDEBAR */}
-<aside className="about-card">
-  <h3>About this space</h3>
+          <aside className="about-card">
+            <h3>About this space</h3>
 
-  <p>{circle.description}</p>
+            <p>{circle.description}</p>
 
-  {/* PUBLIC */}
+            {/* PUBLIC */}
 
-  <div className="info-row">
+            <div className="info-row">
+              <div className="info-icon">
+                <FiGlobe />
+              </div>
 
-    <div className="info-icon">
-      <FiGlobe />
-    </div>
+              <div className="info-text">
+                <div className="info-title">Public space</div>
+                <div className="info-desc">Everyone can see posts</div>
+              </div>
+            </div>
 
-    <div className="info-text">
-      <div className="info-title">Public space</div>
-      <div className="info-desc">Everyone can see posts</div>
-    </div>
+            {/* LEVEL */}
 
-  </div>
+            <div className="info-row">
+              <div className="info-icon">
+                <FiBarChart2 />
+              </div>
 
-  {/* LEVEL */}
+              <div className="info-text">
+                <div className="info-title">Level</div>
+                <div className="info-desc">{circle.level}</div>
+              </div>
+            </div>
 
-  <div className="info-row">
+            {/* MENTOR */}
 
-    <div className="info-icon">
-      <FiBarChart2 />
-    </div>
+            <div className="info-row">
+              <div className="info-icon">
+                <FiUser />
+              </div>
 
-    <div className="info-text">
-      <div className="info-title">Level</div>
-      <div className="info-desc">{circle.level}</div>
-    </div>
-
-  </div>
-
-  {/* MENTOR */}
-
-  <div className="info-row">
-
-    <div className="info-icon">
-      <FiUser />
-    </div>
-
-    <div className="info-text">
-      <div className="info-title">Mentor</div>
-      <div className="info-desc">{circle.mentor?.name}</div>
-    </div>
-
-  </div>
-
-</aside>
+              <div className="info-text">
+                <div className="info-title">Mentor</div>
+                <div className="info-desc">{circle.mentor?.name}</div>
+              </div>
+            </div>
+          </aside>
 
           {/* RIGHT FEED */}
 
@@ -274,13 +259,26 @@ const [snackbar, setSnackbar] = useState("");
                 {activeTab === "discussion" && (
                   <>
                     <div
-                      className="create-post-box"
-                      onClick={() =>
-                        navigate(`/circles/${circleId}/create-post`)
-                      }
-                    >
-                      Ask something to the community...
-                    </div>
+  className="create-post-box"
+  onClick={() => navigate(`/circles/${circleId}/create-post`)}
+>
+
+  <div className="create-post-avatar">
+    {user?.photo ? (
+      <img
+        src={`http://localhost:5000${user.photo}`}
+        alt="avatar"
+      />
+    ) : (
+      <span>{user?.name?.charAt(0)}</span>
+    )}
+  </div>
+
+  <div className="create-post-input">
+    Ask something to the community...
+  </div>
+
+</div>
 
                     {posts.length === 0 ? (
                       <p>No posts yet.</p>
@@ -289,17 +287,31 @@ const [snackbar, setSnackbar] = useState("");
                         <div key={post._id} className="post-card">
                           {/* POST HEADER */}
                           <div className="post-header">
-                            <div className="post-avatar">
-                              {post.author?.photo ? (
-                                <img
-                                  src={`http://localhost:5000${post.author.photo}`}
-                                  alt="avatar"
-                                  className="avatar-img"
-                                />
-                              ) : (
-                                <span>{post.author?.name?.charAt(0)}</span>
-                              )}
-                            </div>
+                           <div
+  className={`post-avatar
+  ${
+    post.author?._id === circle.mentor?._id
+      ? "circle-mentor-avatar"
+      : post.author?.role === "mentor"
+      ? "mentor-avatar"
+      : post.author?.role === "contributor"
+      ? "contributor-avatar"
+      : ""
+  }
+  `}
+>
+  {post.author?.photo ? (
+    <img
+      src={`http://localhost:5000${post.author.photo}`}
+      alt="avatar"
+      className="avatar-img"
+    />
+  ) : (
+    <span className="avatar-letter">
+      {post.author?.name?.charAt(0)}
+    </span>
+  )}
+</div>
 
                             <div className="post-meta">
                               <div className="post-author">
@@ -382,7 +394,7 @@ const [snackbar, setSnackbar] = useState("");
 
                 {activeTab === "challenges" && (
                   <div>
-                    <h3>Available Challenges</h3>
+                    <h3 className="challenge-title">Available Challenges</h3>
 
                     {challenges.length === 0 ? (
                       <p>No challenges yet.</p>
@@ -405,31 +417,32 @@ const [snackbar, setSnackbar] = useState("");
                 {/* About */}
 
                 {activeTab === "about" && (
-                  <div className="post-card">
-                    <h3>Full Circle Details</h3>
+                  <div className="circle-details-card">
 
-                    <p>{circle.description}</p>
+  <h3 className="details-title">Full Circle Details</h3>
 
-                    <p>
-                      <strong>Topic:</strong> {circle.topic}
-                    </p>
+  <p className="details-description">
+    {circle.description}
+  </p>
 
-                    <p>
-                      <strong>Difficulty:</strong> {circle.level}
-                    </p>
-                  </div>
+  <div className="details-row">
+    <span className="details-label">Topic</span>
+    <span className="details-value">{circle.topic}</span>
+  </div>
 
+  <div className="details-row">
+    <span className="details-label">Difficulty</span>
+    <span className="details-value">{circle.level}</span>
+  </div>
+
+</div>
                 )}
               </>
             )}
           </main>
         </div>
       </div>
-      {snackbar && (
-  <div className="snackbar">
-    {snackbar}
-  </div>
-)}
+      {snackbar && <div className="snackbar">{snackbar}</div>}
     </div>
   );
 };

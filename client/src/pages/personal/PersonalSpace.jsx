@@ -1,239 +1,225 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import "../../css/personal/personalSpace.css";
+
+import {
+  FiEdit2,
+  FiTrash2,
+  FiFolder,
+  FiMoreHorizontal,
+  FiCheckCircle
+} from "react-icons/fi";
+
 const PersonalSpace = () => {
-    const navigate = useNavigate();
-  const [folders, setFolders] = useState([]);
-  const [folderName, setFolderName] = useState("");
-  const [selectedFolder, setSelectedFolder] = useState(null);
-  const [tasks, setTasks] = useState([]);
-  const [taskTitle, setTaskTitle] = useState("");
-  const [taskDescription, setTaskDescription] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [editingFolderId, setEditingFolderId] = useState(null);
-  const [editName, setEditName] = useState("");
-const [editingTaskId, setEditingTaskId] = useState(null);
-const [editTaskTitle, setEditTaskTitle] = useState("");
-const [editTaskDescription, setEditTaskDescription] = useState("");
+
+  const navigate = useNavigate();
+
+  const [folders,setFolders] = useState([]);
+  const [folderName,setFolderName] = useState("");
+  const [loading,setLoading] = useState(false);
+
+  const [menuOpenId,setMenuOpenId] = useState(null);
+
+  const [editingFolderId,setEditingFolderId] = useState(null);
+  const [editName,setEditName] = useState("");
+
+  const [snackbar,setSnackbar] = useState("");
+
+
+
+  /* FETCH FOLDERS */
+
   const fetchFolders = async () => {
-    try {
+    try{
       const res = await api.get("/personal/folders");
       setFolders(res.data);
-    } catch (err) {
+    }catch(err){
       console.error(err);
     }
   };
 
-  useEffect(() => {
+  useEffect(()=>{
     fetchFolders();
-  }, []);
+  },[]);
+
+
+
+  /* CREATE FOLDER */
 
   const handleCreateFolder = async () => {
-    if (!folderName.trim()) return;
 
-    try {
+    if(!folderName.trim()) return;
+
+    try{
+
       setLoading(true);
-      await api.post("/personal/folders", { name: folderName });
-      setFolderName("");
-      fetchFolders();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const fetchTasks = async (folderId) => {
-    try {
-      const res = await api.get(`/personal/tasks/${folderId}`);
-      setTasks(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleCreateTask = async () => {
-    if (!taskTitle.trim() || !selectedFolder) return;
-
-    try {
-      setLoading(true);
-      await api.post("/personal/task", {
-        title: taskTitle,
-        description: taskDescription,
-        folderId: selectedFolder._id,
+      await api.post("/personal/folders",{
+        name:folderName
       });
 
-      setTaskTitle("");
-      setTaskDescription("");
-      fetchTasks(selectedFolder._id);
-    } catch (err) {
+      setFolderName("");
+      fetchFolders();
+
+      /* SHOW SNACKBAR */
+
+      setSnackbar("Folder created successfully");
+
+      setTimeout(()=>{
+        setSnackbar("");
+      },3000);
+
+    }catch(err){
       console.error(err);
-    } finally {
+    }finally{
       setLoading(false);
     }
+
   };
 
-  return (
+
+
+  return(
+
     <div className="personal-container">
+
       <h2>Personal Space</h2>
 
-      {/* Create Folder */}
-      <div style={{ marginBottom: "30px" }}>
-        <h3>Create Folder</h3>
+      {/* CREATE FOLDER */}
+
+      <div className="create-folder">
+
         <input
           type="text"
           placeholder="Folder Name"
           value={folderName}
-          onChange={(e) => setFolderName(e.target.value)}
-          style={{ padding: "8px", width: "70%", marginRight: "10px" }}
+          onChange={(e)=>setFolderName(e.target.value)}
         />
-        <button onClick={handleCreateFolder} disabled={loading}>
+
+        <button
+          onClick={handleCreateFolder}
+          disabled={loading}
+        >
           {loading ? "Creating..." : "Create Folder"}
         </button>
+
       </div>
 
-      <h3>My Folders</h3>
+      <h3>Folders</h3>
 
-      {folders.length === 0 && <p>No folders yet.</p>}
 
-      {folders.map((folder) => (
-        <div
-          key={folder._id}
-          className={`folder-card ${
-            selectedFolder?._id === folder._id ? "active" : ""
-          }`}
-        >
-          {editingFolderId === folder._id ? (
-            <>
-              <input
-                type="text"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                style={{ padding: "6px", width: "100%", marginBottom: "8px" }}
-              />
 
-              <button
-                onClick={async () => {
-                  if (!editName.trim()) return;
-                  await api.put(`/personal/folders/${folder._id}`, {
-                    name: editName,
-                  });
-                  setEditingFolderId(null);
-                  setEditName("");
-                  fetchFolders();
-                }}
-              >
-                Save
-              </button>
+      {/* FOLDER GRID */}
 
-              <button
-                onClick={() => {
-                  setEditingFolderId(null);
-                  setEditName("");
-                }}
-                style={{ marginLeft: "10px" }}
-              >
-                Cancel
-              </button>
-            </>
-          ) : (
-            <div className="folder-row">
+      <div className="folder-grid">
+
+        {folders.map((folder)=>(
+
+          <div key={folder._id} className="folder-card">
+
+            <div className="folder-top">
+
+              <div className="folder-icon">
+                <FiFolder/>
+              </div>
+
               <div
-                className="folder-name"
-                onClick={() => {
-                  navigate(`/personal/folders/${folder._id}`);
-                }}
+                className="folder-menu"
+                onMouseLeave={()=>setMenuOpenId(null)}
               >
-                {folder.name}
+
+                <button
+                  className="menu-button"
+                  onClick={() =>
+                    setMenuOpenId(
+                      menuOpenId === folder._id ? null : folder._id
+                    )
+                  }
+                >
+                  <FiMoreHorizontal/>
+                </button>
+
+                {menuOpenId === folder._id && (
+
+                  <div className="dropdown-menu">
+
+                    <button
+                      onClick={()=>{
+                        setEditingFolderId(folder._id);
+                        setEditName(folder.name);
+                        setMenuOpenId(null);
+                      }}
+                    >
+                      <FiEdit2/> Edit
+                    </button>
+
+                    <button
+                      onClick={()=>handleDeleteFolder(folder._id)}
+                    >
+                      <FiTrash2/> Delete
+                    </button>
+
+                  </div>
+
+                )}
+
               </div>
 
-              <div className="icon-group">
-                <div
-                  className="icon-wrapper"
-                  data-label="Edit"
-                  onClick={() => {
-                    setEditingFolderId(folder._id);
-                    setEditName(folder.name);
-                  }}
-                >
-                  <FiEdit2 size={18} />
-                </div>
-
-                <div
-                  className="icon-wrapper"
-                  data-label="Delete"
-                  onClick={async () => {
-                    await api.delete(
-                      `/personal/folders/${folder._id}`
-                    );
-
-                    if (selectedFolder?._id === folder._id) {
-                      setSelectedFolder(null);
-                      setTasks([]);
-                    }
-
-                    fetchFolders();
-                  }}
-                >
-                  <FiTrash2 size={18} color="red" />
-                </div>
-              </div>
             </div>
-          )}
-        </div>
-      ))}
 
-      {/* Task Section */}
-      {selectedFolder && (
-        <>
-          <hr style={{ margin: "40px 0" }} />
 
-          <h3>Tasks in {selectedFolder.name}</h3>
 
-          <div style={{ marginBottom: "20px" }}>
-            <input
-              type="text"
-              placeholder="Task Title"
-              value={taskTitle}
-              onChange={(e) => setTaskTitle(e.target.value)}
-              style={{ padding: "8px", width: "100%", marginBottom: "8px" }}
-            />
+            <div className="folder-content">
 
-            <textarea
-              rows="3"
-              placeholder="Task Description"
-              value={taskDescription}
-              onChange={(e) => setTaskDescription(e.target.value)}
-              style={{ padding: "8px", width: "100%", marginBottom: "8px" }}
-            />
+              <h4>{folder.name}</h4>
 
-            <button onClick={handleCreateTask} disabled={loading}>
-              {loading ? "Adding..." : "Add Task"}
-            </button>
+              <p>{folder.taskCount || 0} Tasks</p>
+
+              <div className="folder-bottom">
+
+                <div className="folder-divider"></div>
+
+                <div
+                  className="view-button"
+                  onClick={() =>
+                    navigate(`/personal/folders/${folder._id}`)
+                  }
+                >
+                  <span>View</span>
+                  <span className="arrow">→</span>
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
 
-          {tasks.length === 0 && <p>No tasks yet.</p>}
+        ))}
 
-          {tasks.map((task) => (
-            <div
-              key={task._id}
-              style={{
-                padding: "12px",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                marginBottom: "10px",
-              }}
-            >
-              <strong>{task.title}</strong>
-              <p style={{ fontSize: "14px" }}>{task.description}</p>
-            </div>
-          ))}
-        </>
+      </div>
+
+
+
+      {/* SNACKBAR */}
+
+      {snackbar && (
+
+        <div className="snackbar">
+
+          <FiCheckCircle/>
+
+          <span>{snackbar}</span>
+
+        </div>
+
       )}
+
     </div>
+
   );
+
 };
 
 export default PersonalSpace;

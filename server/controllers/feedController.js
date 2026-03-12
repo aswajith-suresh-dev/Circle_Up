@@ -12,7 +12,7 @@ export const getFeed = async (req, res) => {
     // 2. Fetch posts from those circles
     const posts = await Post.find({ circle: { $in: circleIds } })
       .sort({ createdAt: -1 })
-      .populate("author", "name photo")
+      .populate("author", "name photo role")
       .populate("circle", "name");
 
     res.status(200).json(posts);

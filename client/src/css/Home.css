@@ -84,6 +84,47 @@
   margin-top:8px;
 }
 
+/* Avatar container */
+
+.post-avatar{
+width:60px;
+height:60px;
+border-radius:50%;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#e5e7eb;
+border:4px solid transparent;
+padding:3px;
+}
+
+
+
+/* Profile image */
+
+.avatar-img{
+width:100%;
+height:100%;
+border-radius: 50%;
+object-fit:cover;
+}
+
+
+
+/* Mentor ring */
+
+.mentor-avatar{
+border-color:#ef4444; /* red */
+}
+
+
+
+/* Contributor ring */
+
+.contributor-avatar{
+border-color:#6366f1; /* indigo */
+}
 /* MY CIRCLES BUTTON */
 
 .my-circles-btn{

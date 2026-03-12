@@ -22,11 +22,16 @@ const Home = () => {
   const [filter, setFilter] = useState("recent");
 
   const navigate = useNavigate();
-const [snackbar, setSnackbar] = useState("");
+
+  const [snackbar, setSnackbar] = useState("");
+
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id;
 
-  // Fetch Feed
+
+
+  /* FETCH FEED */
+
   const fetchFeed = async () => {
     try {
 
@@ -42,45 +47,52 @@ const [snackbar, setSnackbar] = useState("");
     fetchFeed();
   }, []);
 
-  // Like
+
+
+  /* LIKE POST */
+
   const handleLike = async (e, postId) => {
 
-  e.stopPropagation();
+    e.stopPropagation();
 
-  try {
+    try {
 
-    const res = await api.put(`/posts/like/${postId}`);
+      const res = await api.put(`/posts/like/${postId}`);
 
-    const updatedPost = res.data;
+      const updatedPost = res.data;
 
-    setPosts((prev) =>
-      prev.map((post) =>
-        post._id === postId ? updatedPost : post
-      )
-    );
+      setPosts((prev) =>
+        prev.map((post) =>
+          post._id === postId ? updatedPost : post
+        )
+      );
 
-    // check if user liked or unliked
-    const liked = updatedPost.likes.some(
-      (id) => id.toString() === userId.toString()
-    );
+      const liked = updatedPost.likes.some(
+        (id) => id.toString() === userId.toString()
+      );
 
-    setSnackbar(liked ? "Discussion liked ❤️" : "Like removed");
+      setSnackbar(
+        liked ? "Discussion liked ❤️" : "Like removed"
+      );
 
-    setTimeout(() => {
-      setSnackbar("");
-    }, 2000);
+      setTimeout(() => {
+        setSnackbar("");
+      }, 2000);
 
-  } catch (err) {
+    } catch (err) {
 
-    console.error(
-      err.response?.data?.message || err.message
-    );
+      console.error(
+        err.response?.data?.message || err.message
+      );
 
-  }
+    }
 
-};
+  };
 
-  // Filter posts
+
+
+  /* FILTER POSTS */
+
   const filteredPosts = posts.filter((post) => {
 
     if (filter === "recent") return true;
@@ -97,6 +109,8 @@ const [snackbar, setSnackbar] = useState("");
 
   });
 
+
+
   return (
 
     <div className="home-layout">
@@ -108,9 +122,13 @@ const [snackbar, setSnackbar] = useState("");
           setFilter={setFilter}
         />
 
+
+
         {filteredPosts.length === 0 && (
           <p>No posts found</p>
         )}
+
+
 
         {filteredPosts.map((post) => (
 
@@ -120,11 +138,27 @@ const [snackbar, setSnackbar] = useState("");
             onClick={() => navigate(`/posts/${post._id}`)}
           >
 
+
+
             {/* POST HEADER */}
 
             <div className="post-header">
 
-              <div className="post-avatar">
+              {/* AVATAR WITH ROLE BORDER */}
+
+              <div
+                className={`post-avatar
+                ${
+                  post.author?.role === "mentor"
+                    ? "mentor-avatar"
+                    : ""
+                }
+                ${
+                  post.author?.role === "contributor"
+                    ? "contributor-avatar"
+                    : ""
+                }`}
+              >
 
                 {post.author?.photo ? (
 
@@ -143,6 +177,10 @@ const [snackbar, setSnackbar] = useState("");
                 )}
 
               </div>
+
+
+
+              {/* AUTHOR INFO */}
 
               <div className="post-meta">
 
@@ -169,11 +207,17 @@ const [snackbar, setSnackbar] = useState("");
             </div>
 
 
+
             {/* TYPE BADGE */}
 
-            <div className={`post-type-badge ${post.type}`}>
-              {post.type === "doubt" ? "Doubt" : "Discussion"}
+            <div
+              className={`post-type-badge ${post.type}`}
+            >
+              {post.type === "doubt"
+                ? "Doubt"
+                : "Discussion"}
             </div>
+
 
 
             {/* TITLE */}
@@ -183,11 +227,13 @@ const [snackbar, setSnackbar] = useState("");
             </h4>
 
 
+
             {/* DESCRIPTION */}
 
             <p className="post-description">
               {post.description}
             </p>
+
 
 
             {/* IMAGE */}
@@ -207,6 +253,7 @@ const [snackbar, setSnackbar] = useState("");
             )}
 
 
+
             {/* LINKS */}
 
             {post.links?.map((link, i) => (
@@ -220,10 +267,13 @@ const [snackbar, setSnackbar] = useState("");
                 onClick={(e) => e.stopPropagation()}
               >
                 <FiLink className="link-icon" />
+
                 <span>Link {i + 1}</span>
+
               </a>
 
             ))}
+
 
 
             {/* ACTIONS */}
@@ -233,7 +283,8 @@ const [snackbar, setSnackbar] = useState("");
               {post.type === "discussion" && (
 
                 <button
-                  className={`like-btn ${
+                  className={`like-btn
+                  ${
                     post.likes?.some(
                       (id) =>
                         id?.toString() === userId?.toString()
@@ -241,7 +292,9 @@ const [snackbar, setSnackbar] = useState("");
                       ? "liked"
                       : ""
                   }`}
-                  onClick={(e) => handleLike(e, post._id)}
+                  onClick={(e) =>
+                    handleLike(e, post._id)
+                  }
                 >
 
                   <FaHeart className="action-icon" />
@@ -254,11 +307,16 @@ const [snackbar, setSnackbar] = useState("");
 
               )}
 
+
+
               <button
                 className="reply-btn"
                 onClick={(e) => {
+
                   e.stopPropagation();
+
                   navigate(`/posts/${post._id}`);
+
                 }}
               >
 
@@ -276,12 +334,24 @@ const [snackbar, setSnackbar] = useState("");
 
       </div>
 
+
+
       <RightSidebar />
-{snackbar && (
-  <div className="snackbar">
-    {snackbar}
-  </div>
-)}
+
+
+
+      {/* SNACKBAR */}
+
+      {snackbar && (
+
+        <div className="snackbar">
+
+          {snackbar}
+
+        </div>
+
+      )}
+
     </div>
 
   );
