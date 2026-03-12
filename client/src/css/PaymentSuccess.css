@@ -1,0 +1,143 @@
+.payment-success-page{
+
+min-height:100vh;
+background:#F9FAFB;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+padding:40px;
+}
+
+/* ---------------- LOADER BOX ---------------- */
+
+.payment-loader-box{
+
+background:white;
+
+padding:70px 80px;
+
+border-radius:16px;
+border:1px solid #E5E7EB;
+
+text-align:center;
+
+width:460px;
+
+box-shadow:0 12px 35px rgba(0,0,0,0.05);
+}
+
+/* LOADER */
+
+.loader{
+
+width:60px;
+height:60px;
+
+border:6px solid #E5E7EB;
+border-top:6px solid #373A7A;
+
+border-radius:50%;
+
+margin:0 auto 20px auto;
+
+animation:spin 1s linear infinite;
+
+}
+
+@keyframes spin{
+
+0%{ transform:rotate(0deg); }
+
+100%{ transform:rotate(360deg); }
+
+}
+
+.payment-loader-box p{
+
+font-size:16px;
+color:#374151;
+font-weight:500;
+
+}
+
+/* ---------------- SUCCESS CARD ---------------- */
+
+.success-card{
+
+background:white;
+
+padding:70px 60px;
+
+border-radius:16px;
+border:1px solid #E5E7EB;
+
+text-align:center;
+
+width:520px;
+
+box-shadow:0 12px 35px rgba(0,0,0,0.05);
+}
+
+/* TITLE */
+
+.success-card h2{
+
+font-size:28px;
+
+color:#1F2937;
+
+margin-bottom:14px;
+
+}
+
+/* MESSAGE */
+
+.success-card p{
+
+font-size:16px;
+color:#374151;
+
+}
+
+/* TRANSACTION TEXT */
+
+.txn{
+
+margin-top:14px;
+
+font-size:14px;
+color:#6B7280;
+
+}
+
+/* BUTTON */
+
+.success-btn{
+
+margin-top:28px;
+
+background:#373A7A;
+color:white;
+
+padding:14px 28px;
+
+border-radius:10px;
+
+border:none;
+
+font-size:15px;
+font-weight:500;
+
+cursor:pointer;
+
+transition:0.2s;
+
+}
+
+.success-btn:hover{
+
+opacity:0.9;
+
+}

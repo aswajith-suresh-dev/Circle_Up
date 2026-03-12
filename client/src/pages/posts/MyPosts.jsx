@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
+import "../../css/MyPosts.css";
 
 const MyPosts = () => {
 
@@ -11,7 +12,6 @@ const MyPosts = () => {
   const fetchPosts = async () => {
     try {
       const res = await api.get("/posts/my");
-      
       setPosts(res.data);
     } catch (err) {
       console.error(err);
@@ -28,11 +28,8 @@ const MyPosts = () => {
     if (!confirmDelete) return;
 
     try {
-
       await api.delete(`/posts/${postId}`);
-
       fetchPosts();
-
     } catch (err) {
       console.error(err);
     }
@@ -75,143 +72,107 @@ const MyPosts = () => {
 
   return (
 
-    <div style={{ padding: "20px" }}>
+    <div className="myposts-container">
 
-      <h2>My Posts</h2>
+      <h2 className="myposts-title">My Posts</h2>
 
       {posts.length === 0 && (
-        <p>You haven't created posts yet</p>
+        <p className="empty-text">You haven't created posts yet</p>
       )}
 
-      {posts.map(post => (
+      {/* GRID CONTAINER */}
+      <div className="myposts-grid">
 
-        <div
-          key={post._id}
-          style={{
-            border: "1px solid #ddd",
-            padding: "12px",
-            marginBottom: "12px",
-            borderRadius: "8px"
-          }}
-        >
+        {posts.map(post => (
 
-          {editingPostId === post._id ? (
+          <div
+            key={post._id}
+            className="mypost-card"
+          >
 
-            <>
-              <input
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                style={{
-                  width: "100%",
-                  marginBottom: "8px",
-                  padding: "6px"
-                }}
-              />
+            {editingPostId === post._id ? (
 
-              <textarea
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-                style={{
-                  width: "100%",
-                  marginBottom: "8px",
-                  padding: "6px"
-                }}
-              />
+              <>
+                <input
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="edit-input"
+                  placeholder="Post title"
+                />
 
-              <button
-                onClick={() => updatePost(post._id)}
-                style={saveButton}
-              >
-                Save
-              </button>
+                <textarea
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  className="edit-textarea"
+                  placeholder="Post description"
+                />
 
-              <button
-                onClick={cancelEdit}
-                style={cancelButton}
-              >
-                Cancel
-              </button>
+                <div className="edit-actions">
 
-            </>
+                  <button
+                    onClick={() => updatePost(post._id)}
+                    className="btn-save"
+                  >
+                    Save
+                  </button>
 
-          ) : (
+                  <button
+                    onClick={cancelEdit}
+                    className="btn-cancel"
+                  >
+                    Cancel
+                  </button>
 
-            <>
-              <h3>{post.title}</h3>
-<p style={{ marginTop: "6px", color: "#374151" }}>
-  {post.description}
-</p>
+                </div>
+              </>
 
-              <p>
-                {post.type} · {post.circle?.name}
-              </p>
+            ) : (
 
-              <button
-                onClick={() => startEdit(post)}
-                style={editButton}
-              >
-                Edit
-              </button>
+              <>
+                <h3 className="post-title">
+                  {post.title}
+                </h3>
 
-              <button
-                onClick={() => deletePost(post._id)}
-                style={deleteButton}
-              >
-                Delete
-              </button>
+                <p className="post-desc">
+                  {post.description}
+                </p>
 
-            </>
+                <p className="post-meta">
+                  {post.type} · {post.circle?.name}
+                </p>
 
-          )}
+                <div className="post-actions">
 
-        </div>
+                  <button
+                    onClick={() => startEdit(post)}
+                    className="btn-edit"
+                  >
+                    Edit
+                  </button>
 
-      ))}
+                  <button
+                    onClick={() => deletePost(post._id)}
+                    className="btn-delete"
+                  >
+                    Delete
+                  </button>
+
+                </div>
+
+              </>
+
+            )}
+
+          </div>
+
+        ))}
+
+      </div>
 
     </div>
 
   );
 
-};
-
-const editButton = {
-  marginTop: "10px",
-  marginRight: "8px",
-  padding: "6px 12px",
-  border: "none",
-  borderRadius: "6px",
-  background: "#3b82f6",
-  color: "white",
-  cursor: "pointer"
-};
-
-const deleteButton = {
-  marginTop: "10px",
-  padding: "6px 12px",
-  border: "none",
-  borderRadius: "6px",
-  background: "#ef4444",
-  color: "white",
-  cursor: "pointer"
-};
-
-const saveButton = {
-  marginRight: "8px",
-  padding: "6px 12px",
-  border: "none",
-  borderRadius: "6px",
-  background: "#10b981",
-  color: "white",
-  cursor: "pointer"
-};
-
-const cancelButton = {
-  padding: "6px 12px",
-  border: "none",
-  borderRadius: "6px",
-  background: "#6b7280",
-  color: "white",
-  cursor: "pointer"
 };
 
 export default MyPosts;

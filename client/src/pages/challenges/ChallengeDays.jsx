@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../api/axios";
+import "../../css/ChallengeDays.css";
+import { FiCheckCircle, FiLock, FiBookOpen } from "react-icons/fi";
+import { HiOutlineSparkles } from "react-icons/hi";
 
 const ChallengeDays = () => {
   const { challengeId } = useParams();
@@ -15,9 +18,7 @@ const ChallengeDays = () => {
 
   const fetchProgress = async () => {
     try {
-      const res = await api.get(
-        `/challenges/${challengeId}/progress`
-      );
+      const res = await api.get(`/challenges/${challengeId}/progress`);
 
       setChallenge(res.data.challenge);
       setProgress(res.data.progress);
@@ -45,201 +46,172 @@ const ChallengeDays = () => {
   if (!challenge || !progress) return <p>Loading...</p>;
 
   const completionPercent = Math.floor(
-    (progress.completedDays.length / challenge.totalDays) * 100
+    (progress.completedDays.length / challenge.totalDays) * 100,
   );
 
   const currentDayData = challenge.days.find(
-    (d) => d.dayNumber === selectedDay
+    (d) => d.dayNumber === selectedDay,
   );
 
   return (
-    <div style={{ padding: "20px", maxWidth: "650px" }}>
-      <h2>{challenge.title}</h2>
+    <div className="challenge-page">
+      <div className="challenge-header">
+        <h2 className="challenge-title">{challenge.title}</h2>
 
-      {/* Status Section */}
-      {isCompleted ? (
-        <p style={{ fontWeight: "bold" }}>
-          All {challenge.totalDays} days completed
-        </p>
-      ) : (
-        <p>
-          Current Day: {progress.currentDay} /{" "}
-          {challenge.totalDays}
-        </p>
-      )}
+        <div className="challenge-meta">
+          {isCompleted ? (
+            <p className="challenge-status success">
+              ✔ All {challenge.totalDays} days completed
+            </p>
+          ) : (
+            <>
+            <p className="challenge-status">
+              Completed {progress.completedDays.length} of {challenge.totalDays}{" "}
+              days
+            </p>
+            
+            </>
+          )}
 
-      <p>🔥 Streak: {progress.streak}</p>
-
-      {progress.isBroken && !isCompleted && (
-        <p style={{ color: "red" }}>
-          ⚠️ Streak Broken
-        </p>
-      )}
-
-      {/* Progress Bar */}
-      <div style={{ marginTop: "10px", marginBottom: "20px" }}>
-        <div
-          style={{
-            height: "8px",
-            background: "#e5e7eb",
-            borderRadius: "4px",
-          }}
-        >
-          <div
-            style={{
-              width: `${completionPercent}%`,
-              height: "8px",
-              background: "#3b82f6",
-              borderRadius: "4px",
-            }}
-          ></div>
+          {/* <p className="challenge-streak">🔥 {progress.streak} day streak</p> */}
         </div>
-        <p style={{ fontSize: "12px", marginTop: "5px" }}>
-          {progress.completedDays.length} /{" "}
-          {challenge.totalDays} days completed
-          ({completionPercent}%)
-        </p>
+
+        {progress.isBroken && !isCompleted && (
+          <p className="streak-warning">
+            ⚠️ Your streak is broken. Keep going!
+          </p>
+        )}
+      </div>
+      <div className="streak-card">
+        <div className="streak-header">
+          <span className="streak-fire">🔥</span>
+
+          <div>
+            <p className="streak-label">STREAK</p>
+            <h2>{progress.streak} DAYS</h2>
+          </div>
+        </div>
+
+        <div className="streak-days">
+          {challenge.days.slice(0, 7).map((day) => {
+            const completed = progress.completedDays.includes(day.dayNumber);
+
+            return (
+              <div
+                key={day.dayNumber}
+                className={`streak-circle ${completed ? "done" : ""}`}
+              >
+                {completed ? "✔" : ""}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {/* Progress Bar */}
+      <div className="progress-card">
+        <div className="progress-top">
+          <div className="progress-info">
+            <p className="progress-label">Progress</p>
+            <p className="progress-days">
+              {progress.completedDays.length} / {challenge.totalDays} days
+            </p>
+          </div>
+
+          <div className="progress-percent">{completionPercent}%</div>
+        </div>
+
+        <div className="progress-bar-bg">
+          <div
+            className="progress-bar-fill"
+            style={{ width: `${completionPercent}%` }}
+          />
+        </div>
       </div>
 
       {/* Completion Summary */}
+
       {isCompleted && (
-        <div
-          style={{
-            padding: "16px",
-            background: "#dcfce7",
-            borderRadius: "8px",
-            border: "1px solid #86efac",
-            marginBottom: "20px",
-          }}
-        >
-          <h3>🎉 Challenge Completed!</h3>
-          <p>🔥 Final Streak: {progress.streak}</p>
-          <p>📊 Completion Rate: {completionPercent}%</p>
+        <div className="completion-card">
+          <h3>
+            <HiOutlineSparkles /> Challenge Completed
+          </h3>
+
+          <p>
+            🔥 Final Streak: <strong>{progress.streak}</strong>
+          </p>
+
+          <p>
+            📊 Completion Rate: <strong>{completionPercent}%</strong>
+          </p>
         </div>
       )}
 
       {/* Day Tabs */}
-      <div
-        style={{
-          display: "flex",
-          gap: "8px",
-          flexWrap: "wrap",
-          marginBottom: "16px",
-        }}
-      >
-        {challenge.days.map((day) => {
-          const isCompletedDay =
-            progress.completedDays.includes(day.dayNumber);
 
-          const isLocked =
-            isCompleted ||
-            day.dayNumber > progress.currentDay;
+      <div className="day-tabs">
+        {challenge.days.map((day) => {
+          const isCompletedDay = progress.completedDays.includes(day.dayNumber);
+
+          const isLocked = isCompleted || day.dayNumber > progress.currentDay;
 
           return (
             <button
               key={day.dayNumber}
               disabled={isLocked}
               onClick={() => setSelectedDay(day.dayNumber)}
-              style={{
-                padding: "6px 12px",
-                borderRadius: "6px",
-                border: "1px solid #ccc",
-                background: isCompletedDay
-                  ? "#dcfce7"
-                  : "#f3f4f6",
-                cursor: isLocked
-                  ? "not-allowed"
-                  : "pointer",
-                opacity: isLocked ? 0.6 : 1,
-              }}
+              className={`day-button 
+        ${isCompletedDay ? "done" : ""}
+        ${isLocked ? "locked" : ""}`}
             >
               Day {day.dayNumber}
-              {isCompletedDay && " ✔"}
-              {isLocked && !isCompletedDay && " 🔒"}
+              {isCompletedDay && <FiCheckCircle />}
+              {isLocked && !isCompletedDay && <FiLock />}
             </button>
           );
         })}
       </div>
 
       {/* Day Content */}
-      <div
-        style={{
-          border: "1px solid #ddd",
-          padding: "16px",
-          borderRadius: "6px",
-          background: "#fafafa",
-        }}
-      >
+
+      <div className="day-content">
         <h3>Day {selectedDay}</h3>
 
-        <p>{currentDayData?.content}</p>
+        <p className="day-text">{currentDayData?.content}</p>
 
-        {/* PREMIUM STUDY MATERIALS */}
-        {challenge.type === "paid" &&
-          currentDayData?.resources?.length > 0 && (
-            <div
-              style={{
-                marginTop: "15px",
-                padding: "12px",
-                background: "#fef3c7",
-                borderRadius: "6px",
-                border: "1px solid #fcd34d",
-              }}
-            >
-              <h4>📚 Study Materials</h4>
+        {/* Study Materials */}
 
-              {currentDayData.resources.map(
-                (resource, index) => (
-                  <div key={index}>
-                    <a
-                      href={resource.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{
-                        color: "#2563eb",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      {resource.title}
-                    </a>
-                  </div>
-                )
-              )}
-            </div>
-          )}
+        {challenge.type === "paid" && currentDayData?.resources?.length > 0 && (
+          <div className="study-materials">
+            <h4>
+              <FiBookOpen /> Study Materials
+            </h4>
+
+            {currentDayData.resources.map((resource, index) => (
+              <a
+                key={index}
+                href={resource.url}
+                target="_blank"
+                rel="noreferrer"
+                className="resource-link"
+              >
+                {resource.title}
+              </a>
+            ))}
+          </div>
+        )}
 
         {/* Check-in Button */}
-        {selectedDay === progress.currentDay &&
-          canCheckIn &&
-          !isCompleted && (
-            <button
-              onClick={handleCheckIn}
-              style={{
-                marginTop: "12px",
-                padding: "8px 16px",
-                borderRadius: "6px",
-                border: "none",
-                background: "#3b82f6",
-                color: "white",
-                cursor: "pointer",
-              }}
-            >
-              Mark Today as Done ✔
-            </button>
-          )}
 
-        {!canCheckIn &&
-          selectedDay === progress.currentDay &&
-          !isCompleted && (
-            <p
-              style={{
-                marginTop: "10px",
-                color: "gray",
-              }}
-            >
-              You’ve already checked in today
-            </p>
-          )}
+        {selectedDay === progress.currentDay && canCheckIn && !isCompleted && (
+          <button onClick={handleCheckIn} className="checkin-button">
+            <FiCheckCircle />
+            Mark Today as Done
+          </button>
+        )}
+
+        {!canCheckIn && selectedDay === progress.currentDay && !isCompleted && (
+          <p className="checkin-info">You’ve already checked in today</p>
+        )}
       </div>
     </div>
   );

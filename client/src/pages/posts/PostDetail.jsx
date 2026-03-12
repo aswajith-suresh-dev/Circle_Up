@@ -3,8 +3,17 @@ import { useParams } from "react-router-dom";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
 
-const PostDetail = () => {
+import {
+  FiArrowUp,
+  FiEdit,
+  FiTrash2,
+  FiCheckCircle,
+  FiMessageSquare,
+} from "react-icons/fi";
 
+import "../../css/PostDetail.css";
+
+const PostDetail = () => {
   const { user } = useAuth();
   const { postId } = useParams();
 
@@ -13,6 +22,8 @@ const PostDetail = () => {
 
   const [editingReplyId, setEditingReplyId] = useState(null);
   const [editReplyText, setEditReplyText] = useState("");
+
+  const [snackbar, setSnackbar] = useState("");
 
   const fetchPost = async () => {
     try {
@@ -27,108 +38,108 @@ const PostDetail = () => {
     fetchPost();
   }, [postId]);
 
+  const showSnackbar = (msg) => {
+    setSnackbar(msg);
+    setTimeout(() => setSnackbar(""), 2000);
+  };
+
   const handleReply = async () => {
     if (!replyText.trim()) return;
 
     try {
-
       await api.post(`/replies/${postId}`, {
         content: replyText,
       });
 
       setReplyText("");
       fetchPost();
-
+      showSnackbar("Reply added");
     } catch (err) {
       console.error(err);
     }
   };
 
   const deleteReply = async (replyId) => {
-
     if (!window.confirm("Delete reply?")) return;
 
     try {
-
       await api.delete(`/replies/${replyId}`);
-
       fetchPost();
-
+      showSnackbar("Reply deleted");
     } catch (err) {
       console.error(err);
     }
-
   };
 
   const startEditReply = (reply) => {
-
     setEditingReplyId(reply._id);
     setEditReplyText(reply.content);
-
   };
 
   const updateReply = async (replyId) => {
-
     try {
-
       await api.put(`/replies/${replyId}`, {
         content: editReplyText,
       });
 
       setEditingReplyId(null);
       fetchPost();
-
+      showSnackbar("Reply updated");
     } catch (err) {
       console.error(err);
     }
-
   };
 
   const handleSolve = async (replyId) => {
-
     try {
-
       await api.put(`/replies/solve/${postId}/${replyId}`);
-
       fetchPost();
-
+      showSnackbar("Marked as solved");
     } catch (err) {
       console.error(err.response?.data?.message || err.message);
     }
-
   };
 
   const handleUpvote = async (replyId) => {
-
     try {
-
-      await api.put(`/replies/upvote/${replyId}`);
+      const res = await api.put(`/replies/upvote/${replyId}`);
 
       fetchPost();
 
+      // show backend message
+      showSnackbar(res.data.message);
     } catch (err) {
       console.error(err.response?.data?.message || err.message);
-    }
 
+      if (err.response?.data?.message) {
+        showSnackbar(err.response.data.message);
+      }
+    }
   };
 
   if (!data) return <p>Loading...</p>;
 
   return (
+    <div className="postdetail-container">
+      {/* Post */}
 
-    <div style={{ padding: "16px" }}>
+      <div className="post-card">
+        <h2>{data.post.title}</h2>
 
-      <h2>{data.post.title}</h2>
-      <p>{data.post.description}</p>
+        <p className="post-description">{data.post.description}</p>
+      </div>
 
-      <hr />
+      {/* Replies */}
 
-      <h3>Replies</h3>
+      <h3 className="reply-title">
+        <FiMessageSquare /> Replies
+      </h3>
 
-      {data.replies.length === 0 && <p>No replies yet</p>}
+      {data.replies.length === 0 && (
+        <p className="empty-text">No replies yet</p>
+      )}
 
       {data.replies.map((reply) => {
-
         const isSolvedReply = data.post.solvedBy === reply._id;
         const isPostAuthor = data.post.author._id === user?._id;
         const isDoubt = data.post.type === "doubt";
@@ -136,165 +147,113 @@ const PostDetail = () => {
         const isReplyAuthor = reply.author._id === user?._id;
 
         return (
-
           <div
             key={reply._id}
-            style={{
-              marginBottom: "12px",
-              padding: "10px",
-              border: isSolvedReply
-                ? "2px solid green"
-                : "1px solid #ddd",
-              background: isSolvedReply ? "#f0fff0" : "white",
-            }}
+            className={`reply-card ${isSolvedReply ? "solved" : ""}`}
           >
-
             {editingReplyId === reply._id ? (
-
               <>
                 <textarea
                   value={editReplyText}
                   onChange={(e) => setEditReplyText(e.target.value)}
-                  style={{ width: "100%", marginBottom: "8px" }}
+                  className="reply-editor"
                 />
 
                 <button
                   onClick={() => updateReply(reply._id)}
-                  style={saveButton}
+                  className="btn-save"
                 >
                   Save
                 </button>
 
                 <button
                   onClick={() => setEditingReplyId(null)}
-                  style={cancelButton}
+                  className="btn-cancel"
                 >
                   Cancel
                 </button>
               </>
-
             ) : (
-
               <>
-                <p>{reply.content}</p>
+                {/* Author */}
 
-                <small>— {reply.author.name}</small>
+                <div className="reply-author">{reply.author.name}</div>
 
-                <div style={{ marginTop: "6px" }}>
+                {/* Content Row */}
 
-                  <button onClick={() => handleUpvote(reply._id)}>
-                    👍 {reply.upvotes.length}
-                  </button>
+                <div className="reply-row">
+                  <p className="reply-text">{reply.content}</p>
 
-                  {isReplyAuthor && (
-                    <>
-                      <button
-                        onClick={() => startEditReply(reply)}
-                        style={editButton}
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => deleteReply(reply._id)}
-                        style={deleteButton}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-
-                  {isDoubt && isPostAuthor && !alreadySolved && (
+                  <div className="reply-actions">
                     <button
-                      disabled={reply.author._id === user?._id}
-                      onClick={() => handleSolve(reply._id)}
-                      style={{
-                        marginLeft: "8px",
-                        opacity: reply.author._id === user?._id ? 0.5 : 1,
-                        cursor:
-                          reply.author._id === user?._id
-                            ? "not-allowed"
-                            : "pointer",
-                      }}
+                      className="upvote-btn"
+                      onClick={() => handleUpvote(reply._id)}
                     >
-                      ✅ Mark as Solved
+                      <FiArrowUp />
+                      {reply.upvotes.length}
                     </button>
-                  )}
 
-                  {isSolvedReply && (
-                    <span
-                      style={{ marginLeft: "10px", color: "green" }}
-                    >
-                      ✔ Solved Answer
-                    </span>
-                  )}
+                    {isReplyAuthor && (
+                      <>
+                        <button
+                          className="icon-btn"
+                          onClick={() => startEditReply(reply)}
+                        >
+                          <FiEdit />
+                        </button>
 
+                        <button
+                          className="icon-btn delete"
+                          onClick={() => deleteReply(reply._id)}
+                        >
+                          <FiTrash2 />
+                        </button>
+                      </>
+                    )}
+                    {isDoubt &&
+                      isPostAuthor &&
+                      !alreadySolved &&
+                      reply.author._id !== user?._id && (
+                        <button
+                          className="solve-btn"
+                          onClick={() => handleSolve(reply._id)}
+                        >
+                          <FiCheckCircle />
+                          Mark Solved
+                        </button>
+                      )}
+
+                    {isSolvedReply && (
+                      <span className="solved-label">✔ Solved Answer</span>
+                    )}
+                  </div>
                 </div>
               </>
-
             )}
-
           </div>
-
         );
-
       })}
 
-      <hr />
+      {/* Reply input */}
 
-      <h3>Add a reply</h3>
+      <div className="reply-input-box">
+        <textarea
+          rows="3"
+          value={replyText}
+          onChange={(e) => setReplyText(e.target.value)}
+          placeholder="Write your reply..."
+        />
 
-      <textarea
-        rows="3"
-        value={replyText}
-        onChange={(e) => setReplyText(e.target.value)}
-        placeholder="Write your reply..."
-        style={{ width: "100%", marginBottom: "8px" }}
-      />
+        <button onClick={handleReply} className="reply-submit-btn">
+          Reply
+        </button>
+      </div>
 
-      <button onClick={handleReply}>Reply</button>
+      {/* Snackbar */}
 
+      {snackbar && <div className="snackbar">{snackbar}</div>}
     </div>
   );
-};
-
-const editButton = {
-  marginLeft: "8px",
-  padding: "4px 8px",
-  border: "none",
-  borderRadius: "6px",
-  background: "#3b82f6",
-  color: "white",
-  cursor: "pointer",
-};
-
-const deleteButton = {
-  marginLeft: "8px",
-  padding: "4px 8px",
-  border: "none",
-  borderRadius: "6px",
-  background: "#ef4444",
-  color: "white",
-  cursor: "pointer",
-};
-
-const saveButton = {
-  marginRight: "8px",
-  padding: "4px 10px",
-  border: "none",
-  borderRadius: "6px",
-  background: "#10b981",
-  color: "white",
-  cursor: "pointer",
-};
-
-const cancelButton = {
-  padding: "4px 10px",
-  border: "none",
-  borderRadius: "6px",
-  background: "#6b7280",
-  color: "white",
-  cursor: "pointer",
 };
 
 export default PostDetail;

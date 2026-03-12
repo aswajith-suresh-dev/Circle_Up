@@ -1,0 +1,75 @@
+.notifications-page{
+display:flex;
+justify-content:center;
+padding:40px 20px;
+background:#F9FAFB;
+}
+
+.notifications-container{
+width:100%;
+max-width:850px;
+}
+
+/* header */
+
+.notifications-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.notifications-header h2{
+color:#1F2937;
+}
+
+/* button */
+
+.mark-read-btn{
+background:#373A7A;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+}
+
+/* cards */
+
+.notification-card{
+background:#FFFFFF;
+border:1px solid #E5E7EB;
+border-radius:10px;
+padding:14px;
+margin-bottom:12px;
+cursor:pointer;
+transition:all 0.2s ease;
+}
+
+.notification-card:hover{
+box-shadow:0 6px 14px rgba(0,0,0,0.05);
+}
+
+/* unread highlight */
+
+.notification-card.unread{
+background:#eef2ff;
+border-color:#c7d2fe;
+}
+
+/* text */
+
+.notification-message{
+margin-bottom:6px;
+color:#1F2937;
+}
+
+.notification-time{
+font-size:12px;
+color:#6b7280;
+}
+
+.empty-text{
+color:#6b7280;
+}

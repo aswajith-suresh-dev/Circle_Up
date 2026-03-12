@@ -127,8 +127,9 @@ export const getAllChallenges = async (req, res) => {
   try {
 
     const challenges = await Challenge.find({
-  approvalStatus: "approved",
-})
+      approvalStatus: "approved",
+      mentor: { $ne: req.user._id }
+    })
       .populate("mentor", "name photo")
       .populate("circle", "name")
       .sort({ createdAt: -1 });

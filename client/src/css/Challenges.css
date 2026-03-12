@@ -1,0 +1,171 @@
+.challenges-page{
+padding:30px;
+background:#F9FAFB;
+}
+
+.challenge-title{
+color:#1F2937;
+margin-bottom:20px;
+}
+
+.challenge-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+gap:24px;
+}
+
+/* card */
+
+.challenge-card{
+background:#FFFFFF;
+border:1px solid #E5E7EB;
+border-radius:14px;
+padding:22px;
+transition:all 0.2s ease;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.challenge-card:hover{
+box-shadow:0 10px 25px rgba(0,0,0,0.07);
+transform:translateY(-2px);
+}
+
+/* header */
+
+.challenge-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:14px;
+}
+
+.challenge-header h3{
+font-size:18px;
+color:#1F2937;
+}
+
+/* badges */
+
+.badge-free{
+background:#dcfce7;
+color:#065f46;
+padding:4px 8px;
+border-radius:6px;
+font-size:12px;
+}
+
+.badge-paid{
+background:#fde68a;
+color:#92400e;
+padding:4px 8px;
+border-radius:6px;
+font-size:12px;
+}
+
+/* meta info */
+
+.challenge-meta{
+margin-bottom:14px;
+}
+
+.challenge-meta p{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:14px;
+color:#6b7280;
+margin-bottom:6px;
+}
+
+/* progress */
+
+.challenge-progress{
+margin-top:10px;
+margin-bottom:10px;
+}
+
+.progress-bg{
+height:10px;
+background:#E5E7EB;
+border-radius:6px;
+overflow:hidden;
+}
+
+.progress-fill{
+height:100%;
+background:#373A7A;
+}
+
+.progress-text{
+font-size:12px;
+margin-top:5px;
+color:#6b7280;
+}
+
+/* buttons */
+
+.btn-join{
+margin-top:12px;
+background:#373A7A;
+color:white;
+border:none;
+padding:9px 14px;
+border-radius:8px;
+cursor:pointer;
+width:100%;
+font-weight:500;
+}
+
+.btn-continue{
+margin-top:12px;
+background:#1F2937;
+color:white;
+border:none;
+padding:9px 14px;
+border-radius:8px;
+cursor:pointer;
+width:100%;
+}
+
+.btn-completed{
+margin-top:12px;
+background:#16a34a;
+color:white;
+border:none;
+padding:9px 14px;
+border-radius:8px;
+cursor:pointer;
+width:100%;
+}
+
+.note{
+font-size:12px;
+color:#6b7280;
+margin-top:8px;
+}
+
+/* filter */
+
+.challenge-filter{
+margin-bottom:24px;
+}
+
+.filter-btn{
+margin-right:10px;
+padding:8px 14px;
+border-radius:8px;
+border:1px solid #E5E7EB;
+background:white;
+cursor:pointer;
+display:inline-flex;
+align-items:center;
+gap:6px;
+}
+
+.filter-btn.active{
+background:#373A7A;
+color:white;
+border:none;
+}

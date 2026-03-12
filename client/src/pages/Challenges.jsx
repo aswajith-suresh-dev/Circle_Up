@@ -2,7 +2,20 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
+import {
+  FiUsers,
+  FiUser,
+  FiBookOpen,
+  FiBarChart2,
+  FiTrendingUp,
+  FiGrid,
+  FiTarget
+} from "react-icons/fi";
+
+import "../css/Challenges.css";
+
 const Challenges = () => {
+
   const [allChallenges, setAllChallenges] = useState([]);
   const [myProgress, setMyProgress] = useState([]);
   const [myCircles, setMyCircles] = useState([]);
@@ -12,6 +25,7 @@ const Challenges = () => {
 
   const fetchData = async () => {
     try {
+
       const allRes = await api.get("/challenges/all");
       const myRes = await api.get("/challenges/my");
       const circlesRes = await api.get("/circles/my");
@@ -19,6 +33,7 @@ const Challenges = () => {
       setAllChallenges(allRes.data || []);
       setMyProgress(myRes.data || []);
       setMyCircles(circlesRes.data || []);
+
     } catch (err) {
       console.error(err);
     }
@@ -29,24 +44,18 @@ const Challenges = () => {
   }, []);
 
   const handleJoin = async (challengeId) => {
+
     try {
+
       await api.post(`/challenges/${challengeId}/join`);
-      await fetchData();
+      fetchData();
+
     } catch (err) {
-      console.error(err.response?.data?.message || err.message);
+      console.error(err);
     }
+
   };
 
-  const handlePurchase = async (challengeId) => {
-    try {
-      await api.post(`/challenges/${challengeId}/purchase`);
-      await fetchData();
-    } catch (err) {
-      console.error(err.response?.data?.message || err.message);
-    }
-  };
-
-  // ✅ SAFE JOIN CHECK (fix for null error)
   const isJoined = (challengeId) => {
     return myProgress.find(
       (p) =>
@@ -55,7 +64,6 @@ const Challenges = () => {
     );
   };
 
-  // ✅ SAFE CIRCLE CHECK
   const isCircleMember = (circleId) => {
     return myCircles.find(
       (circle) => circle?._id === circleId
@@ -70,241 +78,216 @@ const Challenges = () => {
           .map((p) => p.challenge);
 
   return (
-    <div style={{ padding: "20px", maxWidth: "750px" }}>
-      <h2>Challenges</h2>
 
-      {/* FILTER BUTTONS */}
-      <div style={{ marginBottom: "20px" }}>
+    <div className="challenges-page">
+<h2 className="challenge-title">
+ Challenges
+</h2>
+
+      {/* FILTER */}
+
+      <div className="challenge-filter">
+
         <button
+          className={filter === "all" ? "filter-btn active" : "filter-btn"}
           onClick={() => setFilter("all")}
-          style={filterButton(filter === "all")}
         >
-          All
+          <FiGrid /> All
         </button>
 
         <button
+          className={filter === "my" ? "filter-btn active" : "filter-btn"}
           onClick={() => setFilter("my")}
-          style={filterButton(filter === "my")}
         >
-          My Challenges
+          <FiTarget /> My Challenges
         </button>
+
       </div>
 
       {filteredChallenges.length === 0 && (
-        <p>No challenges found</p>
+        <p className="empty-text">
+          No challenges found
+        </p>
       )}
 
-      {filteredChallenges.map((challenge) => {
-        if (!challenge) return null;
+      <div className="challenge-grid">
 
-        const progress = isJoined(challenge._id);
+        {filteredChallenges.map((challenge) => {
 
-        const isCompleted =
-          progress &&
-          progress.completedDays.length >=
-            challenge.totalDays;
+          if (!challenge) return null;
 
-        const circleMember = isCircleMember(
-          challenge.circle?._id || challenge.circle
-        );
+          const progress = isJoined(challenge._id);
 
-        const progressPercent = progress
-          ? Math.floor(
-              (progress.completedDays.length /
-                challenge.totalDays) *
-                100
-            )
-          : 0;
+          const isCompleted =
+            progress &&
+            progress.completedDays.length >=
+              challenge.totalDays;
 
-        return (
-          <div
-            key={challenge._id}
-            style={cardStyle}
-          >
-            {/* TITLE + PRICE BADGE */}
-            <div style={titleRow}>
-              <h3>{challenge.title}</h3>
+          const circleMember = isCircleMember(
+            challenge.circle?._id || challenge.circle
+          );
 
-              <span
-                style={{
-                  padding: "4px 8px",
-                  borderRadius: "6px",
-                  fontSize: "12px",
-                  background:
+          const progressPercent = progress
+            ? Math.floor(
+                (progress.completedDays.length /
+                  challenge.totalDays) *
+                  100
+              )
+            : 0;
+
+          return (
+
+            <div
+              key={challenge._id}
+              className="challenge-card"
+            >
+
+              {/* TITLE */}
+
+              <div className="challenge-header">
+
+                <h3>{challenge.title}</h3>
+
+                <span
+                  className={
                     challenge.type === "free"
-                      ? "#dcfce7"
-                      : "#fde68a",
-                  color:
-                    challenge.type === "free"
-                      ? "#065f46"
-                      : "#92400e",
-                }}
-              >
-                {challenge.type === "free"
-                  ? "Free"
-                  : `₹${challenge.price}`}
-              </span>
+                      ? "badge-free"
+                      : "badge-paid"
+                  }
+                >
+                  {challenge.type === "free"
+                    ? "Free"
+                    : `₹${challenge.price}`}
+                </span>
+
+              </div>
+
+              {/* META */}
+
+              <div className="challenge-meta">
+
+                <p>
+                  <FiBarChart2 />
+                  {challenge.level}
+                </p>
+
+                <p>
+                  <FiUsers />
+                  {challenge.participants || 0} participants
+                </p>
+
+                <p>
+                  <FiBookOpen />
+                  {challenge.circle?.name || "N/A"}
+                </p>
+
+                <p>
+                  <FiUser />
+                  {challenge.mentor?.name || "Unknown"}
+                </p>
+
+              </div>
+
+              {/* PROGRESS */}
+
+              {progress && (
+
+                <div className="challenge-progress">
+
+                  <div className="progress-bg">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+
+                  <p className="progress-text">
+                    {progress.completedDays.length} /
+                    {challenge.totalDays} days
+                  </p>
+
+                </div>
+
+              )}
+
+              {/* BUTTONS */}
+
+              {!progress &&
+                filter === "all" &&
+                circleMember &&
+                challenge.type === "free" && (
+
+                  <button
+                    className="btn-join"
+                    onClick={() =>
+                      handleJoin(challenge._id)
+                    }
+                  >
+                    Join Challenge
+                  </button>
+
+              )}
+
+              {!progress &&
+                filter === "all" &&
+                circleMember &&
+                challenge.type === "paid" && (
+
+                  <button
+                    className="btn-join"
+                    onClick={() =>
+                      navigate(`/payment/${challenge._id}`)
+                    }
+                  >
+                    Purchase ₹{challenge.price}
+                  </button>
+
+              )}
+
+              {!circleMember && !progress && (
+
+                <p className="note">
+                  Join the circle first
+                </p>
+
+              )}
+
+              {progress && !isCompleted && (
+
+                <button
+                  className="btn-continue"
+                  onClick={() =>
+                    navigate(`/challenges/${challenge._id}`)
+                  }
+                >
+                  Continue
+                </button>
+
+              )}
+
+              {isCompleted && (
+
+                <button
+                  className="btn-completed"
+                  onClick={() =>
+                    navigate(`/challenges/${challenge._id}`)
+                  }
+                >
+                  Completed ✔
+                </button>
+
+              )}
+
             </div>
 
-            {/* META INFO */}
-            <p style={metaText}>
-Level: {challenge.level}
-</p>
+          );
 
-<p style={metaText}>
-👥 {challenge.participants || 0} participants
-</p>
+        })}
 
-<p style={metaText}>
-Circle: {challenge.circle?.name || "N/A"}
-</p>
+      </div>
 
-<p style={metaText}>
-👨‍🏫 Mentor: <strong>{challenge.mentor?.name || "Unknown"}</strong>
-</p>            {/* PROGRESS BAR */}
-            {progress && (
-              <div style={{ marginTop: "10px" }}>
-                <div style={progressBarBg}>
-                  <div
-                    style={{
-                      ...progressBarFill,
-                      width: `${progressPercent}%`,
-                    }}
-                  />
-                </div>
-                <p style={{ fontSize: "12px" }}>
-                  {progress.completedDays.length} /{" "}
-                  {challenge.totalDays} days completed
-                </p>
-              </div>
-            )}
-
-            {/* BUTTON LOGIC */}
-
-            {/* FREE JOIN */}
-            {!progress &&
-              filter === "all" &&
-              circleMember &&
-              challenge.type === "free" && (
-                <button
-                  onClick={() =>
-                    handleJoin(challenge._id)
-                  }
-                  style={buttonStyle("#3b82f6")}
-                >
-                  Join Challenge
-                </button>
-              )}
-
-            {/* PAID PURCHASE */}
-            {!progress &&
-              filter === "all" &&
-              circleMember &&
-              challenge.type === "paid" && (
-                <button
-                 onClick={() => navigate(`/payment/${challenge._id}`)}
-                >
-                  Purchase ₹{challenge.price}
-                </button>
-              )}
-
-            {/* NOT CIRCLE MEMBER */}
-            {!circleMember && !progress && (
-              <p style={noteStyle}>
-                *You must join the circle first.
-              </p>
-            )}
-
-            {/* CONTINUE */}
-            {progress && !isCompleted && (
-              <button
-                onClick={() =>
-                  navigate(
-                    `/challenges/${challenge._id}`
-                  )
-                }
-                style={buttonStyle("#10b981")}
-              >
-                Continue
-              </button>
-            )}
-
-            {/* COMPLETED */}
-            {isCompleted && (
-              <button
-                onClick={() =>
-                  navigate(
-                    `/challenges/${challenge._id}`
-                  )
-                }
-                style={buttonStyle("#16a34a")}
-              >
-                Completed ✔
-              </button>
-            )}
-          </div>
-        );
-      })}
     </div>
   );
-};
-
-/* -------- STYLES -------- */
-
-const cardStyle = {
-  border: "1px solid #ddd",
-  padding: "16px",
-  marginBottom: "16px",
-  borderRadius: "10px",
-  background: "#fafafa",
-};
-
-const titleRow = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
-
-const metaText = {
-  color: "#6b7280",
-  fontSize: "14px",
-};
-
-const progressBarBg = {
-  height: "8px",
-  background: "#e5e7eb",
-  borderRadius: "4px",
-};
-
-const progressBarFill = {
-  height: "8px",
-  background: "#3b82f6",
-  borderRadius: "4px",
-};
-
-const buttonStyle = (bg) => ({
-  marginTop: "10px",
-  padding: "6px 12px",
-  borderRadius: "6px",
-  border: "none",
-  background: bg,
-  color: "white",
-  cursor: "pointer",
-});
-
-const filterButton = (active) => ({
-  marginRight: "10px",
-  background: active ? "#3b82f6" : "#e5e7eb",
-  color: active ? "white" : "black",
-  padding: "6px 12px",
-  borderRadius: "6px",
-  border: "none",
-});
-
-const noteStyle = {
-  fontSize: "12px",
-  marginTop: "8px",
-  color: "#6b7280",
 };
 
 export default Challenges;

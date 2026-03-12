@@ -1,70 +1,73 @@
-import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import "../css/PaymentSuccess.css";
 
 const PaymentSuccess = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
 
-  const transactionId =
-    location.state?.transactionId || "N/A";
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
+
+  const transactionId = location.state?.transactionId;
 
   useEffect(() => {
+
     const timer = setTimeout(() => {
-      navigate("/challenges");
-    }, 4000);
+      setLoading(false);
+    }, 2000); // fake verification delay
 
     return () => clearTimeout(timer);
-  }, [navigate]);
+
+  }, []);
+
+  if (loading) {
+
+    return (
+
+      <div className="payment-success-page">
+
+        <div className="payment-loader-box">
+
+          <div className="loader"></div>
+
+          <p>Verifying payment...</p>
+
+        </div>
+
+      </div>
+
+    );
+
+  }
 
   return (
-    <div style={containerStyle}>
-      <div style={cardStyle}>
-        <div style={checkCircle}>✓</div>
+
+    <div className="payment-success-page">
+
+      <div className="success-card">
 
         <h2>Payment Successful 🎉</h2>
 
-        <p>
-          Transaction ID:
-          <strong> {transactionId}</strong>
+        <p>Your challenge access has been activated.</p>
+
+        <p className="txn">
+          Transaction ID: <strong>{transactionId}</strong>
         </p>
 
-        <p>Your purchase was successful.</p>
-        <p>Redirecting to challenges...</p>
+        <button
+          onClick={() => navigate("/challenges")}
+          className="success-btn"
+        >
+          Go to Challenges
+        </button>
+
       </div>
+
     </div>
+
   );
-};
 
-/* ---------- Styles ---------- */
-
-const containerStyle = {
-  height: "100vh",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  background: "#f3f4f6",
-};
-
-const cardStyle = {
-  background: "white",
-  padding: "40px",
-  borderRadius: "14px",
-  textAlign: "center",
-  width: "380px",
-  boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
-};
-
-const checkCircle = {
-  width: "70px",
-  height: "70px",
-  borderRadius: "50%",
-  background: "#10b981",
-  color: "white",
-  fontSize: "40px",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  margin: "0 auto 20px",
 };
 
 export default PaymentSuccess;

@@ -1,0 +1,170 @@
+.myposts-container{
+  max-width:1200px;   /* increased width */
+  margin:auto;
+  padding:40px 20px;
+  background:#F9FAFB;
+}
+
+/* TITLE */
+
+.myposts-title{
+  color:#1F2937;
+  margin-bottom:28px;
+  text-align:center;
+  font-size:28px;
+}
+
+/* GRID */
+
+.myposts-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:24px;
+}
+
+/* CARD */
+
+.mypost-card{
+  background:#FFFFFF;
+  border:1px solid #E5E7EB;
+  border-radius:14px;
+
+  padding:22px;
+  min-height:180px;   /* bigger height */
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  transition:all 0.25s ease;
+}
+
+.mypost-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 24px rgba(0,0,0,0.06);
+}
+
+/* TITLE */
+
+.post-title{
+  color:#1F2937;
+  margin-bottom:8px;
+  font-size:18px;
+  font-weight:600;
+}
+
+/* DESCRIPTION */
+
+.post-desc{
+  color:#374151;
+  margin-bottom:12px;
+  font-size:14px;
+  line-height:1.5;
+}
+
+/* META */
+
+.post-meta{
+  font-size:13px;
+  color:#6b7280;
+}
+
+/* ACTION BUTTONS */
+
+.post-actions{
+  margin-top:16px;
+  display:flex;
+  gap:10px;
+}
+
+/* EDIT BUTTON */
+
+.btn-edit{
+  background:#373A7A;
+  color:white;
+  border:none;
+  padding:7px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+/* DELETE BUTTON */
+
+.btn-delete{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:7px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+/* EDIT MODE */
+
+.edit-input{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border:1px solid #E5E7EB;
+  border-radius:8px;
+}
+
+.edit-textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid #E5E7EB;
+  border-radius:8px;
+  margin-bottom:12px;
+  min-height:80px;
+}
+
+/* EDIT ACTIONS */
+
+.edit-actions{
+  display:flex;
+  gap:10px;
+}
+
+/* SAVE */
+
+.btn-save{
+  background:#10b981;
+  color:white;
+  border:none;
+  padding:7px 14px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* CANCEL */
+
+.btn-cancel{
+  background:#6b7280;
+  color:white;
+  border:none;
+  padding:7px 14px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* RESPONSIVE */
+
+@media (max-width:1100px){
+  .myposts-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media (max-width:800px){
+  .myposts-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media (max-width:500px){
+  .myposts-grid{
+    grid-template-columns:1fr;
+  }
+}

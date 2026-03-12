@@ -395,8 +395,9 @@ function App() {
     "/suggested-circles"
   ];
 
-  const hideSidebar = authPages.includes(location.pathname);
-
+const hideSidebar =
+  authPages.includes(location.pathname) ||
+  location.pathname.startsWith("/payment");
   const hasTopics = user && user.topics && user.topics.length > 0;
 
   return (

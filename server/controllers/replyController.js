@@ -56,44 +56,72 @@ if (
 // 👍 Upvote a reply
 export const upvoteReply = async (req, res) => {
   try {
+
     const { replyId } = req.params;
 
     const reply = await Reply.findById(replyId);
+
     if (!reply) {
       return res.status(404).json({ message: "Reply not found" });
     }
-    // Prevent self-upvote
+
+    // prevent self upvote
     if (reply.author.toString() === req.user._id.toString()) {
       return res
         .status(400)
         .json({ message: "You cannot upvote your own reply" });
     }
-    // prevent duplicate upvote
-    if (reply.upvotes.includes(req.user._id)) {
-      return res.status(400).json({ message: "Already upvoted" });
+
+    const alreadyUpvoted = reply.upvotes.some(
+      (id) => id.toString() === req.user._id.toString()
+    );
+
+    let message = "";
+
+    if (alreadyUpvoted) {
+
+      // REMOVE UPVOTE
+      reply.upvotes.pull(req.user._id);
+
+      // decrease author's upvote count
+      const replyAuthor = await User.findById(reply.author);
+      replyAuthor.replyUpvotesCount -= 1;
+      await replyAuthor.save();
+
+      message = "Upvote removed";
+
+    } else {
+
+      // ADD UPVOTE
+      reply.upvotes.push(req.user._id);
+
+      const replyAuthor = await User.findById(reply.author);
+      replyAuthor.replyUpvotesCount += 1;
+      await replyAuthor.save();
+
+      // notify author
+      await createNotification({
+        user: reply.author,
+        type: "upvote",
+        message: `${req.user.name} upvoted your reply`,
+        link: `/posts/${reply.post}`,
+      });
+
+      // promotion check
+      await checkAndPromoteContributor(replyAuthor._id);
+
+      message = "Reply upvoted";
+
     }
 
-    reply.upvotes.push(req.user._id);
     await reply.save();
-    if (reply.author.toString() !== req.user._id.toString()) {
-    await createNotification({
-      user: reply.author,
-      type: "upvote",
-      message: `${req.user.name} upvoted your reply`,
-      link: `/posts/${reply.post}`,
-    });
-  }
-    // increment upvote count for reply author
-    const replyAuthor = await User.findById(reply.author);
-    replyAuthor.replyUpvotesCount += 1;
-    await replyAuthor.save();
 
-    // check promotion
-    await checkAndPromoteContributor(replyAuthor._id);
     res.status(200).json({
-      message: "Reply upvoted",
+      message,
       upvotesCount: reply.upvotes.length,
+      upvotes: reply.upvotes
     });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

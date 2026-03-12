@@ -1,0 +1,137 @@
+.postdetail-container{
+  max-width:750px;
+  margin:auto;
+  padding:30px;
+}
+
+.post-card{
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:25px;
+}
+
+.post-description{
+  color:#374151;
+  margin-top:10px;
+}
+
+.reply-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:14px;
+}
+
+.reply-card{
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  padding:14px;
+  margin-bottom:12px;
+}
+
+.reply-card.solved{
+  border:2px solid #10b981;
+  background:#f0fff4;
+}
+
+.reply-author{
+  font-weight:600;
+  color:#1F2937;
+  margin-bottom:6px;
+}
+
+/* main row */
+
+.reply-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+}
+
+.reply-text{
+  color:#374151;
+  font-size:14px;
+  max-width:75%;
+  margin:0;
+}
+
+.reply-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.upvote-btn{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  border:none;
+  background:#f3f4f6;
+  padding:5px 8px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.icon-btn{
+  border:none;
+  background:none;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.icon-btn.delete{
+  color:#ef4444;
+}
+
+.solve-btn{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  border:none;
+  background:#747bff;
+  color:white;
+  padding:5px 10px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.solved-label{
+  color:#10b981;
+  font-weight:600;
+}
+
+.reply-input-box{
+  margin-top:20px;
+}
+
+.reply-input-box textarea{
+  width:100%;
+  border:1px solid #e5e7eb;
+  border-radius:8px;
+  padding:10px;
+}
+
+.reply-submit-btn{
+  margin-top:8px;
+  padding:6px 14px;
+  border:none;
+  border-radius:6px;
+  background:#373A7A;
+  color:white;
+  cursor:pointer;
+}
+
+.snackbar{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#1F2937;
+  color:white;
+  padding:10px 18px;
+  border-radius:8px;
+}

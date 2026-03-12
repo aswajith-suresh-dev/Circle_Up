@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
+import "../../css/Feedback.css";
 
 const Feedback = () => {
+
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(5);
   const [existingFeedback, setExistingFeedback] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [snackbar, setSnackbar] = useState("");
+
+  const showSnackbar = (msg) => {
+    setSnackbar(msg);
+    setTimeout(() => setSnackbar(""), 2500);
+  };
 
   const fetchMyFeedback = async () => {
     try {
+
       const res = await api.get("/support/my-feedback");
 
       if (res.data) {
@@ -16,6 +25,7 @@ const Feedback = () => {
         setMessage(res.data.message);
         setRating(res.data.rating);
       }
+
     } catch (err) {
       console.error(err);
     }
@@ -26,68 +36,120 @@ const Feedback = () => {
   }, []);
 
   const handleSubmit = async () => {
+
+    if (!message.trim()) {
+      showSnackbar("Please write feedback");
+      return;
+    }
+
     try {
+
       await api.post("/support/feedback", {
         message,
         rating,
       });
 
+      showSnackbar("Feedback submitted");
+
       setIsEditing(false);
       fetchMyFeedback();
+
     } catch (err) {
-      console.error(err.response?.data?.message || err.message);
+
+      showSnackbar(
+        err.response?.data?.message || "Something went wrong"
+      );
+
     }
+
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "600px" }}>
-      <h2>Feedback</h2>
 
-      {existingFeedback && !isEditing ? (
-        <>
-          <p><strong>Your Rating:</strong></p>
-          <p>{"⭐".repeat(existingFeedback.rating)}</p>
+    <div className="feedback-page">
 
-          <p><strong>Your Feedback:</strong></p>
-          <p>{existingFeedback.message}</p>
+      <div className="feedback-card">
 
-          <button onClick={() => setIsEditing(true)}>
-            Edit Feedback
-          </button>
-        </>
-      ) : (
-        <>
-          <div style={{ marginBottom: "10px" }}>
-            {[1, 2, 3, 4, 5].map((num) => (
-              <button
-                key={num}
-                onClick={() => setRating(num)}
-                style={{
-                  marginRight: "5px",
-                  background: rating >= num ? "#facc15" : "#e5e7eb",
-                  border: "none",
-                  padding: "6px 10px",
-                  borderRadius: "6px",
-                }}
-              >
-                ⭐
-              </button>
-            ))}
-          </div>
+        <h2>Feedback</h2>
 
-          <textarea
-            rows="4"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            style={{ width: "100%", marginBottom: "10px" }}
-          />
+        {existingFeedback && !isEditing ? (
 
-          <button onClick={handleSubmit}>
-            {existingFeedback ? "Update Feedback" : "Submit Feedback"}
-          </button>
-        </>
+          <>
+            <div className="rating-view">
+              {"⭐".repeat(existingFeedback.rating)}
+            </div>
+
+            <p className="feedback-text">
+              {existingFeedback.message}
+            </p>
+
+            <button
+              className="btn-secondary"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Feedback
+            </button>
+          </>
+
+        ) : (
+
+          <>
+
+            {/* Rating */}
+
+            <div className="rating-select">
+
+              {[1,2,3,4,5].map((num) => (
+
+                <button
+                  key={num}
+                  onClick={() => setRating(num)}
+                  className={`star-btn ${rating >= num ? "active" : ""}`}
+                >
+                  ⭐
+                </button>
+
+              ))}
+
+            </div>
+
+            {/* Message */}
+
+            <textarea
+              rows="4"
+              value={message}
+              placeholder="Share your experience..."
+              onChange={(e) => setMessage(e.target.value)}
+              className="feedback-textarea"
+            />
+
+            <button
+              onClick={handleSubmit}
+              className="btn-secondary"
+            >
+              {existingFeedback
+                ? "Update Feedback"
+                : "Submit Feedback"}
+            </button>
+
+          </>
+
+        )}
+
+      </div>
+
+      {/* Snackbar */}
+
+      {snackbar && (
+
+        <div className="snackbar">
+          {snackbar}
+        </div>
+
       )}
+
     </div>
+
   );
 };
 

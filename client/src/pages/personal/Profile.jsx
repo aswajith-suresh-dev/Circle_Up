@@ -8,6 +8,8 @@ import { useAuth } from "../../context/AuthContext";
 const Profile = () => {
 
   const [data, setData] = useState(null);
+  const [activeTab, setActiveTab] = useState("stats");
+
   const [isEditing, setIsEditing] = useState(false);
 
   const [name, setName] = useState("");
@@ -17,9 +19,10 @@ const Profile = () => {
   const { logout, updateUser } = useAuth();
   const navigate = useNavigate();
 
-  // 🔹 Fetch profile
   useEffect(() => {
+
     const fetchProfile = async () => {
+
       try {
 
         const res = await api.get("/auth/profile");
@@ -28,22 +31,22 @@ const Profile = () => {
         setName(res.data.user.name || "");
         setDescription(res.data.user.description || "");
 
-        // update sidebar user
         updateUser(res.data.user);
 
       } catch (err) {
         console.error(err);
       }
+
     };
 
     fetchProfile();
+
   }, []);
 
   if (!data) return <p>Loading...</p>;
 
   const { user, stats } = data;
 
-  // 🔹 Save profile changes
   const handleSave = async () => {
 
     try {
@@ -57,17 +60,13 @@ const Profile = () => {
         formData.append("photo", photoFile);
       }
 
-      const res = await api.put("/auth/profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await api.put("/auth/profile", formData);
 
       const updatedUser = res.data.user;
 
-      setData((prev) => ({
+      setData(prev => ({
         ...prev,
-        user: updatedUser,
+        user: updatedUser
       }));
 
       updateUser(updatedUser);
@@ -82,176 +81,199 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
+
     logout();
     navigate("/login");
+
   };
 
   return (
-    <div style={{ maxWidth: "700px", margin: "40px auto" }}>
 
-      <h2>My Profile</h2>
+    <div className="profile-page">
 
-      {/* Identity Card */}
-      <div
-        style={{
-          background: "#ffffff",
-          padding: "20px",
-          borderRadius: "12px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-          marginBottom: "30px",
-          position: "relative",
-        }}
-      >
+      {/* Banner */}
+
+      <div className="profile-banner"></div>
+
+      {/* Profile Card */}
+
+      <div className="profile-card">
 
         {!isEditing && (
           <div
-            className="profile-edit-icon"
+            className="edit-icon"
             onClick={() => setIsEditing(true)}
           >
-            <FiEdit2 size={18} />
-            <span className="profile-tooltip">Edit Profile</span>
+            <FiEdit2/>
           </div>
         )}
 
-        <div style={{ textAlign: "center" }}>
+        <img
+          className="profile-avatar"
+          src={
+            user.photo
+              ? `http://localhost:5000${user.photo}`
+              : "https://via.placeholder.com/150"
+          }
+          alt="profile"
+        />
 
-          <img
-            src={
-              user.photo
-                ? `http://localhost:5000${user.photo}`
-                : "https://via.placeholder.com/120"
-            }
-            alt="Profile"
-            style={{
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              marginBottom: "10px",
-            }}
-          />
+        {!isEditing ? (
+          <>
+            <h2>{user.name}</h2>
+            <p className="profile-role">{user.role}</p>
+            <p className="profile-desc">
+              {user.description || "Add a profile description"}
+            </p>
+          </>
+        ) : (
+          <div className="edit-section">
 
-          {!isEditing ? (
-            <>
-              <h3>{user.name}</h3>
-              <p style={{ color: "#6b7280" }}>{user.role}</p>
-              <p style={{ fontSize: "14px", color: "#6b7280" }}>
-                Joined {new Date(user.createdAt).toLocaleDateString()}
-              </p>
-              <p>🔥 {user.activityStreak} day streak</p>
-            </>
-          ) : (
             <input
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              style={{
-                padding: "8px",
-                width: "60%",
-                marginBottom: "10px",
-              }}
+              onChange={(e)=>setName(e.target.value)}
             />
-          )}
-
-        </div>
-
-        {/* Edit Mode */}
-        {isEditing ? (
-          <div style={{ marginTop: "15px" }}>
 
             <textarea
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Write something about yourself..."
-              style={{
-                width: "100%",
-                marginBottom: "10px",
-                padding: "8px",
-              }}
+              onChange={(e)=>setDescription(e.target.value)}
             />
 
             <input
               type="file"
-              accept="image/*"
-              onChange={(e) => setPhotoFile(e.target.files[0])}
-              style={{ marginBottom: "10px" }}
+              onChange={(e)=>setPhotoFile(e.target.files[0])}
             />
 
-            <div>
-              <button
-                onClick={handleSave}
-                style={{ marginRight: "10px" }}
-              >
-                Save
-              </button>
-
-              <button onClick={() => setIsEditing(false)}>
-                Cancel
-              </button>
+            <div className="edit-buttons">
+              <button onClick={handleSave}>Save</button>
+              <button onClick={()=>setIsEditing(false)}>Cancel</button>
             </div>
 
-          </div>
-        ) : (
-          <div style={{ marginTop: "15px", textAlign: "center" }}>
-            {user.description ? (
-              <p>{user.description}</p>
-            ) : (
-              <p style={{ color: "gray" }}>
-                Complete your profile to add description.
-              </p>
-            )}
           </div>
         )}
 
       </div>
 
-      {/* Stats */}
-      <div style={{ marginBottom: "30px" }}>
-        <h3>Stats</h3>
-        <p>Circles Joined: {stats.circlesJoined}</p>
-        <p>Posts Created: {stats.postsCreated}</p>
-        <p>Challenges Joined: {stats.challengesJoined}</p>
-      </div>
+      {/* Tabs */}
 
-      {/* Reputation */}
-      <div>
-        <h3>⭐ Reputation</h3>
-        <p>Reply Upvotes: {user.replyUpvotesCount}</p>
-        <p>Solutions Given: {user.solvedRepliesCount}</p>
-      </div>
-
-      {/* Account */}
-      <div style={{ marginTop: "40px", borderTop: "1px solid #ddd", paddingTop: "20px" }}>
-        <h3>Account</h3>
+      <div className="profile-tabs">
 
         <button
-          onClick={() => navigate("/change-password")}
-          style={{
-            padding: "8px 16px",
-            cursor: "pointer",
-          }}
+          className={activeTab === "stats" ? "active" : ""}
+          onClick={()=>setActiveTab("stats")}
         >
-          Change Password
+          Stats
         </button>
 
         <button
-          onClick={handleLogout}
-          style={{
-            padding: "8px 16px",
-            marginLeft: "10px",
-            cursor: "pointer",
-            background: "#ef4444",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-          }}
+          className={activeTab === "reputation" ? "active" : ""}
+          onClick={()=>setActiveTab("reputation")}
         >
-          Logout
+          Reputation
         </button>
+
+        <button
+          className={activeTab === "account" ? "active" : ""}
+          onClick={()=>setActiveTab("account")}
+        >
+          Account
+        </button>
+
+        <button
+          className={activeTab === "support" ? "active" : ""}
+          onClick={()=>setActiveTab("support")}
+        >
+          Support
+        </button>
+
+      </div>
+
+      {/* Tab Content */}
+
+      <div className="profile-content">
+
+        {activeTab === "stats" && (
+
+          <div className="stats-grid">
+
+            <div className="stat-card">
+              <span>{stats.circlesJoined}</span>
+              <p>Circles Joined</p>
+            </div>
+
+            <div className="stat-card">
+              <span>{stats.postsCreated}</span>
+              <p>Posts Created</p>
+            </div>
+
+            <div className="stat-card">
+              <span>{stats.challengesJoined}</span>
+              <p>Challenges Joined</p>
+            </div>
+
+          </div>
+
+        )}
+
+        {activeTab === "reputation" && (
+
+          <div className="stats-grid">
+
+            <div className="stat-card">
+              <span>{user.replyUpvotesCount}</span>
+              <p>Reply Upvotes</p>
+            </div>
+
+            <div className="stat-card">
+              <span>{user.solvedRepliesCount}</span>
+              <p>Solutions Given</p>
+            </div>
+
+          </div>
+
+        )}
+
+        {activeTab === "account" && (
+
+          <div className="account-buttons">
+
+            <button onClick={()=>navigate("/change-password")}>
+              Change Password
+            </button>
+
+            <button
+              className="logout-btn"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+
+          </div>
+
+        )}
+
+        {activeTab === "support" && (
+
+          <div className="account-buttons">
+
+            <button onClick={()=>navigate("/complaint")}>
+              Complaint
+            </button>
+
+            <button onClick={()=>navigate("/feedback")}>
+              Feedback
+            </button>
+
+          </div>
+
+        )}
 
       </div>
 
     </div>
+
   );
+
 };
 
 export default Profile;
