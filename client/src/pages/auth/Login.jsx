@@ -16,35 +16,34 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
-  
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
 
-  try {
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-    const res = await api.post("/auth/login", {
-      email,
-      password,
-    });
+    try {
+      setLoading(true);
 
-    const { user, token } = res.data;
-const fullUser = await login(user, token);
+      const res = await api.post("/auth/login", {
+        email,
+        password,
+      });
 
-if (!fullUser.topics || fullUser.topics.length === 0) {
-  navigate("/select-topics", { replace: true });
-} else {
-  navigate("/home", { replace: true });
-}
+      const { user, token } = res.data;
+      const fullUser = await login(user, token);
 
-  } catch (err) {
-    console.log("LOGIN ERROR:", err.response?.data || err.message);
-    setError(err.response?.data?.message || "Login failed");
-  } finally {
-    setLoading(false);
-  }
-};
+      if (!fullUser.topics || fullUser.topics.length === 0) {
+        navigate("/select-topics", { replace: true });
+      } else {
+        navigate("/home", { replace: true });
+      }
+    } catch (err) {
+      console.log("LOGIN ERROR:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -88,10 +87,8 @@ if (!fullUser.topics || fullUser.topics.length === 0) {
             <Link to="/signup">Sign Up</Link>
           </p>
           <p style={{ marginTop: "10px", textAlign: "center" }}>
-  <Link to="/forgot-password">
-    Forgot Password?
-  </Link>
-</p>
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </p>
         </div>
       </div>
 

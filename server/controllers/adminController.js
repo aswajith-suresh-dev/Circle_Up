@@ -1,6 +1,5 @@
 import User from "../models/User.js";
 import Challenge from "../models/Challenge.js";
-import Payment from "../models/Payment.js";
 export const promoteUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -122,6 +121,331 @@ export const getAdminRevenue = async (req,res) => {
 
     res.status(500).json({
       message:"Failed to load revenue"
+    });
+
+  }
+
+};
+import Circle from "../models/Circle.js";
+import Payment from "../models/Payment.js";
+export const getAdminDashboardStats = async (req, res) => {
+  try {
+
+    const payments = await Payment.find();
+
+    let totalRevenue = 0;
+    let monthRevenue = 0;
+
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    payments.forEach(payment => {
+
+      const adminShare = payment.amount * 0.2;
+
+      totalRevenue += adminShare;
+
+      const paymentDate = new Date(payment.createdAt);
+
+      if (
+        paymentDate.getMonth() === currentMonth &&
+        paymentDate.getFullYear() === currentYear
+      ) {
+        monthRevenue += adminShare;
+      }
+
+    });
+
+    const totalSales = payments.length;
+
+    const avgSale =
+      totalSales > 0 ? totalRevenue / totalSales : 0;
+
+    res.json({
+      totalRevenue: Math.round(totalRevenue),
+      monthRevenue: Math.round(monthRevenue),
+      totalSales,
+      avgSale: Math.round(avgSale)
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: "Failed to load dashboard stats"
+    });
+
+  }
+};
+export const getTopDashboardData = async (req, res) => {
+
+  try {
+
+    /* TOP CIRCLES */
+
+    const topCircles = await Circle.find()
+      .sort({ membersCount: -1 })
+      .limit(3)
+      .select("name topic membersCount")
+      .lean();
+
+    /* TOP CHALLENGES */
+
+    const topChallenges = await Challenge.find()
+      .sort({ participantsCount: -1 })
+      .limit(3)
+      .select("title level participantsCount")
+      .lean();
+
+    /* TOP USERS */
+
+    const topUsers = await User.find({
+      role: { $in: ["user", "contributor"] }
+    })
+      .sort({ replyUpvotesCount: -1 })
+      .limit(3)
+      .select("name replyUpvotesCount solvedRepliesCount")
+      .lean();
+
+    /* TOP MENTORS */
+
+    const topMentors = await User.find({ role: "mentor" })
+      .sort({ solvedRepliesCount: -1 })
+      .limit(3)
+      .select("name solvedRepliesCount replyUpvotesCount")
+      .lean();
+
+    res.json({
+      topCircles,
+      topChallenges,
+      topUsers,
+      topMentors
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: "Failed to load top dashboard data"
+    });
+
+  }
+
+};
+export const getAdminRevenueList = async (req, res) => {
+
+  try {
+
+    const challenges = await Challenge.find()
+      .populate("mentor", "name")
+      .select("title price");
+
+    const result = [];
+
+    for (const challenge of challenges) {
+
+      const payments = await Payment.find({
+        challenge: challenge._id
+      });
+
+      const buyers = payments.length;
+
+      const totalRevenue = payments.reduce(
+        (sum,p) => sum + p.amount,
+        0
+      );
+
+      result.push({
+        mentor: challenge.mentor?.name,
+        challenge: challenge.title,
+        price: challenge.price,
+        buyers,
+        totalRevenue
+      });
+
+    }
+result.sort((a,b)=>b.totalRevenue - a.totalRevenue);
+    res.json(result);
+
+  } catch(err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message:"Failed to load revenue list"
+    });
+
+  }
+
+};
+export const getAllUsers = async (req,res) => {
+
+  try{
+
+    const users = await User.find()
+      .select("name email role createdAt replyUpvotesCount solvedRepliesCount");
+
+    res.json(users);
+
+  }catch(err){
+
+    console.error(err);
+
+    res.status(500).json({
+      message:"Failed to fetch users"
+    });
+
+  }
+
+};
+export const deleteUser = async (req,res) => {
+
+  try{
+
+    const { userId } = req.params;
+
+    await User.findByIdAndDelete(userId);
+
+    res.json({
+      message:"User deleted successfully"
+    });
+
+  }catch(err){
+
+    console.error(err);
+
+    res.status(500).json({
+      message:"Failed to delete user"
+    });
+
+  }
+
+};
+export const getAllCircles = async (req, res) => {
+
+  try {
+
+    const circles = await Circle.find()
+      .populate("mentor", "name")
+      .select("name topic mentor members createdAt");
+
+    const result = circles.map(circle => ({
+
+      _id: circle._id,
+
+      name: circle.name,
+
+      topic: circle.topic,
+
+      mentor: circle.mentor,
+
+      membersCount: circle.members?.length || 0,
+
+      createdAt: circle.createdAt
+
+    }));
+
+    res.json(result);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: "Failed to fetch circles"
+    });
+
+  }
+
+};
+export const deleteCircle = async (req,res) => {
+
+  try{
+
+    const { circleId } = req.params;
+
+    await Circle.findByIdAndDelete(circleId);
+
+    res.json({
+      message:"Circle deleted successfully"
+    });
+
+  }catch(err){
+
+    console.error(err);
+
+    res.status(500).json({
+      message:"Failed to delete circle"
+    });
+
+  }
+
+};
+
+export const getAllChallenges = async (req,res) => {
+
+  try{
+
+    const challenges = await Challenge.find()
+      .populate("mentor","name")
+      .populate("circle","name")
+      .select("title price participants createdAt mentor circle");
+
+    const result = challenges.map(challenge => ({
+
+      _id: challenge._id,
+
+      title: challenge.title,
+
+      mentor: challenge.mentor,
+
+      circle: challenge.circle,
+
+      price: challenge.price,
+
+      participantsCount: challenge.participants?.length || 0,
+
+      createdAt: challenge.createdAt
+
+    }));
+
+    res.json(result);
+
+  }catch(err){
+
+    console.error(err);
+
+    res.status(500).json({
+      message:"Failed to fetch challenges"
+    });
+
+  }
+
+};
+
+
+
+export const deleteChallenge = async (req,res) => {
+
+  try{
+
+    const { challengeId } = req.params;
+
+    await Challenge.findByIdAndDelete(challengeId);
+
+    res.json({
+      message:"Challenge deleted"
+    });
+
+  }catch(err){
+
+    console.error(err);
+
+    res.status(500).json({
+      message:"Failed to delete challenge"
     });
 
   }

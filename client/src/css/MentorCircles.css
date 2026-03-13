@@ -1,0 +1,157 @@
+/* PAGE */
+
+.mentor-circle-page{
+max-width:780px;
+margin:auto;
+padding:25px;
+font-family:Inter;
+}
+
+/* TITLE */
+
+.mentor-circle-title{
+font-size:24px;
+font-weight:700;
+color:#1f2937;
+margin-bottom:18px;
+}
+
+/* EMPTY STATE */
+
+.mentor-circle-empty{
+margin-top:18px;
+}
+
+.mentor-circle-empty-text{
+color:#6b7280;
+margin-bottom:10px;
+font-size:14px;
+}
+
+/* CREATE BUTTON */
+
+.mentor-circle-create-btn{
+
+padding:7px 14px;
+
+border:none;
+
+border-radius:8px;
+
+background:#1f2937;
+
+color:white;
+
+cursor:pointer;
+
+font-size:13px;
+
+}
+
+.mentor-circle-create-btn:hover{
+background:#111827;
+}
+
+/* CARD */
+
+.mentor-circle-card{
+
+background:white;
+
+border:1px solid #e5e7eb;
+
+border-radius:10px;
+
+padding:14px;
+
+margin-bottom:14px;
+
+box-shadow:0 2px 5px rgba(0,0,0,0.04);
+
+transition:0.15s;
+
+}
+
+.mentor-circle-card:hover{
+box-shadow:0 4px 8px rgba(0,0,0,0.08);
+}
+
+/* NAME */
+
+.mentor-circle-name{
+font-size:16px;
+color:#1f2937;
+margin-bottom:4px;
+}
+
+/* DESCRIPTION */
+
+.mentor-circle-description{
+color:#374151;
+font-size:13px;
+margin-bottom:6px;
+}
+
+/* META */
+
+.mentor-circle-meta{
+font-size:12px;
+color:#6b7280;
+margin-bottom:2px;
+}
+
+/* ACTIONS */
+
+.mentor-circle-actions{
+display:flex;
+gap:8px;
+margin-top:10px;
+}
+
+/* EDIT BUTTON */
+
+.mentor-circle-edit-btn{
+
+padding:6px 12px;
+
+border:none;
+
+border-radius:7px;
+
+background:#1f2937;
+
+color:white;
+
+cursor:pointer;
+
+font-size:12px;
+
+}
+
+.mentor-circle-edit-btn:hover{
+background:#111827;
+}
+
+/* DELETE BUTTON */
+
+.mentor-circle-delete-btn{
+
+padding:6px 12px;
+
+border-radius:7px;
+
+border:1px solid #ef4444;
+
+background:#fef2f2;
+
+color:#b91c1c;
+
+cursor:pointer;
+
+font-size:12px;
+
+}
+
+.mentor-circle-delete-btn:hover{
+background:#fee2e2;
+}

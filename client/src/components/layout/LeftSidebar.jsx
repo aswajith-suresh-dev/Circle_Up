@@ -8,6 +8,7 @@ import {
   FiBell,
   FiUser,
   FiFolder,
+  FiBarChart2,
 } from "react-icons/fi";
 import { BsPin } from "react-icons/bs";
 import "../../css/LeftSidebar.css";
@@ -21,10 +22,10 @@ const LeftSidebar = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-const photoUrl = useMemo(() => {
-  if (!user?.photo) return "/profile.png";
-  return `http://localhost:5000${user.photo}`;
-}, [user?.photo]);
+  const photoUrl = useMemo(() => {
+    if (!user?.photo) return "/profile.png";
+    return `http://localhost:5000${user.photo}`;
+  }, [user?.photo]);
   const handleMouseEnter = () => {
     setHovering(true);
     if (!pinned) setCollapsed(false);
@@ -42,7 +43,7 @@ const photoUrl = useMemo(() => {
   };
 
   const isActive = (path) => location.pathname === path;
-console.log(user);
+  console.log(user);
   return (
     <div
       className={`sidebar ${collapsed ? "collapsed" : "expanded"}`}
@@ -51,24 +52,24 @@ console.log(user);
     >
       {/* Pin Icon (shows only when hovering) */}
       {(hovering || pinned) && (
-  <div className="sidebar-pin" onClick={togglePin}>
-    <BsPin className={pinned ? "pinned" : ""} size={16} />
-  </div>
-)}
+        <div className="sidebar-pin" onClick={togglePin}>
+          <BsPin className={pinned ? "pinned" : ""} size={16} />
+        </div>
+      )}
 
       {/* Top Section */}
       <div>
         {/* Profile */}
         <div className="sidebar-profile">
-  <img
-  src={
-    user?.photo
-      ? `http://localhost:5000${user.photo}`
-      : "/profile.png"
-  }
-  className="avatar"
-  alt="profile"
-/>
+          <img
+            src={
+              user?.photo
+                ? `http://localhost:5000${user.photo}`
+                : "/profile.png"
+            }
+            className="avatar"
+            alt="profile"
+          />
 
           <p className={`username ${collapsed ? "hidden" : ""}`}>
             {user?.name}
@@ -77,7 +78,6 @@ console.log(user);
 
         {/* Navigation */}
         <nav className="sidebar-nav">
-
           <Link
             to="/"
             className={`sidebar-link ${isActive("/") ? "active" : ""}`}
@@ -93,7 +93,15 @@ console.log(user);
             <FiSearch />
             {!collapsed && <span>Search</span>}
           </Link>
-
+          {user?.role === "mentor" && (
+            <Link
+              to="/mentor"
+              className={`sidebar-link ${isActive("/mentor") ? "active" : ""}`}
+            >
+              <FiBarChart2 />
+              {!collapsed && <span>Dashboard</span>}
+            </Link>
+          )}
           <Link
             to="/my-circles"
             className={`sidebar-link ${isActive("/my-circles") ? "active" : ""}`}
@@ -133,14 +141,11 @@ console.log(user);
             <FiFolder />
             {!collapsed && <span>Personal Space</span>}
           </Link>
-
         </nav>
       </div>
 
       {/* Bottom Logo */}
-      <div className="sidebar-logo">
-        {collapsed ? "CU" : "CircleUp"}
-      </div>
+      <div className="sidebar-logo">{collapsed ? "CU" : "CircleUp"}</div>
     </div>
   );
 };

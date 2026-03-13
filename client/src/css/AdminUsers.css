@@ -1,0 +1,114 @@
+/* PAGE */
+
+.admin-users-page{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+/* TITLE */
+
+.admin-users-title{
+font-size:22px;
+}
+
+/* SEARCH */
+
+.admin-users-search{
+
+background:#0f172a;
+border:1px solid #1f2937;
+color:white;
+
+padding:10px 12px;
+border-radius:6px;
+
+width:260px;
+
+}
+
+/* EMPTY */
+
+.admin-users-empty{
+color:#9ca3af;
+}
+
+/* GRID */
+
+.admin-users-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+/* CARD */
+
+.admin-users-card{
+
+background:#1e293b;
+padding:18px;
+
+border-radius:12px;
+
+display:flex;
+flex-direction:column;
+gap:6px;
+
+border:1px solid #1f2937;
+
+}
+
+/* NAME */
+
+.admin-users-card h3{
+margin:0;
+font-size:18px;
+}
+
+/* TEXT */
+
+.admin-users-card p{
+margin:0;
+font-size:14px;
+color:#9ca3af;
+}
+
+/* DELETE BUTTON */
+
+.admin-users-delete{
+
+margin-top:10px;
+
+background:#ef4444;
+border:none;
+
+padding:8px 14px;
+border-radius:6px;
+
+color:white;
+cursor:pointer;
+
+width:120px;
+
+}
+
+.admin-users-controls{
+
+display:flex;
+gap:15px;
+
+}
+
+.admin-users-controls select{
+
+background:#0f172a;
+border:1px solid #1f2937;
+color:white;
+
+padding:8px 10px;
+border-radius:6px;
+
+}
+.admin-users-delete:hover{
+opacity:0.9;
+}

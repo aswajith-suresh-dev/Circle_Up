@@ -190,3 +190,67 @@ color:white;
 .edit-buttons button:last-child{
 background:#E5E7EB;
 }
+/* Mentor Banner */
+
+.profile-mentor-banner{
+background:#1f2937;
+color:white;
+
+border-radius:10px;
+
+padding:16px 40px 16px 20px;
+
+margin-top:20px;
+margin-bottom:10px;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+position:relative;
+}
+
+.profile-mentor-banner h3{
+margin:0;
+font-size:16px;
+font-weight:600;
+}
+
+.profile-mentor-banner p{
+margin:4px 0 0 0;
+font-size:13px;
+color:#d1d5db;
+}
+
+.profile-mentor-banner button{
+background:#373A7A;
+border:none;
+
+padding:8px 16px;
+border-radius:6px;
+
+color:white;
+cursor:pointer;
+
+font-size:14px;
+}
+
+.profile-mentor-banner button:hover{
+opacity:0.9;
+}
+/* Banner close icon */
+
+.mentor-banner-close{
+position:absolute;
+top:12px;
+right:16px;
+
+cursor:pointer;
+font-size:18px;
+color:white;
+
+opacity:0.8;
+}
+
+.mentor-banner-close:hover{
+opacity:1;
+}

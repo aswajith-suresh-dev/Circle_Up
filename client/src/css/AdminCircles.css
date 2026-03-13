@@ -1,0 +1,111 @@
+/* PAGE */
+
+.admin-circles-page{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+/* TITLE */
+
+.admin-circles-title{
+font-size:22px;
+}
+
+/* SEARCH */
+
+.admin-circles-search{
+
+background:#0f172a;
+border:1px solid #1f2937;
+color:white;
+
+padding:10px 12px;
+border-radius:6px;
+
+width:260px;
+
+}
+
+/* CONTROLS */
+
+.admin-circles-controls{
+display:flex;
+gap:15px;
+}
+
+.admin-circles-controls select{
+
+background:#0f172a;
+border:1px solid #1f2937;
+color:white;
+
+padding:8px 10px;
+border-radius:6px;
+
+}
+
+/* EMPTY */
+
+.admin-circles-empty{
+color:#9ca3af;
+}
+
+/* GRID */
+
+.admin-circles-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+/* CARD */
+
+.admin-circles-card{
+
+background:#1e293b;
+padding:18px;
+
+border-radius:12px;
+
+display:flex;
+flex-direction:column;
+gap:6px;
+
+border:1px solid #1f2937;
+
+}
+
+.admin-circles-card h3{
+margin:0;
+font-size:18px;
+}
+
+.admin-circles-card p{
+margin:0;
+font-size:14px;
+color:#9ca3af;
+}
+
+/* DELETE */
+
+.admin-circles-delete{
+
+margin-top:10px;
+
+background:#ef4444;
+border:none;
+
+padding:8px 14px;
+border-radius:6px;
+
+color:white;
+cursor:pointer;
+
+width:130px;
+
+}
+
+.admin-circles-delete:hover{
+opacity:0.9;
+}

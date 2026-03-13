@@ -1,6 +1,10 @@
+// src/pages/mentor/CreateChallenge.jsx
+
 import { useState, useEffect } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+
+import "../../css/CreateChallenge.css";
 
 const CreateChallenge = () => {
 
@@ -25,18 +29,23 @@ resources:[]
 
 const totalDays = days.length;
 
+
+/* FETCH MENTOR CIRCLES */
+
 useEffect(()=>{
 
 const fetchCircles = async () => {
 
 try{
 
-const res = await api.get("/circles/my");
+const res = await api.get("/mentor/circles");
 
 setCircles(res.data);
 
 }catch(err){
+
 console.error(err);
+
 }
 
 };
@@ -44,6 +53,9 @@ console.error(err);
 fetchCircles();
 
 },[]);
+
+
+/* DAY CONTENT CHANGE */
 
 const handleDayChange = (index,value)=>{
 
@@ -54,6 +66,9 @@ updated[index].content = value;
 setDays(updated);
 
 };
+
+
+/* ADD DAY */
 
 const addDay = () => {
 
@@ -68,6 +83,9 @@ resources:[]
 
 };
 
+
+/* ADD RESOURCE */
+
 const addResource = (dayIndex) => {
 
 const updated = [...days];
@@ -81,6 +99,9 @@ setDays(updated);
 
 };
 
+
+/* RESOURCE CHANGE */
+
 const handleResourceChange = (dayIndex,resIndex,field,value)=>{
 
 const updated = [...days];
@@ -91,6 +112,9 @@ setDays(updated);
 
 };
 
+
+/* SUBMIT */
+
 const handleSubmit = async (e)=>{
 
 e.preventDefault();
@@ -98,6 +122,7 @@ e.preventDefault();
 try{
 
 await api.post("/challenges",{
+
 title,
 description,
 level,
@@ -106,6 +131,7 @@ price: type==="paid" ? Number(price) : 0,
 totalDays,
 days,
 circleId
+
 });
 
 alert("Challenge created");
@@ -120,38 +146,44 @@ console.error(err.response?.data?.message || err.message);
 
 };
 
+
 return(
 
-<div style={{padding:"20px",maxWidth:"750px"}}>
+<div className="create-challenge-page">
 
-<h2>Create Challenge</h2>
+<h2 className="create-challenge-title">
+Create Challenge
+</h2>
 
-<form onSubmit={handleSubmit}>
+<form onSubmit={handleSubmit} className="challenge-form">
+
 
 {/* TITLE */}
 
 <input
-placeholder="Challenge Title"
+className="challenge-input"
+placeholder="Challenge Title" 
 value={title}
 onChange={(e)=>setTitle(e.target.value)}
-style={input}
 />
+
 
 {/* DESCRIPTION */}
 
 <textarea
+className="challenge-textarea"
 placeholder="Description"
 value={description}
 onChange={(e)=>setDescription(e.target.value)}
-style={input}
 />
+
 
 {/* LEVEL */}
 
 <select
+className="challenge-select"
 value={level}
 onChange={(e)=>setLevel(e.target.value)}
-style={input}
 >
 
 <option value="beginner">Beginner</option>
@@ -160,12 +192,13 @@ style={input}
 
 </select>
 
+
 {/* TYPE */}
 
 <select
+className="challenge-select"
 value={type}
 onChange={(e)=>setType(e.target.value)}
-style={input}
 >
 
 <option value="free">Free</option>
@@ -173,26 +206,28 @@ style={input}
 
 </select>
 
+
 {/* PRICE */}
 
 {type==="paid" && (
 
 <input
 type="number"
+className="challenge-input"
 placeholder="Price"
 value={price}
 onChange={(e)=>setPrice(e.target.value)}
-style={input}
 />
 
 )}
 
-{/* CIRCLE */}
+
+{/* SELECT CIRCLE */}
 
 <select
+className="challenge-select"
 value={circleId}
 onChange={(e)=>setCircleId(e.target.value)}
-style={input}
 >
 
 <option value="">Select Circle</option>
@@ -207,24 +242,32 @@ style={input}
 
 </select>
 
-<h3>Challenge Days</h3>
+
+{/* CHALLENGE DAYS */}
+
+<h3 className="challenge-days-title">
+Challenge Days
+</h3>
+
 
 {days.map((day,index)=>(
 
-<div key={index} style={dayBox}>
+<div key={index} className="day-card">
 
-<h4>Day {day.dayNumber}</h4>
+<h4>
+Day {day.dayNumber}
+</h4>
+
 
 <textarea
+className="challenge-textarea"
 placeholder="Day content"
 value={day.content}
 onChange={(e)=>handleDayChange(index,e.target.value)}
-style={input}
 />
 
-{/* RESOURCES */}
 
-{/* RESOURCES (ONLY FOR PAID CHALLENGES) */}
+{/* RESOURCES FOR PAID CHALLENGE */}
 
 {type === "paid" && (
 
@@ -232,36 +275,39 @@ style={input}
 
 {day.resources.map((res,resIndex)=>(
 
-<div key={resIndex} style={{marginTop:"10px"}}>
+<div key={resIndex} className="resource-box">
 
 <input
+className="challenge-input"
 placeholder="Resource Title"
 value={res.title}
 onChange={(e)=>
 handleResourceChange(index,resIndex,"title",e.target.value)
 }
-style={input}
 />
 
 <input
+className="challenge-input"
 placeholder="Resource URL"
 value={res.url}
 onChange={(e)=>
 handleResourceChange(index,resIndex,"url",e.target.value)
 }
-style={input}
 />
 
 </div>
 
 ))}
 
+
 <button
 type="button"
+className="secondary-btn"
 onClick={()=>addResource(index)}
-style={smallButton}
 >
+
 Add Resource
+
 </button>
 
 </>
@@ -272,22 +318,32 @@ Add Resource
 
 ))}
 
+
+{/* ADD DAY */}
+
 <button
 type="button"
+className="add-day-btn"
 onClick={addDay}
-style={button}
 >
+
 Add Day
+
 </button>
 
-<br/>
+
+{/* SUBMIT */}
 
 <button
 type="submit"
-style={button}
+className="submit-btn"
+disabled={!circleId}
 >
+
 Create Challenge
+
 </button>
+
 
 </form>
 
@@ -295,42 +351,6 @@ Create Challenge
 
 );
 
-};
-
-const input = {
-width:"100%",
-padding:"8px",
-marginBottom:"10px",
-borderRadius:"6px",
-border:"1px solid #ccc"
-};
-
-const button = {
-marginTop:"10px",
-padding:"8px 16px",
-borderRadius:"6px",
-border:"none",
-background:"#3b82f6",
-color:"white",
-cursor:"pointer"
-};
-
-const smallButton = {
-marginTop:"8px",
-padding:"5px 10px",
-borderRadius:"6px",
-border:"none",
-background:"#10b981",
-color:"white",
-cursor:"pointer"
-};
-
-const dayBox = {
-border:"1px solid #ddd",
-padding:"12px",
-marginBottom:"15px",
-borderRadius:"8px",
-background:"#fafafa"
 };
 
 export default CreateChallenge;

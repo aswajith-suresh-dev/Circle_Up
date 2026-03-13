@@ -1,0 +1,233 @@
+/* PAGE */
+
+.create-challenge-page{
+
+max-width:850px;
+margin:auto;
+
+padding:30px;
+
+font-family:Inter;
+
+}
+
+/* HEADER */
+
+.create-challenge-title{
+
+font-size:26px;
+font-weight:700;
+
+color:#1f2937;
+
+margin-bottom:20px;
+
+}
+
+/* FORM */
+
+.challenge-form{
+
+background:white;
+
+border:1px solid #e5e7eb;
+
+border-radius:10px;
+
+padding:24px;
+
+}
+
+/* INPUTS */
+
+.challenge-input,
+.challenge-select,
+.challenge-textarea{
+
+width:100%;
+
+padding:10px 12px;
+
+border-radius:8px;
+
+border:1px solid #d1d5db;
+
+margin-bottom:12px;
+
+font-size:14px;
+
+transition:all 0.15s ease;
+
+}
+
+.challenge-input:focus,
+.challenge-select:focus,
+.challenge-textarea:focus{
+
+outline:none;
+
+border-color:#1f2937;
+
+box-shadow:0 0 0 2px rgba(31,41,55,0.1);
+
+}
+
+/* SECTION TITLE */
+
+.challenge-days-title{
+
+margin-top:20px;
+
+font-size:18px;
+font-weight:600;
+
+color:#1f2937;
+
+margin-bottom:10px;
+
+}
+
+/* DAY CARD */
+
+.day-card{
+
+border:1px solid #e5e7eb;
+
+border-radius:10px;
+
+padding:14px;
+
+margin-bottom:16px;
+
+background:#f9fafb;
+
+}
+
+.day-card h4{
+
+margin-bottom:8px;
+
+font-size:15px;
+
+color:#1f2937;
+
+}
+
+/* RESOURCE BOX */
+
+.resource-box{
+
+margin-top:10px;
+
+}
+
+/* BUTTONS */
+
+.primary-btn{
+
+margin-top:12px;
+
+padding:10px 18px;
+
+border:none;
+
+border-radius:8px;
+
+background:#1f2937;
+
+color:white;
+
+font-weight:500;
+
+cursor:pointer;
+
+transition:all 0.15s ease;
+
+}
+
+.primary-btn:hover{
+
+background:#111827;
+
+}
+
+.secondary-btn{
+
+margin-top:8px;
+
+padding:6px 12px;
+
+border:none;
+
+border-radius:6px;
+
+background:#10b981;
+
+color:white;
+
+font-size:13px;
+
+cursor:pointer;
+
+}
+
+.secondary-btn:hover{
+
+background:#059669;
+
+}
+
+/* ADD DAY BUTTON */
+
+.add-day-btn{
+
+margin-top:10px;
+
+padding:10px 18px;
+
+border:none;
+
+border-radius:8px;
+
+background:#374151;
+
+color:white;
+
+cursor:pointer;
+
+}
+
+.add-day-btn:hover{
+
+background:#1f2937;
+
+}
+
+/* SUBMIT */
+
+.submit-btn{
+
+margin-top:16px;
+
+padding:10px 18px;
+margin-left: 20px; 
+
+border:none;
+
+border-radius:8px;
+
+background:#373a7a;
+
+color:white;
+
+font-weight:500;
+
+cursor:pointer;
+
+}
+
+.submit-btn:hover{
+
+background:#23265c;
+
+}

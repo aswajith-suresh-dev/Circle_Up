@@ -3,7 +3,7 @@ import  {checkMentorEligibility}  from "../utils/roleEligibility.js";
 import { createNotification } from "../utils/createNotification.js";
 import Challenge from "../models/Challenge.js";
 import User from "../models/User.js";
-
+import Circle from "../models/Circle.js";
 
 export const applyForMentor = async (req, res) => {
   try {
@@ -293,4 +293,58 @@ export const deleteChallenge = async (req, res) => {
     });
 
   }
+};
+export const getMentorCircles = async (req, res) => {
+  try {
+
+    console.log("User from token:", req.user);
+
+    const mentorId = req.user._id;
+
+    const circles = await Circle.find({
+      mentor: mentorId
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json(circles);
+
+  } catch (error) {
+
+    console.error("Mentor circles error:", error);
+
+    res.status(500).json({
+      message: "Failed to load mentor circles"
+    });
+
+  }
+};
+export const getApplicationStatus = async (req,res) => {
+
+try{
+
+const application = await MentorApplication.findOne({
+user:req.user._id
+});
+
+if(!application){
+
+return res.status(200).json({
+status:"none"
+});
+
+}
+
+res.status(200).json({
+status:application.status
+});
+
+}catch(err){
+
+console.error(err);
+
+res.status(500).json({
+message:"Failed to load status"
+});
+
+}
+
 };

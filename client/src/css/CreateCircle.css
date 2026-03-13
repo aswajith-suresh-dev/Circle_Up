@@ -1,0 +1,80 @@
+/* PAGE */
+
+.mentor-create-circle-page{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#f9fafb;
+font-family:Inter;
+}
+
+/* CARD */
+
+.mentor-create-circle-card{
+background:white;
+padding:28px;
+border-radius:12px;
+border:1px solid #e5e7eb;
+width:100%;
+max-width:520px;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* TITLE */
+
+.mentor-create-circle-title{
+font-size:22px;
+font-weight:700;
+color:#1f2937;
+margin-bottom:18px;
+}
+
+/* INPUT */
+
+.mentor-create-circle-input{
+width:100%;
+padding:9px 12px;
+border-radius:8px;
+border:1px solid #d1d5db;
+margin-bottom:12px;
+font-size:14px;
+transition:0.15s;
+}
+
+.mentor-create-circle-input:focus{
+outline:none;
+border-color:#1f2937;
+box-shadow:0 0 0 2px rgba(31,41,55,0.08);
+}
+
+/* ERROR */
+
+.mentor-create-circle-error{
+color:#b91c1c;
+font-size:13px;
+margin-bottom:10px;
+}
+
+/* BUTTON */
+
+.mentor-create-circle-btn{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:none;
+background:#1f2937;
+color:white;
+cursor:pointer;
+font-size:14px;
+transition:0.2s;
+}
+
+.mentor-create-circle-btn:hover{
+background:#111827;
+}
+
+.mentor-create-circle-btn:disabled{
+background:#9ca3af;
+cursor:not-allowed;
+}

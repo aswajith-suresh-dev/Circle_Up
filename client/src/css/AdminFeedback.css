@@ -1,0 +1,78 @@
+/* PAGE */
+
+.admin-feedback-page{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+/* TITLE */
+
+.admin-feedback-title{
+font-size:22px;
+}
+
+/* EMPTY STATE */
+
+.admin-feedback-empty{
+color:#9ca3af;
+}
+
+/* ACCESS DENIED */
+
+.admin-feedback-denied{
+padding:40px;
+text-align:center;
+}
+
+/* GRID */
+
+.admin-feedback-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+/* CARD */
+
+.admin-feedback-card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+
+display:flex;
+flex-direction:column;
+gap:12px;
+
+border:1px solid #1f2937;
+}
+
+/* STARS */
+
+.admin-feedback-stars{
+font-size:18px;
+}
+
+/* MESSAGE */
+
+.admin-feedback-message{
+color:#9ca3af;
+font-size:14px;
+}
+
+/* USER */
+
+.admin-feedback-user{
+margin-top:8px;
+display:flex;
+flex-direction:column;
+gap:2px;
+}
+
+.admin-feedback-user span{
+font-weight:500;
+}
+
+.admin-feedback-user small{
+color:#6b7280;
+}

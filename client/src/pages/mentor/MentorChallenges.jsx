@@ -1,146 +1,96 @@
-import { useEffect,useState } from "react";
+// src/pages/mentor/MentorChallenges.jsx
+
+import { useEffect, useState } from "react";
 import api from "../../api/axios";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+
+import "../../css/MentorChallenges.css";
+
 const MentorChallenges = () => {
+  const [challenges, setChallenges] = useState([]);
+  const navigate = useNavigate();
 
-const [challenges,setChallenges] = useState([]);
-const navigate = useNavigate();
-const editButton = {
-  padding: "6px 12px",
-  border: "none",
-  borderRadius: "6px",
-  background: "#3b82f6",
-  color: "white",
-  cursor: "pointer"
+  const fetchChallenges = async () => {
+    try {
+      const res = await api.get("/mentor/challenges");
+
+      setChallenges(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchChallenges();
+  }, []);
+
+  const handleDelete = async (challengeId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this challenge?",
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await api.delete(`/mentor/challenges/${challengeId}`);
+
+      fetchChallenges();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <div className="mentor-challenges-page">
+      <h2 className="mentor-challenges-title">My Challenges</h2>
+
+      {challenges.length === 0 && (
+        <p className="no-challenges">No challenges created</p>
+      )}
+
+      {challenges.map((challenge) => (
+        <div key={challenge._id} className="challenge-card">
+          <div className="challenge-header">
+            <h3>{challenge.title}</h3>
+
+            <span
+              className={`challenge-type ${
+                challenge.type === "free" ? "free" : "paid"
+              }`}
+            >
+              {challenge.type === "free" ? "FREE" : "PAID"}
+            </span>
+          </div>
+
+          <p className="challenge-info">{challenge.totalDays} Days</p>
+
+          <p className="challenge-info">
+            Participants: {challenge.participantsCount || 0}
+          </p>
+
+          <p className="challenge-info">Earnings: ₹{challenge.revenue || 0}</p>
+
+          <p className="challenge-status">Status: {challenge.approvalStatus}</p>
+
+          <div className="challenge-actions">
+            <button
+              className="btn-edit"
+              onClick={() => navigate(`/edit-challenge/${challenge._id}`)}
+            >
+              Edit
+            </button>
+
+            <button
+              className="btn-delete"
+              onClick={() => handleDelete(challenge._id)}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 };
-const fetchChallenges = async () => {
-
-try{
-
-const res = await api.get("/mentor/challenges");
-
-setChallenges(res.data);
-
-}catch(err){
-console.error(err);
-}
-
-};
-
-useEffect(()=>{
-fetchChallenges();
-},[]);
-
-const handleDelete = async (challengeId) => {
-
-const confirmDelete = window.confirm(
-"Are you sure you want to delete this challenge?"
-);
-
-if(!confirmDelete) return;
-
-try{
-
-await api.delete(`mentor/challenges/${challengeId}`);
-
-fetchChallenges();
-
-}catch(err){
-console.error(err);
-}
-
-};
-
-return(
-
-<div style={{padding:"20px"}}>
-
-<h2>My Challenges</h2>
-
-{challenges.length === 0 && (
-<p>No challenges created</p>
-)}
-
-{challenges.map((challenge)=>(
-
-<div
-key={challenge._id}
-style={{
-border:"1px solid #ddd",
-padding:"12px",
-marginBottom:"12px",
-borderRadius:"8px",
-background:"#fafafa"
-}}
->
-
-{/* TITLE + TYPE BADGE */}
-
-<div style={{
-display:"flex",
-justifyContent:"space-between",
-alignItems:"center"
-}}>
-
-<h3>{challenge.title}</h3>
-
-<span
-style={{
-padding:"4px 8px",
-borderRadius:"6px",
-fontSize:"12px",
-background:
-challenge.type === "free"
-? "#dcfce7"
-: "#fde68a",
-color:
-challenge.type === "free"
-? "#065f46"
-: "#92400e"
-}}
->
-{challenge.type === "free" ? "FREE" : "PAID"}
-</span>
-
-</div>
-
-<p>{challenge.totalDays} Days</p>
-
-<p>Participants: {challenge.participantsCount || 0}</p>
-
-<p>Revenue: ₹{challenge.revenue || 0}</p>
-
-<p>Status: {challenge.approvalStatus}</p>
-
-<button
-onClick={()=>handleDelete(challenge._id)}
-style={{
-marginTop:"10px",
-padding:"6px 12px",
-borderRadius:"6px",
-border:"none",
-background:"#ef4444",
-color:"white",
-cursor:"pointer"
-}}
->
-Delete Challenge
-</button>
-<button
-  onClick={() => navigate(`/edit-challenge/${challenge._id}`)}
-  style={editButton}
->
-  Edit
-</button>
-
-</div>
-
-))}
-
-</div>
-
-);
-
-}
 
 export default MentorChallenges;

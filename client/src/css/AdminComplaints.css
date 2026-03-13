@@ -1,0 +1,103 @@
+/* PAGE */
+
+.admin-complaints-page{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+/* TITLE */
+
+.admin-complaints-title{
+font-size:22px;
+}
+
+/* EMPTY */
+
+.admin-complaints-empty{
+color:#9ca3af;
+}
+
+/* ACCESS DENIED */
+
+.admin-complaints-denied{
+padding:40px;
+text-align:center;
+}
+
+/* GRID */
+
+.admin-complaints-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+/* CARD */
+
+.admin-complaints-card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+/* MESSAGE */
+
+.admin-complaints-message{
+color:#9ca3af;
+}
+
+/* ADMIN REPLY */
+
+.admin-complaints-reply-box{
+margin-top:10px;
+padding:12px;
+
+background:#0f172a;
+border-radius:8px;
+}
+
+/* REPLY SECTION */
+
+.admin-complaints-reply-section{
+margin-top:10px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+/* TEXTAREA */
+
+.admin-complaints-reply-section textarea{
+background:#0f172a;
+border:1px solid #1f2937;
+color:white;
+
+padding:10px;
+border-radius:6px;
+
+resize:none;
+}
+
+/* BUTTON */
+
+.admin-complaints-reply-btn{
+background:#373A7A;
+border:none;
+
+padding:8px 14px;
+border-radius:6px;
+
+color:white;
+cursor:pointer;
+
+width:100px;
+}
+
+.admin-complaints-reply-btn:hover{
+opacity:0.9;
+}

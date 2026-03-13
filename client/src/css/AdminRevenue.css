@@ -1,0 +1,67 @@
+.admin-revenue-page{
+display:flex;
+flex-direction:column;
+gap:25px;
+}
+
+.admin-revenue-title{
+font-size:22px;
+}
+
+/* STATS */
+
+.admin-revenue-stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.admin-revenue-card{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+}
+
+.admin-revenue-card h3{
+font-size:14px;
+color:#94a3b8;
+margin-bottom:8px;
+}
+
+.admin-revenue-card p{
+font-size:20px;
+font-weight:600;
+}
+
+/* TABLE */
+
+.admin-revenue-table-wrapper{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+}
+
+.admin-revenue-table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+.admin-revenue-table th,
+.admin-revenue-table td{
+padding:12px 14px;
+text-align:left;
+}
+
+.admin-revenue-table th{
+background:#0f172a;
+color:#94a3b8;
+}
+
+.admin-revenue-table tr{
+border-bottom:1px solid #1f2937;
+}
+
+.admin-revenue-table tr:last-child{
+border-bottom:none;
+}

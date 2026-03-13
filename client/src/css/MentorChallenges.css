@@ -1,0 +1,163 @@
+/* PAGE */
+
+.mentor-challenges-page{
+max-width:900px;
+margin:auto;
+padding:30px;
+font-family:Inter;
+}
+
+/* HEADER */
+
+.mentor-challenges-title{
+font-size:26px;
+font-weight:700;
+color:#1f2937;
+margin-bottom:20px;
+}
+
+/* EMPTY STATE */
+
+.no-challenges{
+color:#6b7280;
+font-size:14px;
+}
+
+/* CARD */
+
+.challenge-card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:10px;
+padding:18px;
+margin-bottom:16px;
+box-shadow:0 2px 6px rgba(0,0,0,0.04);
+transition:0.15s;
+}
+
+.challenge-card:hover{
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+
+.challenge-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:8px;
+}
+
+.challenge-header h3{
+font-size:18px;
+color:#1f2937;
+}
+
+/* TYPE BADGE */
+
+.challenge-type{
+padding:4px 8px;
+border-radius:6px;
+font-size:12px;
+font-weight:500;
+}
+
+.challenge-type.free{
+background:#dcfce7;
+color:#065f46;
+}
+
+.challenge-type.paid{
+background:#fde68a;
+color:#92400e;
+}
+
+/* INFO */
+
+.challenge-info{
+font-size:14px;
+color:#374151;
+margin-bottom:6px;
+}
+
+/* STATUS */
+
+.challenge-status{
+margin-top:6px;
+font-size:13px;
+color:#6b7280;
+}
+
+/* ACTIONS */
+
+.challenge-actions{
+display:flex;
+gap:10px;
+margin-top:12px;
+}
+
+/* EDIT BUTTON */
+
+/* ACTIONS */
+
+.challenge-actions{
+display:flex;
+gap:10px;
+margin-top:12px;
+}
+
+/* EDIT BUTTON */
+
+.btn-edit{
+
+padding:7px 14px;
+
+border:none;
+
+border-radius:8px;
+
+background:#1f2937;
+
+color:white;
+
+font-size:13px;
+
+cursor:pointer;
+
+transition:0.2s;
+
+}
+
+.btn-edit:hover{
+
+background:#111827;
+
+}
+
+/* DELETE BUTTON */
+
+.btn-delete{
+
+padding:7px 14px;
+
+border-radius:8px;
+
+border:1px solid #ef4444;
+
+background:#fef2f2;
+
+color:#b91c1c;
+
+font-size:13px;
+
+cursor:pointer;
+
+transition:0.2s;
+
+}
+
+.btn-delete:hover{
+
+background:#fee2e2;
+
+}

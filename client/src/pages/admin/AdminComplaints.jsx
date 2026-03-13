@@ -1,150 +1,162 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
+import "../../css/AdminComplaints.css";
+
 const AdminComplaints = () => {
-    const { user } = useAuth();
-  const [complaints, setComplaints] = useState([]);
-  const [replyText, setReplyText] = useState({});
-  const [loading, setLoading] = useState(false);
-if (user?.role !== "admin") {
-  return (
-    <div style={{ padding: "20px",textAlign: "center" }}>
-      <h2>Access Denied</h2>
-      <p>You are not authorized to view this page.</p>
-    </div>
-  );
-}
+
+  const { user } = useAuth();
+
+  const [complaints,setComplaints] = useState([]);
+  const [replyText,setReplyText] = useState({});
+  const [loading,setLoading] = useState(false);
+
+  if(user?.role !== "admin"){
+    return(
+      <div className="admin-complaints-denied">
+        <h2>Access Denied</h2>
+        <p>You are not authorized to view this page.</p>
+      </div>
+    );
+  }
+
   const fetchComplaints = async () => {
-    try {
+    try{
+
       const res = await api.get("/support/complaints");
+
       setComplaints(res.data);
-    } catch (err) {
+
+    }catch(err){
       console.error(err);
     }
   };
 
-  useEffect(() => {
+  useEffect(()=>{
     fetchComplaints();
-  }, []);
+  },[]);
+
 
   const handleReply = async (complaintId) => {
-    try {
+
+    try{
+
       setLoading(true);
 
       await api.put(
         `/support/complaint/reply/${complaintId}`,
         {
-          reply: replyText[complaintId],
+          reply: replyText[complaintId]
         }
       );
 
-      setReplyText((prev) => ({
+      setReplyText(prev => ({
         ...prev,
-        [complaintId]: "",
+        [complaintId]:""
       }));
 
       fetchComplaints();
 
-    } catch (err) {
+    }catch(err){
       console.error(
         err.response?.data?.message || err.message
       );
-    } finally {
+    }finally{
       setLoading(false);
     }
+
   };
 
-  return (
-    <div style={{ padding: "20px", maxWidth: "800px" }}>
-      <h2>Admin - Complaints</h2>
+
+  return(
+
+    <div className="admin-complaints-page">
+
+      <h2 className="admin-complaints-title">
+        User Complaints
+      </h2>
 
       {complaints.length === 0 && (
-        <p>No complaints found.</p>
+        <p className="admin-complaints-empty">
+          No complaints found
+        </p>
       )}
 
-      {complaints.map((complaint) => (
-        <div
-          key={complaint._id}
-          style={{
-            border: "1px solid #ddd",
-            padding: "15px",
-            marginBottom: "15px",
-            borderRadius: "8px",
-          }}
-        >
-          <p>
-            <strong>User:</strong>{" "}
-            {complaint.user?.name}
-          </p>
+      <div className="admin-complaints-grid">
 
-          <p>
-            <strong>Message:</strong>
-          </p>
-          <p>{complaint.message}</p>
+        {complaints.map(complaint => (
 
-          <p>
-            <strong>Status:</strong>{" "}
-            {complaint.status}
-          </p>
+          <div
+            key={complaint._id}
+            className="admin-complaints-card"
+          >
 
-          {complaint.adminReply && (
-            <div
-              style={{
-                marginTop: "10px",
-                padding: "10px",
-                background: "#e0f2fe",
-                borderRadius: "6px",
-              }}
-            >
-              <strong>Admin Reply:</strong>
-              <p>{complaint.adminReply}</p>
-            </div>
-          )}
+            <p>
+              <strong>User:</strong> {complaint.user?.name}
+            </p>
 
-          {complaint.status === "pending" && (
-            <>
-              <textarea
-                rows="3"
-                placeholder="Write reply..."
-                value={
-                  replyText[complaint._id] || ""
-                }
-                onChange={(e) =>
-                  setReplyText((prev) => ({
-                    ...prev,
-                    [complaint._id]:
-                      e.target.value,
-                  }))
-                }
-                style={{
-                  width: "100%",
-                  marginTop: "10px",
-                  padding: "8px",
-                }}
-              />
+            <p>
+              <strong>Message:</strong>
+            </p>
 
-              <button
-                onClick={() =>
-                  handleReply(complaint._id)
-                }
-                disabled={loading}
-                style={{
-                  marginTop: "8px",
-                  padding: "6px 12px",
-                  background: "#3b82f6",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                }}
-              >
-                Reply
-              </button>
-            </>
-          )}
-        </div>
-      ))}
+            <p className="admin-complaints-message">
+              {complaint.message}
+            </p>
+
+            <p>
+              <strong>Status:</strong> {complaint.status}
+            </p>
+
+            {complaint.adminReply && (
+
+              <div className="admin-complaints-reply-box">
+
+                <strong>Admin Reply</strong>
+
+                <p>{complaint.adminReply}</p>
+
+              </div>
+
+            )}
+
+            {complaint.status === "pending" && (
+
+              <div className="admin-complaints-reply-section">
+
+                <textarea
+                  rows="3"
+                  placeholder="Write reply..."
+                  value={replyText[complaint._id] || ""}
+                  onChange={(e)=>
+                    setReplyText(prev=>({
+                      ...prev,
+                      [complaint._id]:e.target.value
+                    }))
+                  }
+                />
+
+                <button
+                  className="admin-complaints-reply-btn"
+                  onClick={()=>handleReply(complaint._id)}
+                  disabled={loading}
+                >
+                  Reply
+                </button>
+
+              </div>
+
+            )}
+
+          </div>
+
+        ))}
+
+      </div>
+
     </div>
+
   );
+
 };
 
 export default AdminComplaints;

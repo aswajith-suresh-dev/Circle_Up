@@ -1,0 +1,156 @@
+/* PAGE */
+
+.mentor-apply-page{
+display:flex;
+justify-content:center;
+align-items:center;
+
+min-height:70vh;
+
+padding:40px 20px;
+}
+
+/* CARD */
+
+.mentor-apply-card{
+
+background:white;
+
+width:100%;
+max-width:520px;
+
+padding:30px;
+
+border-radius:12px;
+
+border:1px solid #E5E7EB;
+
+box-shadow:0 8px 20px rgba(0,0,0,0.06);
+
+}
+
+.mentor-apply-card h2{
+
+margin-bottom:20px;
+
+color:#1f2937;
+
+font-size:22px;
+
+}
+
+/* INPUTS */
+
+.mentor-input{
+
+width:100%;
+
+padding:10px 12px;
+
+margin-bottom:14px;
+
+border-radius:8px;
+
+border:1px solid #E5E7EB;
+
+font-size:14px;
+
+outline:none;
+
+transition:all 0.2s ease;
+
+}
+
+.mentor-input:focus{
+
+border-color:#373A7A;
+
+box-shadow:0 0 0 2px rgba(55,58,122,0.1);
+
+}
+
+/* BUTTON */
+
+.mentor-submit-btn{
+
+width:100%;
+
+padding:10px;
+
+border:none;
+
+border-radius:8px;
+
+background:#373A7A;
+
+color:white;
+
+font-size:14px;
+
+cursor:pointer;
+
+transition:0.2s;
+
+}
+
+.mentor-submit-btn:hover{
+
+opacity:0.9;
+
+}
+
+/* STATUS */
+
+.mentor-status{
+
+text-align:center;
+
+padding:10px 0;
+
+}
+
+.mentor-status h3{
+
+margin-bottom:10px;
+
+color:#1f2937;
+
+}
+
+/* ERROR */
+
+.mentor-error{
+
+color:#ef4444;
+
+font-size:14px;
+
+}
+
+/* MESSAGE */
+
+.mentor-message{
+
+margin-top:12px;
+
+font-size:14px;
+
+text-align:center;
+
+color:#374151;
+
+}
+
+/* LOADING */
+
+.mentor-loading{
+
+text-align:center;
+
+margin-top:40px;
+
+color:#6b7280;
+
+font-size:14px;
+
+}

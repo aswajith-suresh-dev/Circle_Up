@@ -1,0 +1,70 @@
+/* STATUS CARD */
+
+.mentor-status-card{
+text-align:center;
+padding:40px;
+}
+
+/* STATUS SECTION */
+
+.mentor-status{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:12px;
+margin-top:20px;
+}
+
+/* ICON */
+
+.mentor-status-icon{
+font-size:42px;
+}
+
+/* COLORS */
+
+.mentor-status.pending .mentor-status-icon{
+color:#f59e0b;
+}
+
+.mentor-status.approved .mentor-status-icon{
+color:#10b981;
+}
+
+.mentor-status.rejected .mentor-status-icon{
+color:#ef4444;
+}
+
+/* TEXT */
+
+.mentor-status h3{
+font-size:22px;
+font-weight:600;
+color:#1f2937;
+}
+
+.mentor-status p{
+color:#6b7280;
+max-width:420px;
+line-height:1.5;
+}
+
+/* BUTTON */
+
+.mentor-submit-btn{
+margin-top:12px;
+padding:10px 20px;
+
+border:none;
+border-radius:8px;
+
+background:#373A7A;
+color:white;
+
+cursor:pointer;
+font-weight:500;
+}
+
+.mentor-submit-btn:hover{
+opacity:0.9;
+}

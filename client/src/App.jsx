@@ -308,6 +308,8 @@
 
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import MentorRoute from "./components/MentorRoute";
+import AdminRoute from "./components/AdminRoute";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import PrivateRoute from "./components/PrivateRoute";
@@ -354,11 +356,16 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import ApplyMentor from "./pages/mentor/ApplyMentor";
 import Mentors from "./pages/mentor/Mentors";
 import MentorCircles from "./pages/mentor/MentorCircles";
+import MentorDashboard from "./pages/mentor/MentorDashboard";
 // Admin
-import AdminPanel from "./pages/admin/AdminPanel";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminMentorRequests from "./pages/admin/AdminMentorRequests";
 import AdminComplaints from "./pages/admin/AdminComplaints";
 import AdminFeedback from "./pages/support/AdminFeedback";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminCircles from "./pages/admin/AdminCircles";
+import AdminManageChallenges from "./pages/admin/AdminManageChallenges";
 
 // Support
 import Complaint from "./pages/support/Complaint";
@@ -372,11 +379,11 @@ import Profile from "./pages/personal/Profile";
 import CreateChallenge from "./pages/mentor/CreateChallenge";
 import MentorChallenges from "./pages/mentor/MentorChallenges";
 import AdminChallenges from "./pages/admin/AdminChallenges";
+import MentorStatus from "./pages/mentor/MentorStatus";
 
 import MentorRevenue from "./pages/mentor/MentorRevenue";
 import AdminRevenue from "./pages/admin/AdminRevenue";
 function App() {
-
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -392,109 +399,120 @@ function App() {
     "/login",
     "/signup",
     "/select-topics",
-    "/suggested-circles"
+    "/suggested-circles",
   ];
+  const isAdminRoute = location.pathname.startsWith("/admin");
 
-const hideSidebar =
-  authPages.includes(location.pathname) ||
-  location.pathname.startsWith("/payment");
+  const hideSidebar =
+    authPages.includes(location.pathname) ||
+    location.pathname.startsWith("/payment") ||
+    isAdminRoute;
   const hasTopics = user && user.topics && user.topics.length > 0;
 
   return (
     <div className="app-layout">
-
       {/* Sidebar */}
       {!hideSidebar && user && <LeftSidebar />}
 
       {/* Main Content */}
       <div className="main-content">
-
         <Routes>
-
           {/* LANDING PAGE */}
           <Route
             path="/"
             element={
-              user
-                ? hasTopics
-                  ? <Navigate to="/home" replace />
-                  : <Navigate to="/select-topics" replace />
-                : <Landing />
+              user ? (
+                hasTopics ? (
+                  <Navigate to="/home" replace />
+                ) : (
+                  <Navigate to="/select-topics" replace />
+                )
+              ) : (
+                <Landing />
+              )
             }
           />
-
           {/* LOGIN */}
           <Route
             path="/login"
             element={
-              user
-                ? hasTopics
-                  ? <Navigate to="/home" replace />
-                  : <Navigate to="/select-topics" replace />
-                : <Login />
+              user ? (
+                hasTopics ? (
+                  <Navigate to="/home" replace />
+                ) : (
+                  <Navigate to="/select-topics" replace />
+                )
+              ) : (
+                <Login />
+              )
             }
           />
-
           {/* SIGNUP */}
           <Route
             path="/signup"
             element={
-              user
-                ? hasTopics
-                  ? <Navigate to="/home" replace />
-                  : <Navigate to="/select-topics" replace />
-                : <Signup />
+              user ? (
+                hasTopics ? (
+                  <Navigate to="/home" replace />
+                ) : (
+                  <Navigate to="/select-topics" replace />
+                )
+              ) : (
+                <Signup />
+              )
             }
           />
-<Route path="/forgot-password" element={<ForgotPassword />} />
-
-<Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           {/* ONBOARDING */}
-
           <Route
-  path="/select-topics"
-  element={
-    <PrivateRoute>
-      <SelectTopics />
-    </PrivateRoute>
-  }
-/>
-<Route
-  path="/mentor/revenue"
-  element={
-    <ProtectedRoute>
-      <MentorRevenue />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/my-posts"
-  element={
-    <ProtectedRoute>
-      <MyPosts />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/admin/revenue"
-  element={
-    <ProtectedRoute>
-      <AdminRevenue />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/mentor/circles"
-  element={
-    <ProtectedRoute>
-      <MentorCircles />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/edit-circle/:circleId"
-  element={<EditCircle />}
-/>
+            path="/select-topics"
+            element={
+              <PrivateRoute>
+                <SelectTopics />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/mentor/revenue"
+            element={
+              <MentorRoute>
+                <MentorRevenue />
+              </MentorRoute>
+            }
+          />
+          <Route
+            path="/my-posts"
+            element={
+              <ProtectedRoute>
+                <MyPosts />
+              </ProtectedRoute>
+            }
+          />
+          {/* <Route
+            path="/admin/revenue"
+            element={
+              <AdminRoute>
+                <AdminRevenue />
+              </AdminRoute>
+            }
+          /> */}
+          <Route
+            path="/mentor/circles"
+            element={
+              <MentorRoute>
+                <MentorCircles />
+              </MentorRoute>
+            }
+          />
+          <Route
+            path="/edit-circle/:circleId"
+            element={
+              <MentorRoute>
+                <EditCircle />
+              </MentorRoute>
+            }
+          />{" "}
           <Route
             path="/suggested-circles"
             element={
@@ -503,7 +521,6 @@ const hideSidebar =
               </PrivateRoute>
             }
           />
-
           <Route
             path="/change-password"
             element={
@@ -512,20 +529,27 @@ const hideSidebar =
               </PrivateRoute>
             }
           />
-
+          <Route
+            path="/mentor-status"
+            element={
+              <ProtectedRoute>
+                <MentorStatus />
+              </ProtectedRoute>
+            }
+          />
           {/* MAIN APP */}
-
           <Route
             path="/home"
             element={
-              user && (!user.topics || user.topics.length === 0)
-                ? <Navigate to="/select-topics" replace />
-                : <ProtectedRoute>
-                    <Home />
-                  </ProtectedRoute>
+              user && (!user.topics || user.topics.length === 0) ? (
+                <Navigate to="/select-topics" replace />
+              ) : (
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              )
             }
           />
-
           <Route
             path="/search"
             element={
@@ -534,7 +558,6 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/notifications"
             element={
@@ -543,7 +566,6 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/challenges"
             element={
@@ -552,7 +574,6 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/challenges/:challengeId"
             element={
@@ -561,7 +582,6 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/payment/:challengeId"
             element={
@@ -570,7 +590,6 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/payment-success"
             element={
@@ -579,11 +598,8 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           {/* CIRCLES */}
-
           <Route path="/create-circle" element={<CreateCircle />} />
-
           <Route
             path="/circles/:circleId"
             element={
@@ -592,7 +608,6 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/circles/:circleId/create-post"
             element={
@@ -601,7 +616,6 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/my-circles"
             element={
@@ -610,9 +624,7 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           {/* POSTS */}
-
           <Route
             path="/posts/:postId"
             element={
@@ -621,9 +633,7 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           {/* PROFILE */}
-
           <Route
             path="/profile"
             element={
@@ -632,11 +642,8 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
           {/* MENTORS */}
-
           <Route path="/mentors" element={<Mentors />} />
-
           <Route
             path="/apply-mentor"
             element={
@@ -645,58 +652,107 @@ const hideSidebar =
               </ProtectedRoute>
             }
           />
-
-          {/* ADMIN */}
-
-          <Route path="/admin" element={<AdminPanel />} />
-
           <Route
-            path="/admin/mentor-requests"
+            path="/mentor"
             element={
               <ProtectedRoute>
-                <AdminMentorRequests />
+                <MentorDashboard />
               </ProtectedRoute>
             }
           />
+          {/* ADMIN */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
 
-          <Route path="/admin/complaints" element={<AdminComplaints />} />
+            <Route path="users" element={<AdminUsers />} />
 
-          <Route path="/admin/feedback" element={<AdminFeedback />} />
+<Route path="manage-challenges" element={<AdminManageChallenges />} />
+            <Route path="circles" element={<AdminCircles />} /> 
 
+            <Route path="challenges" element={<AdminChallenges />} />
+
+            <Route path="mentor-requests" element={<AdminMentorRequests />} />
+
+            <Route path="complaints" element={<AdminComplaints />} />
+
+            <Route path="feedback" element={<AdminFeedback />} />
+
+            <Route path="revenue" element={<AdminRevenue />} />
+          </Route>{" "}
+          {/* <Route
+            path="/admin/mentor-requests"
+            element={
+              <AdminRoute>
+                <AdminMentorRequests />
+              </AdminRoute>
+            }
+          /> */}
+          {/* <Route
+            path="/admin/complaints"
+            element={
+              <AdminRoute>
+                <AdminComplaints />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/feedback"
+            element={
+              <AdminRoute>
+                <AdminFeedback />
+              </AdminRoute>
+            }
+          />{" "} */}
           {/* SUPPORT */}
-
           <Route path="/complaint" element={<Complaint />} />
           <Route path="/feedback" element={<Feedback />} />
-
           {/* PERSONAL SPACE */}
-
           <Route path="/personal" element={<PersonalSpace />} />
-
           <Route
             path="/personal/folders/:folderId"
             element={<FolderDetail />}
           />
-<Route
-path="/mentor/create-challenge"
-element={<CreateChallenge />}
-/>
-<Route
-path="/edit-challenge/:challengeId"
-element={<EditChallenge />}
-/>
-<Route
-path="/mentor/challenges"
-element={<MentorChallenges />}
-/>
-
-<Route
-  path="/admin/challenges"
-  element={<AdminChallenges />}
-/>
+          <Route
+            path="/mentor/create-challenge"
+            element={
+              <MentorRoute>
+                <CreateChallenge />
+              </MentorRoute>
+            }
+          />
+          <Route
+            path="/edit-challenge/:challengeId"
+            element={
+              <MentorRoute>
+                <EditChallenge />
+              </MentorRoute>
+            }
+          />
+          <Route
+            path="/mentor/challenges"
+            element={
+              <MentorRoute>
+                <MentorChallenges />
+              </MentorRoute>
+            }
+          />
+          {/* <Route
+            path="/admin/challenges"
+            element={
+              <AdminRoute>
+                <AdminChallenges />
+              </AdminRoute>
+            }
+          />{" "} */}
         </Routes>
-
       </div>
-
     </div>
   );
 }
