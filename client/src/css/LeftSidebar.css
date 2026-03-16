@@ -29,7 +29,7 @@
 }
 
 .expanded {
-  width: 220px;
+  width: 250px;
 }
 
 /* Pin Button */
@@ -128,6 +128,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-top:8px;
 }
 
 /* Navigation Links */
@@ -203,4 +204,35 @@
   color: #1f2937;
 
   margin-top: 20px;
+}
+/* LOGO BOX */
+
+.sidebar-logo-box{
+display:flex;
+align-items:center;
+justify-content:center;
+
+gap:10px;
+
+height:110px;
+
+border-bottom:1px solid #e5e7eb;
+margin-bottom:px;
+}
+
+/* LOGO IMAGE */
+
+.sidebar-logo-img{
+width:42px;
+height:42px;
+
+object-fit:contain;
+}
+
+/* LOGO TEXT */
+
+.sidebar-logo-text{
+font-size:16px;
+font-weight:600;
+color:#1f2937;
 }

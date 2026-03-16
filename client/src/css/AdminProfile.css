@@ -1,0 +1,115 @@
+/* PAGE */
+
+.admin-profile-page{
+display:flex;
+flex-direction:column;
+gap:20px;
+max-width:600px;
+}
+
+/* TITLE */
+
+.admin-profile-title{
+font-size:22px;
+font-weight:600;
+}
+
+/* CARD */
+
+.admin-profile-card{
+background:#1e293b;
+padding:25px;
+border-radius:12px;
+
+display:flex;
+flex-direction:column;
+gap:20px;
+
+border:1px solid #1f2937;
+}
+
+/* FIELD */
+
+.admin-profile-field{
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+
+.admin-profile-field label{
+font-size:13px;
+color:#9ca3af;
+}
+
+.admin-profile-field p{
+margin:0;
+font-size:15px;
+color:white;
+}
+
+/* INPUT */
+
+.admin-profile-field input{
+background:#0f172a;
+border:1px solid #1f2937;
+
+padding:10px;
+border-radius:6px;
+
+color:white;
+font-size:14px;
+
+outline:none;
+}
+
+.admin-profile-field input:focus{
+border-color:#6366f1;
+}
+
+/* ACTION BUTTONS */
+
+.admin-profile-actions{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:10px;
+}
+
+/* BUTTON */
+
+.admin-profile-btn{
+border:none;
+padding:8px 14px;
+
+border-radius:6px;
+cursor:pointer;
+
+font-size:14px;
+
+background:#373A7A;
+color:white;
+}
+
+/* SAVE */
+
+.admin-profile-btn.save{
+background:#22c55e;
+}
+
+/* PASSWORD */
+
+.admin-profile-btn.password{
+background:#6366f1;
+}
+
+/* LOGOUT */
+
+.admin-profile-btn.logout{
+background:#ef4444;
+}
+
+/* HOVER */
+
+.admin-profile-btn:hover{
+opacity:0.9;
+}

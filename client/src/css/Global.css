@@ -20,3 +20,41 @@ body {
   
 }
 
+/* Snackbar base style */
+
+.notistack-SnackbarContainer {
+  bottom: 20px !important;
+}
+
+/* success */
+
+.MuiSnackbarContent-root.MuiSnackbarContent-message {
+  font-weight: 500;
+}
+
+.notistack-MuiContent-success {
+  background: #4f46e5 !important;
+  color: white !important;
+  border-radius: 8px !important;
+}
+
+/* info */
+
+.notistack-MuiContent-info {
+  background: #6366f1 !important;
+  color: white !important;
+}
+
+/* warning */
+
+.notistack-MuiContent-warning {
+  background: #f59e0b !important;
+  color: white !important;
+}
+
+/* error */
+
+.notistack-MuiContent-error {
+  background: #ef4444 !important;
+  color: white !important;
+}

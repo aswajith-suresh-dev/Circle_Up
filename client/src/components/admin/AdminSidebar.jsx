@@ -85,7 +85,7 @@ const AdminSidebar = () => {
       {/* BOTTOM SECTION */}
 
       <div className="admin-sidebar-bottom">
-
+{/* 
         <NavLink to="/profile">
           <FiUser /> Profile
         </NavLink>
@@ -95,7 +95,10 @@ const AdminSidebar = () => {
           onClick={handleLogout}
         >
           <FiLogOut /> Logout
-        </button>
+        </button> */}
+        <NavLink to="/admin/profile">
+  <FiUser /> Profile
+</NavLink>
 
       </div>
 

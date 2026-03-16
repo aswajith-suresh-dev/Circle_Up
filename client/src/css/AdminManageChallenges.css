@@ -109,3 +109,19 @@ width:160px;
 .admin-manage-challenges-delete:hover{
 opacity:0.9;
 }
+.admin-manage-challenges-overview{
+
+background:#373A7A;
+color:white;
+
+border:none;
+padding:8px 12px;
+
+border-radius:6px;
+
+margin-top:10px;
+margin-bottom:6px;
+
+cursor:pointer;
+
+}

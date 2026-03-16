@@ -49,8 +49,7 @@ const MentorDashboard = () => {
         {/* IMAGE */}
 
         <div className="dashboard-circle-preview">
-          <img src="https://picsum.photos/600/400" alt="preview" />
-        </div>
+<img src="/images/mentor-dashboard.jpg" alt="preview" />        </div>
 
         {/* CIRCLES */}
 

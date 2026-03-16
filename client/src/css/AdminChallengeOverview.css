@@ -1,0 +1,39 @@
+.admin-overview-page{
+padding:30px;
+max-width:900px;
+margin:auto;
+}
+
+.admin-overview-title{
+margin-bottom:25px;
+color:#E5E7EB;
+}
+
+.admin-overview-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:20px;
+}
+.admin-manage-challenges-overview,
+.admin-manage-challenges-delete{
+width:100%;
+margin-top:8px;
+}
+.admin-overview-card{
+background:#373A7A;
+border:1px solid #E5E7EB;
+border-radius:12px;
+padding:20px;
+text-align:center;
+}
+
+.admin-overview-card h3{
+font-size:28px;
+color:#E5E7EB;
+margin-bottom:6px;
+}
+
+.admin-overview-card p{
+color:#E5E7EB;
+font-size:14px;
+}

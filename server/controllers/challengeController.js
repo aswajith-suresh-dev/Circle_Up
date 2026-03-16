@@ -105,60 +105,86 @@ export const getChallengeDetail = async (req, res) => {
   }
 };
 export const getMyChallenges = async (req, res) => {
+
   try {
+
     const userId = req.user._id;
 
-    const progresses = await UserChallengeProgress.find({ user: userId })
+    const progresses = await UserChallengeProgress.find({
+      user: userId
+    })
       .populate({
         path: "challenge",
-        select: "title description totalDays",
+        populate: [
+          { path: "circle", select: "name" },
+          { path: "mentor", select: "name" }
+        ]
       })
       .sort({ updatedAt: -1 });
 
     res.status(200).json(progresses);
+
   } catch (error) {
+
     console.error(error);
     res.status(500).json({ message: "Failed to load challenges" });
+
   }
+
 };
 import UserChallengeProgress from "../models/UserChallengeProgress.js";
 
+import ChallengeReview from "../models/ChallengeReview.js";
+
 export const getAllChallenges = async (req, res) => {
+
   try {
 
-    const challenges = await Challenge.find({
-      approvalStatus: "approved",
-      mentor: { $ne: req.user._id }
-    })
-      .populate("mentor", "name photo")
+    const challenges = await Challenge.find()
       .populate("circle", "name")
-      .sort({ createdAt: -1 });
+      .populate("mentor", "name");
 
     const result = await Promise.all(
+
       challenges.map(async (challenge) => {
 
+        // ⭐ Get reviews
+        const reviews = await ChallengeReview.find({
+          challenge: challenge._id
+        });
+
+        const reviewCount = reviews.length;
+
+        const avgRating = reviewCount
+          ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+          : 0;
+
+        // 👥 Count participants
         const participants = await UserChallengeProgress.countDocuments({
-          challenge: challenge._id,
+          challenge: challenge._id
         });
 
         return {
-          ...challenge.toObject(),
-          participants,
+          ...challenge._doc,
+          avgRating,
+          reviewCount,
+          participants
         };
 
       })
+
     );
 
-    res.status(200).json(result);
+    res.json(result);
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Failed to fetch challenges",
-    });
+  } catch (err) {
+
+    console.error(err);
+    res.status(500).json({ message: "Failed to load challenges" });
+
   }
-};
-// controllers/challengeController.js
+
+};// controllers/challengeController.js
 
 
 export const getChallengesByCircle = async (req, res) => {
@@ -267,4 +293,69 @@ export const updateChallenge = async (req, res) => {
     });
 
   }
+};
+export const getChallengeOverview = async (req, res) => {
+
+  try {
+
+    const { challengeId } = req.params;
+
+    const challenge = await Challenge.findById(challengeId);
+
+    if (!challenge) {
+      return res.status(404).json({ message: "Challenge not found" });
+    }
+
+    const progress = await UserChallengeProgress.find({
+      challenge: challengeId,
+    });
+
+    const participants = progress.length;
+
+    const completed = progress.filter(
+      (p) => p.completedDays.length >= challenge.totalDays
+    ).length;
+
+    const active = progress.filter(
+      (p) => p.completedDays.length < challenge.totalDays
+    ).length;
+
+    const completionRate =
+      participants === 0
+        ? 0
+        : Math.round((completed / participants) * 100);
+
+    const reviews = await ChallengeReview.find({
+      challenge: challengeId,
+    });
+
+    const reviewCount = reviews.length;
+
+    const avgRating =
+      reviewCount === 0
+        ? 0
+        : (
+            reviews.reduce((sum, r) => sum + r.rating, 0) /
+            reviewCount
+          ).toFixed(1);
+
+    res.json({
+      participants,
+      completed,
+      active,
+      completionRate,
+      avgRating,
+      reviewCount,
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: "Failed to load overview",
+    });
+
+  }
+
 };

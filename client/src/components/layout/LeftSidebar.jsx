@@ -60,21 +60,23 @@ const LeftSidebar = () => {
       {/* Top Section */}
       <div>
         {/* Profile */}
-        <div className="sidebar-profile">
-          <img
-            src={
-              user?.photo
-                ? `http://localhost:5000${user.photo}`
-                : "/profile.png"
-            }
-            className="avatar"
-            alt="profile"
-          />
+        {/* CircleUp Logo */}
 
-          <p className={`username ${collapsed ? "hidden" : ""}`}>
-            {user?.name}
-          </p>
-        </div>
+<div className="sidebar-logo-box">
+
+  <img
+    src="/icon.jpg"
+    className="sidebar-logo-img"
+    alt="CircleUp"
+  />
+
+  {!collapsed && (
+    <span className="sidebar-logo-text">
+      CircleUp
+    </span>
+  )}
+
+</div>
 
         {/* Navigation */}
         <nav className="sidebar-nav">

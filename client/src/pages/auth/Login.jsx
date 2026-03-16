@@ -18,33 +18,45 @@ const Login = () => {
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const res = await api.post("/auth/login", {
-        email,
-        password,
-      });
+    const res = await api.post("/auth/login", {
+      email,
+      password,
+    });
 
-      const { user, token } = res.data;
-      const fullUser = await login(user, token);
+    const { user, token } = res.data;
 
-      if (!fullUser.topics || fullUser.topics.length === 0) {
-        navigate("/select-topics", { replace: true });
-      } else {
-        navigate("/home", { replace: true });
-      }
-    } catch (err) {
-      console.log("LOGIN ERROR:", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
+    const fullUser = await login(user, token);
+
+    console.log("Logged in user:", fullUser);
+
+    /* ADMIN REDIRECT FIRST */
+
+    if (fullUser.role === "admin") {
+      navigate("/admin", { replace: true });
+      return;
     }
-  };
 
+    /* NORMAL USERS */
+
+    if (!fullUser.topics || fullUser.topics.length === 0) {
+      navigate("/select-topics", { replace: true });
+    } else {
+      navigate("/home", { replace: true });
+    }
+
+  } catch (err) {
+    console.log("LOGIN ERROR:", err.response?.data || err.message);
+    setError(err.response?.data?.message || "Login failed");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <>
       <LandingNavbar />

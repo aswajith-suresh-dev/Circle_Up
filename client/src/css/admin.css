@@ -7,11 +7,23 @@ color:#e5e7eb;
 
 /* SIDEBAR */
 
+/* SIDEBAR */
+
 .admin-sidebar{
+position:fixed;
+
+left:0;
+top:0;
+
 width:240px;
+height:100vh;
+
 background:#111827;
 padding:30px 20px;
+
 border-right:1px solid #1f2937;
+
+overflow-y:auto;
 }
 
 .admin-logo{
@@ -53,6 +65,7 @@ color:white;
 .admin-main{
 flex:1;
 padding:35px;
+margin-left:240px;
 }
 
 /* DASHBOARD */

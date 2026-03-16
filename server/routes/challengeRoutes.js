@@ -9,6 +9,7 @@ import { getChallengesByCircle } from "../controllers/challengeController.js";
 import { adminOnly } from "../middlewares/adminMiddleware.js";
 import { getPopularChallenges } from "../controllers/challengeController.js";
 import { updateChallenge } from "../controllers/challengeController.js";
+import { getChallengeOverview } from "../controllers/challengeController.js";
 const router = express.Router();
 
 // mentor creates challenge
@@ -16,6 +17,7 @@ const router = express.Router();
 router.post("/", protect, mentorOnly, createChallenge);
 router.get("/all", protect, getAllChallenges);
 router.get("/popular", protect, getPopularChallenges);
+router.get("/:challengeId/overview", protect, getChallengeOverview);
 router.get("/:challengeId", protect, getChallengeDetail);
 router.put("/:challengeId", protect, updateChallenge);
 router.get(

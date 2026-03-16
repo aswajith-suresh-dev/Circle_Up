@@ -74,6 +74,14 @@ const MentorChallenges = () => {
 
           <div className="challenge-actions">
             <button
+              className="btn-secondary"
+              onClick={() =>
+                navigate(`/mentor/challenge/${challenge._id}/overview`)
+              }
+            >
+              Overview
+            </button>
+            <button
               className="btn-edit"
               onClick={() => navigate(`/edit-challenge/${challenge._id}`)}
             >

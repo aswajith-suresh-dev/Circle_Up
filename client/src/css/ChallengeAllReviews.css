@@ -1,0 +1,64 @@
+.challenge-review-page{
+max-width:720px;
+margin:auto;
+padding:40px 20px;
+background:#F9FAFB;
+}
+
+.challenge-review-page h2{
+color:#1F2937;
+margin-bottom:25px;
+}
+
+/* Empty state */
+
+.no-reviews{
+color:#6B7280;
+font-size:14px;
+}
+
+/* Review list */
+
+.challenge-review-list{
+display:flex;
+flex-direction:column;
+gap:16px;
+}
+
+/* Review card */
+
+.challenge-review-card{
+background:#FFFFFF;
+border:1px solid #E5E7EB;
+border-radius:12px;
+padding:16px;
+transition:all 0.2s ease;
+}
+
+.challenge-review-card:hover{
+box-shadow:0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* User name */
+
+.challenge-review-card h4{
+margin-bottom:6px;
+color:#1F2937;
+font-size:15px;
+}
+
+/* Stars */
+
+.review-stars{
+color:#F59E0B;
+font-size:14px;
+margin-bottom:6px;
+}
+
+/* Review text */
+
+.challenge-review-card p{
+color:#374151;
+font-size:14px;
+line-height:1.4;
+}

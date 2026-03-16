@@ -1,158 +1,18 @@
-.challenges-page{
+.challengehub-page{
 padding:30px;
 background:#F9FAFB;
 }
 
-.challenge-title{
+.challengehub-title{
 color:#1F2937;
 margin-bottom:20px;
 }
 
-.challenge-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-gap:24px;
-}
-
-/* card */
-
-.challenge-card{
-background:#FFFFFF;
-border:1px solid #E5E7EB;
-border-radius:14px;
-padding:22px;
-transition:all 0.2s ease;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-}
-
-.challenge-card:hover{
-box-shadow:0 10px 25px rgba(0,0,0,0.07);
-transform:translateY(-2px);
-}
-
-/* header */
-
-.challenge-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:14px;
-}
-
-.challenge-header h3{
-font-size:18px;
-color:#1F2937;
-}
-
-/* badges */
-
-.badge-free{
-background:#dcfce7;
-color:#065f46;
-padding:4px 8px;
-border-radius:6px;
-font-size:12px;
-}
-
-.badge-paid{
-background:#fde68a;
-color:#92400e;
-padding:4px 8px;
-border-radius:6px;
-font-size:12px;
-}
-
-/* meta info */
-
-.challenge-meta{
-margin-bottom:14px;
-}
-
-.challenge-meta p{
-display:flex;
-align-items:center;
-gap:6px;
-font-size:14px;
-color:#6b7280;
-margin-bottom:6px;
-}
-
-/* progress */
-
-.challenge-progress{
-margin-top:10px;
-margin-bottom:10px;
-}
-
-.progress-bg{
-height:10px;
-background:#E5E7EB;
-border-radius:6px;
-overflow:hidden;
-}
-
-.progress-fill{
-height:100%;
-background:#373A7A;
-}
-
-.progress-text{
-font-size:12px;
-margin-top:5px;
-color:#6b7280;
-}
-
-/* buttons */
-
-.btn-join{
-margin-top:12px;
-background:#373A7A;
-color:white;
-border:none;
-padding:9px 14px;
-border-radius:8px;
-cursor:pointer;
-width:100%;
-font-weight:500;
-}
-
-.btn-continue{
-margin-top:12px;
-background:#1F2937;
-color:white;
-border:none;
-padding:9px 14px;
-border-radius:8px;
-cursor:pointer;
-width:100%;
-}
-
-.btn-completed{
-margin-top:12px;
-background:#16a34a;
-color:white;
-border:none;
-padding:9px 14px;
-border-radius:8px;
-cursor:pointer;
-width:100%;
-}
-
-.note{
-font-size:12px;
-color:#6b7280;
-margin-top:8px;
-}
-
-/* filter */
-
-.challenge-filter{
+.challengehub-filter{
 margin-bottom:24px;
 }
 
-.filter-btn{
+.challengehub-filter-btn{
 margin-right:10px;
 padding:8px 14px;
 border-radius:8px;
@@ -164,8 +24,200 @@ align-items:center;
 gap:6px;
 }
 
-.filter-btn.active{
+.challengehub-filter-btn.active{
 background:#373A7A;
 color:white;
 border:none;
+}
+
+.challengehub-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+gap:24px;
+}
+
+/* card */
+
+.challengehub-card{
+background:#FFFFFF;
+border:1px solid #E5E7EB;
+border-radius:14px;
+padding:22px;
+transition:all 0.2s ease;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.challengehub-card:hover{
+box-shadow:0 10px 25px rgba(0,0,0,0.07);
+transform:translateY(-2px);
+}
+
+/* header */
+
+.challengehub-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:14px;
+}
+
+.challengehub-header h3{
+font-size:18px;
+color:#1F2937;
+}
+
+/* badges */
+
+.challengehub-badge-free{
+background:#dcfce7;
+color:#065f46;
+padding:4px 8px;
+border-radius:6px;
+font-size:12px;
+}
+
+.challengehub-badge-paid{
+background:#fde68a;
+color:#92400e;
+padding:4px 8px;
+border-radius:6px;
+font-size:12px;
+}
+
+/* meta */
+
+.challengehub-meta{
+margin-bottom:14px;
+}
+
+.challengehub-meta p{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:14px;
+color:#6b7280;
+margin-bottom:6px;
+}
+
+/* progress */
+
+.challengehub-progress{
+margin-top:10px;
+margin-bottom:10px;
+}
+
+.challengehub-progress-bg{
+height:10px;
+background:#E5E7EB;
+border-radius:6px;
+overflow:hidden;
+}
+
+.challengehub-progress-fill{
+height:100%;
+background:#373A7A;
+}
+
+.challengehub-progress-text{
+font-size:12px;
+margin-top:5px;
+color:#6b7280;
+}
+
+/* buttons */
+
+.challengehub-btn-join{
+margin-top:12px;
+background:#373A7A;
+color:white;
+border:none;
+padding:9px 14px;
+border-radius:8px;
+cursor:pointer;
+width:100%;
+font-weight:500;
+}
+
+.challengehub-btn-continue{
+margin-top:12px;
+background:#1F2937;
+color:white;
+border:none;
+padding:9px 14px;
+border-radius:8px;
+cursor:pointer;
+width:100%;
+}
+
+.challengehub-btn-completed{
+margin-top:12px;
+background:#16a34a;
+color:white;
+border:none;
+padding:9px 14px;
+border-radius:8px;
+cursor:pointer;
+width:100%;
+}
+
+.challengehub-note{
+font-size:12px;
+color:#6b7280;
+margin-top:8px;
+}
+
+.challengehub-empty{
+color:#6b7280;
+}
+/* rating */
+
+.challengehub-rating{
+display:flex;
+align-items:center;
+gap:6px;
+margin-top:4px;
+font-size:13px;
+}
+
+.rating-stars{
+color:#F59E0B;
+font-weight:600;
+}
+
+.rating-count{
+color:#6B7280;
+}
+
+/* reviews button */
+
+.challengehub-btn-reviews{
+margin-top:10px;
+background:white;
+border:1px solid #373A7A;
+color:#373A7A;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+width:100%;
+font-size:14px;
+}
+
+.challengehub-btn-reviews:hover{
+background:#373A7A;
+color:white;
+}
+.challengehub-extra-filters{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
+
+.challengehub-extra-filters select{
+padding:8px 12px;
+border-radius:8px;
+border:1px solid #E5E7EB;
+background:white;
+cursor:pointer;
 }

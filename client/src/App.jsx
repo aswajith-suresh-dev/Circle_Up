@@ -366,6 +366,8 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminCircles from "./pages/admin/AdminCircles";
 import AdminManageChallenges from "./pages/admin/AdminManageChallenges";
+import AdminProfile from "./pages/admin/AdminProfile";
+import AdminChangePassword from "./pages/admin/AdminChangepassword";
 
 // Support
 import Complaint from "./pages/support/Complaint";
@@ -380,9 +382,13 @@ import CreateChallenge from "./pages/mentor/CreateChallenge";
 import MentorChallenges from "./pages/mentor/MentorChallenges";
 import AdminChallenges from "./pages/admin/AdminChallenges";
 import MentorStatus from "./pages/mentor/MentorStatus";
+import ChallengeReviews from "./pages/challenges/ChallengeReviews";
+import ChallengeOverview from "./pages/mentor/ChallengeOverview";
 
 import MentorRevenue from "./pages/mentor/MentorRevenue";
 import AdminRevenue from "./pages/admin/AdminRevenue";
+import AdminChallengeOverview from "./pages/admin/AdminChallengeOverview";
+import ChallengeAllReviews from "./pages/challenges/ChallengeAllReviews";
 function App() {
   const { user, loading } = useAuth();
   const location = useLocation();
@@ -422,7 +428,9 @@ function App() {
             path="/"
             element={
               user ? (
-                hasTopics ? (
+                user.role === "admin" ? (
+                  <Navigate to="/admin" replace />
+                ) : hasTopics ? (
                   <Navigate to="/home" replace />
                 ) : (
                   <Navigate to="/select-topics" replace />
@@ -445,6 +453,14 @@ function App() {
               ) : (
                 <Login />
               )
+            }
+          />
+          <Route
+            path="/challenges/:challengeId/reviews"
+            element={
+              <ProtectedRoute>
+                <ChallengeReviews />
+              </ProtectedRoute>
             }
           />
           {/* SIGNUP */}
@@ -506,6 +522,14 @@ function App() {
             }
           />
           <Route
+            path="/mentor/challenge/:challengeId/overview"
+            element={
+              <MentorRoute>
+                <ChallengeOverview />
+              </MentorRoute>
+            }
+          />
+          <Route
             path="/edit-circle/:circleId"
             element={
               <MentorRoute>
@@ -541,7 +565,9 @@ function App() {
           <Route
             path="/home"
             element={
-              user && (!user.topics || user.topics.length === 0) ? (
+              user?.role === "admin" ? (
+                <Navigate to="/admin" replace />
+              ) : user && (!user.topics || user.topics.length === 0) ? (
                 <Navigate to="/select-topics" replace />
               ) : (
                 <ProtectedRoute>
@@ -653,6 +679,14 @@ function App() {
             }
           />
           <Route
+            path="/challenges/:challengeId/all-reviews"
+            element={
+              <ProtectedRoute>
+                <ChallengeAllReviews />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/mentor"
             element={
               <ProtectedRoute>
@@ -673,9 +707,17 @@ function App() {
 
             <Route path="users" element={<AdminUsers />} />
 
-<Route path="manage-challenges" element={<AdminManageChallenges />} />
-            <Route path="circles" element={<AdminCircles />} /> 
-
+            <Route
+              path="manage-challenges"
+              element={<AdminManageChallenges />}
+            />
+            <Route
+              path="challenges/:challengeId/overview"
+              element={<AdminChallengeOverview />}
+            />
+            <Route path="profile" element={<AdminProfile />} />
+            <Route path="circles" element={<AdminCircles />} />
+            <Route path="change-password" element={<AdminChangePassword />} />
             <Route path="challenges" element={<AdminChallenges />} />
 
             <Route path="mentor-requests" element={<AdminMentorRequests />} />
