@@ -21,7 +21,7 @@ const Hero = () => {
             Join CircleUp
           </Link>
 
-          <Link to="/login" className="secondary-btn">
+          <Link to="/login" className="landing-secondary-btn">
             Explore Circles
           </Link>
         </div>

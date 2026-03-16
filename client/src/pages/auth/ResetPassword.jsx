@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+
 import "../../css/Auth.css";
 
 const ResetPassword = () => {
@@ -8,35 +10,57 @@ const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
 
-  const [password,setPassword] = useState("");
-  const [confirmPassword,setConfirmPassword] = useState("");
-  const [message,setMessage] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+
 
   const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    if(password !== confirmPassword){
-      setMessage("Passwords do not match");
+    setError("");
+    setSuccess("");
+
+    /* PASSWORD VALIDATION */
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-+=])[A-Za-z\d@$!%*?&#^()_\-+=]{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      setError(
+        "Password must be at least 8 characters and include uppercase, lowercase, number and symbol."
+      );
       return;
     }
 
-    try{
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
 
       const res = await api.put(
         `/auth/reset-password/${token}`,
         { newPassword: password }
       );
 
-      setMessage(res.data.message);
+      setSuccess(res.data.message || "Password reset successful");
 
-      setTimeout(()=>{
+      setTimeout(() => {
         navigate("/login");
-      },2000);
+      }, 2000);
 
-    }catch(err){
+    } catch (err) {
 
-      setMessage(
+      setError(
         err.response?.data?.message ||
         "Reset failed"
       );
@@ -45,7 +69,9 @@ const ResetPassword = () => {
 
   };
 
-  return(
+
+
+  return (
 
     <div className="auth-container">
 
@@ -55,31 +81,66 @@ const ResetPassword = () => {
 
         <form className="auth-form" onSubmit={handleSubmit}>
 
+          {/* NEW PASSWORD */}
+
           <div className="auth-field">
 
             <label>New Password</label>
 
-            <input
-              type="password"
-              value={password}
-              onChange={(e)=>setPassword(e.target.value)}
-              required placeholder="enter new password"
-            />
+            <div className="password-wrapper">
+
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter new password"
+              />
+
+              <span
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </span>
+
+            </div>
+
+            <small className="password-hint">
+              Password must contain uppercase, lowercase, number and symbol (min 8 characters)
+            </small>
 
           </div>
+
+
+
+          {/* CONFIRM PASSWORD */}
 
           <div className="auth-field">
 
             <label>Confirm Password</label>
 
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e)=>setConfirmPassword(e.target.value)}
-              required placeholder="enter new password"
-            />
+            <div className="password-wrapper">
+
+              <input
+                type={showConfirm ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                placeholder="Confirm new password"
+              />
+
+              <span
+                className="password-toggle"
+                onClick={() => setShowConfirm(!showConfirm)}
+              >
+                {showConfirm ? <FiEyeOff /> : <FiEye />}
+              </span>
+
+            </div>
 
           </div>
+
 
           <button className="auth-btn">
             Reset Password
@@ -87,8 +148,16 @@ const ResetPassword = () => {
 
         </form>
 
-        {message && (
-          <p className="auth-error">{message}</p>
+        {/* ERROR MESSAGE */}
+
+        {error && (
+          <p className="auth-error">{error}</p>
+        )}
+
+        {/* SUCCESS MESSAGE */}
+
+        {success && (
+          <p className="auth-success">{success}</p>
         )}
 
       </div>

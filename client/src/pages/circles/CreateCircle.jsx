@@ -6,6 +6,17 @@ import api from "../../api/axios";
 
 import "../../css/CreateCircle.css";
 
+/* Suggested Topics */
+
+const TOPIC_SUGGESTIONS = [
+"React",
+"Node",
+"JavaScript",
+"Python",
+"MongoDB",
+"DSA"
+];
+
 const CreateCircle = () => {
 
 const navigate = useNavigate();
@@ -39,7 +50,7 @@ setError("");
 const res = await api.post("/circles",{
 name,
 description,
-topic,
+topic: topic.toLowerCase().trim(), // normalize topic
 level
 });
 
@@ -89,13 +100,26 @@ onChange={(e)=>setDescription(e.target.value)}
 style={{height:"80px"}}
 />
 
+
+{/* TOPIC INPUT WITH SUGGESTIONS */}
 <input
-className="mentor-create-circle-input"
-type="text"
-placeholder="Topic (e.g. React, DSA)"
-value={topic}
-onChange={(e)=>setTopic(e.target.value)}
+  className="mentor-create-circle-input"
+  type="text"
+  list={topic.length > 0 ? "topicSuggestions" : undefined}
+  placeholder="Topic (e.g. React, DSA)"
+  value={topic}
+  onChange={(e)=>setTopic(e.target.value)}
+  autoComplete="off"
 />
+
+{topic.length > 0 && (
+  <datalist id="topicSuggestions">
+    {TOPIC_SUGGESTIONS.map((t)=>(
+      <option key={t} value={t} />
+    ))}
+  </datalist>
+)}
+
 
 <select
 className="mentor-create-circle-input"

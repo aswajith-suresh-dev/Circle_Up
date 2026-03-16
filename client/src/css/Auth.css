@@ -1,10 +1,10 @@
 .auth-container{
-  min-height: 80vh;
+  min-height:80vh;
   display:flex;
   justify-content:center;
   align-items:center;
   padding-top:120px;
-  padding-bottom: 80px;
+  padding-bottom:80px;
 }
 
 .auth-card{
@@ -13,7 +13,6 @@
   border:1px solid #e5e7eb;
   border-radius:12px;
   padding:40px;
-
   box-shadow:0 10px 30px rgba(0,0,0,0.05);
 }
 
@@ -43,17 +42,22 @@
   padding:12px;
   border:1px solid #cbd5e1;
   border-radius:8px;
+  transition:0.2s;
 }
 
 .auth-field input:focus{
   outline:none;
-  border-color:#1F2937;
+  border-color:#373A7A;
+  box-shadow:0 0 0 2px rgba(55,58,122,0.15);
 }
+
+/* BUTTON */
 
 .auth-btn{
   margin-top:10px;
+  width:100%;
   padding:12px;
-  background:#1F2937;
+  background:#373A7A;
   color:white;
   border:none;
   border-radius:8px;
@@ -63,14 +67,32 @@
 }
 
 .auth-btn:hover{
+  background:#2f3265;
   transform:translateY(-2px);
   box-shadow:0 8px 20px rgba(0,0,0,0.12);
 }
 
+/* ERROR MESSAGE */
+
 .auth-error{
-  color:#ef4444;
+  background:#fee2e2;
+  color:#991b1b;
+  padding:8px 10px;
+  border-radius:6px;
+  margin-bottom:12px;
+  font-size:14px;
   text-align:center;
 }
+
+/* SUCCESS MESSAGE */
+
+.auth-success{
+  color:#373A7A;
+  text-align:center;
+}
+
+/* SWITCH LINK */
+
 .auth-switch{
   margin-top:20px;
   text-align:center;
@@ -79,7 +101,7 @@
 }
 
 .auth-switch a{
-  color:#1F2937;
+  color:#373A7A;
   font-weight:600;
   text-decoration:none;
 }
@@ -87,7 +109,42 @@
 .auth-switch a:hover{
   text-decoration:underline;
 }
-.auth-success{
-  color:#747bff;
-  text-align:center;
+
+/* PASSWORD HINT */
+
+.password-hint{
+  display:block;
+  margin-top:6px;
+  font-size:13px;
+  color:#6b7280;
+  line-height:1.4;
+}
+/* PASSWORD TOGGLE */
+
+.password-wrapper{
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+
+.password-wrapper input{
+  width:100%;
+  padding:12px;
+  padding-right:40px;
+  border:1px solid #cbd5e1;
+  border-radius:8px;
+}
+
+.password-toggle{
+  position:absolute;
+  right:12px;
+  cursor:pointer;
+  color:#6b7280;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+}
+
+.password-toggle:hover{
+  color:#373A7A;
 }

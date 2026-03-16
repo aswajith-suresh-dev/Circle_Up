@@ -121,7 +121,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6366f1;
+  color: #373a7a;
 }
 
 .info-text {
@@ -275,7 +275,8 @@
 
 .post-type-badge.discussion {
   background: #dbeafe;
-  color: #1e40af;
+  color: #373a7a;
+;
 }
 
 .post-description {

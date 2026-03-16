@@ -158,21 +158,25 @@ const FolderDetail = () => {
 
   /* DELETE TASK */
 
-  const handleDeleteTask = async(id)=>{
+  const handleDeleteTask = async (id) => {
 
-    try{
+  const confirmDelete = window.confirm("Are you sure you want to delete this task?");
 
-      await api.delete(`/personal/task/${id}`);
+  if(!confirmDelete) return;
 
-      fetchTasks();
+  try{
 
-      showSnack("Task deleted");
+    await api.delete(`/personal/task/${id}`);
 
-    }catch(err){
-      console.error(err);
-    }
+    fetchTasks();
 
-  };
+    showSnack("Task deleted");
+
+  }catch(err){
+    console.error(err);
+  }
+
+};
 
 
 
@@ -244,22 +248,25 @@ const FolderDetail = () => {
 
   /* DELETE STUDY LOG */
 
-  const handleDeleteLog = async(taskId,logId)=>{
+const handleDeleteLog = async(taskId,logId)=>{
 
-    try{
+  const confirmDelete = window.confirm("Delete this study log?");
 
-      await api.delete(`/personal/task/${taskId}/log/${logId}`);
+  if(!confirmDelete) return;
 
-      fetchTasks();
+  try{
 
-      showSnack("Study log deleted");
+    await api.delete(`/personal/task/${taskId}/log/${logId}`);
 
-    }catch(err){
-      console.error(err);
-    }
+    fetchTasks();
 
-  };
+    showSnack("Study log deleted");
 
+  }catch(err){
+    console.error(err);
+  }
+
+};
 
 
   return(

@@ -4,8 +4,6 @@ margin:auto;
 padding:30px;
 }
 
-
-
 /* HEADER */
 
 .task-header{
@@ -16,7 +14,7 @@ margin-bottom:20px;
 }
 
 .add-task-btn{
-background:#6366f1;
+background:#373A7A;
 color:white;
 border:none;
 padding:8px 14px;
@@ -29,10 +27,8 @@ transition:0.2s;
 }
 
 .add-task-btn:hover{
-background:#4f46e5;
+background:#2f3265;
 }
-
-
 
 /* CREATE TASK FORM */
 
@@ -54,16 +50,20 @@ border:1px solid #e5e7eb;
 font-size:14px;
 }
 
+.task-form input:focus,
+.task-form textarea:focus{
+outline:none;
+border-color:#373A7A;
+}
+
 .task-form button{
-background:#6366f1;
+background:#373A7A;
 color:white;
 border:none;
 padding:8px 12px;
 border-radius:6px;
 cursor:pointer;
 }
-
-
 
 /* TASK CARD */
 
@@ -80,21 +80,17 @@ transition:0.2s;
 box-shadow:0 6px 18px rgba(0,0,0,0.06);
 }
 
-
-
 /* COMPLETED TASK */
 
 .task-card.completed{
-background:#f0fdf4;
-border-left:4px solid #22c55e;
+background:#eef2ff;
+border-left:4px solid #373A7A;
 }
 
 .task-card.completed strong{
 text-decoration:line-through;
 opacity:0.7;
 }
-
-
 
 /* TASK HEADER */
 
@@ -104,15 +100,13 @@ align-items:flex-start;
 gap:14px;
 }
 
-
-
 /* BIG CHECK BUTTON */
 
 .task-check{
 width:34px;
 height:34px;
 border-radius:50%;
-border:2px solid #6366f1;
+border:2px solid #373A7A;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -132,8 +126,6 @@ border-color:#22c55e;
 transform:scale(1.1);
 }
 
-
-
 /* TASK CONTENT */
 
 .task-content{
@@ -150,8 +142,6 @@ color:#6b7280;
 margin-top:4px;
 }
 
-
-
 /* ACTION ICONS */
 
 .task-icons{
@@ -165,8 +155,6 @@ display:flex;
 gap:14px;
 margin-left:10px;
 }
-
-
 
 /* TOOLTIP */
 
@@ -195,26 +183,28 @@ span[data-label]:hover::before{
 opacity:1;
 }
 
-
-
 /* SOURCES */
 
 .sources{
 margin-top:10px;
 }
 
+.sources strong{
+display:block;
+margin-bottom:6px;
+}
+
 .sources a{
 display:block;
-color:#6366f1;
+color:#373A7A;
 font-size:14px;
 text-decoration:none;
+margin-bottom:4px;
 }
 
 .sources a:hover{
 text-decoration:underline;
 }
-
-
 
 /* STUDY LOG FORM */
 
@@ -231,8 +221,13 @@ border:1px solid #e5e7eb;
 border-radius:6px;
 }
 
+.log-form input:focus{
+outline:none;
+border-color:#373A7A;
+}
+
 .log-form button{
-background:#6366f1;
+background:#373A7A;
 color:white;
 border:none;
 padding:6px 10px;
@@ -240,12 +235,15 @@ border-radius:6px;
 cursor:pointer;
 }
 
-
-
 /* STUDY LOG LIST */
 
 .study-logs{
 margin-top:14px;
+}
+
+.study-logs strong{
+display:block;
+margin-bottom:6px;
 }
 
 .study-log{
@@ -256,8 +254,6 @@ padding:8px;
 border-radius:6px;
 margin-top:6px;
 }
-
-
 
 /* EDIT TASK FORM */
 
@@ -274,13 +270,19 @@ border:1px solid #e5e7eb;
 border-radius:6px;
 }
 
+.edit-task-form input:focus,
+.edit-task-form textarea:focus{
+outline:none;
+border-color:#373A7A;
+}
+
 .edit-buttons{
 display:flex;
 gap:10px;
 }
 
 .edit-buttons button{
-background:#6366f1;
+background:#373A7A;
 color:white;
 border:none;
 padding:6px 12px;
@@ -288,7 +290,9 @@ border-radius:6px;
 cursor:pointer;
 }
 
-
+.edit-buttons button:hover{
+background:#2f3265;
+}
 
 /* SNACKBAR */
 
@@ -306,4 +310,16 @@ gap:8px;
 align-items:center;
 font-size:14px;
 box-shadow:0 6px 20px rgba(0,0,0,0.25);
+animation:snackbarSlide 0.3s ease;
+}
+
+@keyframes snackbarSlide{
+from{
+transform:translate(-50%,20px);
+opacity:0;
+}
+to{
+transform:translate(-50%,0);
+opacity:1;
+}
 }

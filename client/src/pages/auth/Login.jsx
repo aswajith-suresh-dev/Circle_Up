@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import LandingNavbar from "../../components/landing/LandingNavbar";
 import Footer from "../../components/landing/Footer";
-
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import "../../css/Auth.css";
 
 const Login = () => {
@@ -13,50 +13,61 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+    e.preventDefault();
+    setError("");
 
-  try {
-    setLoading(true);
+    /* PASSWORD VALIDATION */
 
-    const res = await api.post("/auth/login", {
-      email,
-      password,
-    });
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-+=])[A-Za-z\d@$!%*?&#^()_\-+=]{8,}$/;
 
-    const { user, token } = res.data;
-
-    const fullUser = await login(user, token);
-
-    console.log("Logged in user:", fullUser);
-
-    /* ADMIN REDIRECT FIRST */
-
-    if (fullUser.role === "admin") {
-      navigate("/admin", { replace: true });
+    if (!passwordRegex.test(password)) {
+      setError(
+        "Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.",
+      );
       return;
     }
 
-    /* NORMAL USERS */
+    try {
+      setLoading(true);
 
-    if (!fullUser.topics || fullUser.topics.length === 0) {
-      navigate("/select-topics", { replace: true });
-    } else {
-      navigate("/home", { replace: true });
+      const res = await api.post("/auth/login", {
+        email,
+        password,
+      });
+
+      const { user, token } = res.data;
+
+      const fullUser = await login(user, token);
+
+      console.log("Logged in user:", fullUser);
+
+      /* ADMIN REDIRECT FIRST */
+
+      if (fullUser.role === "admin") {
+        navigate("/admin", { replace: true });
+        return;
+      }
+
+      /* NORMAL USERS */
+
+      if (!fullUser.topics || fullUser.topics.length === 0) {
+        navigate("/select-topics", { replace: true });
+      } else {
+        navigate("/home", { replace: true });
+      }
+    } catch (err) {
+      console.log("LOGIN ERROR:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
-
-  } catch (err) {
-    console.log("LOGIN ERROR:", err.response?.data || err.message);
-    setError(err.response?.data?.message || "Login failed");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
   return (
     <>
       <LandingNavbar />
@@ -78,16 +89,30 @@ const Login = () => {
                 placeholder="Enter Email"
               />
             </div>
-
             <div className="auth-field">
               <label>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="Enter Password"
-              />
+
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Enter Password"
+                />
+
+                <span
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </span>
+              </div>
+
+              <small className="password-hint">
+                Password must contain uppercase, lowercase, number and symbol
+                (min 8 characters)
+              </small>
             </div>
 
             <button type="submit" disabled={loading} className="auth-btn">

@@ -145,7 +145,7 @@ will-change: tranform;
   }
 }
 
-.secondary-btn {
+.landing-secondary-btn {
   border: 1px solid #cbd5e1;
   padding: 14px 28px;
   border-radius: 10px;
@@ -161,7 +161,7 @@ will-change: tranform;
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 }
-.secondary-btn:hover {
+.landing-secondary-btn:hover {
   transform: translateY(-2px) scale(1.02);
   border-color: #94a3b8;
   box-shadow: 0 6px 16px rgba(0,0,0,0.08);

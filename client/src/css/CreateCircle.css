@@ -78,3 +78,12 @@ background:#111827;
 background:#9ca3af;
 cursor:not-allowed;
 }
+/* remove datalist dropdown arrow in some browsers */
+
+input[list]::-webkit-calendar-picker-indicator {
+display:none !important;
+}
+
+input[list]{
+appearance:none;
+}
