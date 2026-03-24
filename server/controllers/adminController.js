@@ -392,7 +392,7 @@ export const getAllChallenges = async (req,res) => {
     const challenges = await Challenge.find()
       .populate("mentor","name")
       .populate("circle","name")
-      .select("title price participants createdAt mentor circle");
+      .select("title price participantsCount createdAt mentor circle");
 
     const result = challenges.map(challenge => ({
 
@@ -406,8 +406,7 @@ export const getAllChallenges = async (req,res) => {
 
       price: challenge.price,
 
-      participantsCount: challenge.participants?.length || 0,
-
+participantsCount: challenge.participantsCount || 0,
       createdAt: challenge.createdAt
 
     }));

@@ -225,24 +225,22 @@ const challenges = await Challenge.find({
     });
   }
 };
-export const getPopularChallenges = async (req,res) => {
+export const getPopularChallenges = async (req, res) => {
+  try {
 
-try{
+    const challenges = await Challenge.find({
+      approvalStatus: "approved"
+    })
+      .sort({ participantsCount: -1, createdAt: -1 })
+      .limit(5)
+      .select("title participantsCount");
 
-const challenges = await Challenge.find({ approvalStatus:"approved" })
-.sort({ createdAt:-1 })
-.limit(5)
-.select("title");
+    res.status(200).json(challenges);
 
-res.status(200).json(challenges);
-
-}catch(error){
-
-console.error(error);
-res.status(500).json({message:"Failed to load challenges"});
-
-}
-
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to load challenges" });
+  }
 };
 export const updateChallenge = async (req, res) => {
   try {

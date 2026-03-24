@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
-
+import { Link } from "react-router-dom";
 import LandingNavbar from "../../components/landing/LandingNavbar";
 import Footer from "../../components/landing/Footer";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -116,7 +116,10 @@ const handleSubmit = async (e) => {
             <button type="submit" className="auth-btn">
               Sign Up
             </button>
-
+<p className="auth-switch">
+  Already have an account?
+  <Link to="/login">Login</Link>
+</p>
           </form>
 
         </div>

@@ -4,20 +4,29 @@ import api from "../../api/axios";
 import "../../css/RightSidebar.css";
 
 const RightSidebar = () => {
-
   const [circles, setCircles] = useState([]);
   const [challenges, setChallenges] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
+
+  /* ================= FETCH DATA ================= */
 
   const fetchData = async () => {
     try {
-      const circlesRes = await api.get("/circles/top");
-      const challengesRes = await api.get("/challenges/popular");
+      setLoading(true);
 
-      setCircles(circlesRes.data);
-      setChallenges(challengesRes.data);
+      const [circlesRes, challengesRes] = await Promise.all([
+        api.get("/circles/top"),
+        api.get("/challenges/popular"),
+      ]);
+
+      setCircles(circlesRes.data || []);
+      setChallenges(challengesRes.data || []);
     } catch (err) {
-      console.error(err);
+      console.error("Sidebar fetch error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -25,29 +34,57 @@ const RightSidebar = () => {
     fetchData();
   }, []);
 
+  /* ================= NAVIGATION ================= */
+
+  const handleChallengeClick = (ch) => {
+    console.log("Clicked challenge:", ch);
+
+    if (!ch?._id) {
+      console.warn("Invalid challenge ID");
+      return;
+    }
+
+    navigate(`/challenges/${ch._id}`);
+  };
+
+  const handleCircleClick = (circle) => {
+    if (!circle?._id) return;
+    navigate(`/circles/${circle._id}`);
+  };
+
+  /* ================= UI ================= */
+
+  if (loading) {
+    return <div className="right-sidebar">Loading...</div>;
+  }
+
   return (
     <div className="right-sidebar">
 
       <div className="right-title">Explore</div>
 
-      {/* Top Circles */}
+      {/* ================= TOP CIRCLES ================= */}
       <div className="right-card">
         <h4>🔥 Top Circles</h4>
 
-        {circles.slice(0, 3).map(circle => (
-          <div
-            key={circle._id}
-            className="right-card-item"
-            onClick={() => navigate(`/circles/${circle._id}`)}
-          >
-            <div className="item-content">
-              <span className="item-title">{circle.name}</span>
-              <span className="item-meta">
-                {circle.membersCount || circle.members?.length || 0} members
-              </span>
+        {circles.length === 0 ? (
+          <p className="empty-text">No circles found</p>
+        ) : (
+          circles.slice(0, 3).map((circle) => (
+            <div
+              key={circle._id}
+              className="right-card-item"
+              onClick={() => handleCircleClick(circle)}
+            >
+              <div className="item-content">
+                <span className="item-title">{circle.name}</span>
+                <span className="item-meta">
+                  {circle.membersCount || circle.members?.length || 0} members
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
 
         <div
           className="right-card-footer"
@@ -57,24 +94,28 @@ const RightSidebar = () => {
         </div>
       </div>
 
-      {/* Popular Challenges */}
+      {/* ================= POPULAR CHALLENGES ================= */}
       <div className="right-card">
         <h4>🏆 Popular Challenges</h4>
 
-        {challenges.slice(0, 3).map(ch => (
-          <div
-            key={ch._id}
-            className="right-card-item"
-            onClick={() => navigate(`/challenges/${ch._id}`)}
-          >
-            <div className="item-content">
-              <span className="item-title">{ch.title}</span>
-              <span className="item-meta">
-                {ch.participantsCount || ch.participants?.length || 0} joined
-              </span>
+        {challenges.length === 0 ? (
+          <p className="empty-text">No challenges found</p>
+        ) : (
+          challenges.slice(0, 3).map((ch) => (
+            <div
+              key={ch._id}
+              className="right-card-item"
+              onClick={() => handleChallengeClick(ch)}
+            >
+              <div className="item-content">
+                <span className="item-title">{ch.title}</span>
+                <span className="item-meta">
+                  {ch.participantsCount || 0} joined
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
 
         <div
           className="right-card-footer"

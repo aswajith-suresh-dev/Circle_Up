@@ -17,7 +17,7 @@ const Hero = () => {
         </p>
 
         <div className="hero-buttons">
-          <Link to="/signup" className="primary-btn">
+          <Link to="/signup" className="landing-primary-btn">
             Join CircleUp
           </Link>
 

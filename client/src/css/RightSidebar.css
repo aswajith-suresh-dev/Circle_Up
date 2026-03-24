@@ -20,7 +20,7 @@
   color: #ffffff;
   font-size: 15px;
   font-weight: 700;
-  box-shadow: 0 10px 25px rgba(55, 58, 122, 0.25);
+  /* box-shadow: 0 10px 25px rgba(55, 58, 122, 0.25); */
 }
 
 /* CARD */
@@ -29,7 +29,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   padding: 14px;
-  box-shadow: 0 6px 18px rgba(31, 41, 55, 0.06);
+  /* box-shadow: 0 6px 18px rgba(31, 41, 55, 0.06); */
   transition: all 0.2s ease;
   counter-reset: right-item;
 }
@@ -75,7 +75,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(55, 58, 122, 0.25);
+  /* box-shadow: 0 4px 12px rgba(55, 58, 122, 0.25); */
 }
 
 /* HOVER */

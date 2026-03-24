@@ -194,45 +194,37 @@
 }
 
 /* Bottom Logo */
-
-.sidebar-logo {
-  text-align: center;
-
-  font-weight: 600;
-  font-size: 16px;
-
-  color: #1f2937;
-
-  margin-top: 20px;
-}
 /* LOGO BOX */
 
-.sidebar-logo-box{
-display:flex;
-align-items:center;
-justify-content:center;
+.sidebar-logo-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-gap:10px;
+  height: 110px;
 
-height:110px;
-
-border-bottom:1px solid #e5e7eb;
-margin-bottom:px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 10px;
 }
 
 /* LOGO IMAGE */
 
-.sidebar-logo-img{
-width:42px;
-height:42px;
-
-object-fit:contain;
+.sidebar-logo-img {
+  object-fit: contain;
+  transition: all 0.3s ease;
 }
 
-/* LOGO TEXT */
+/* Collapsed Logo (current size - keep same) */
 
-.sidebar-logo-text{
-font-size:16px;
-font-weight:600;
-color:#1f2937;
+.collapsed .sidebar-logo-img {
+  width: 42px;
+  height: 42px;
+}
+
+/* Expanded Logo (bigger 🔥) */
+
+.expanded .sidebar-logo-img {
+  width: 110px;
+  height: 110px;
+  transform: scale(1.05);
 }

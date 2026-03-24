@@ -5,7 +5,7 @@ const WelcomeCard = () => {
     <div className="admin-welcome-card">
 
       <div className="admin-welcome-text">
-        <h1>Welcome back, Admin 👋</h1>
+        <h1>Welcome back, Aswajith 👋</h1>
         <p>
           Manage users, mentors, circles, and platform activity
           from this dashboard.
@@ -13,9 +13,9 @@ const WelcomeCard = () => {
       </div>
 
       <div className="admin-welcome-icon">
-        ⬛
+        
       </div>
-
+x
     </div>
 
   );

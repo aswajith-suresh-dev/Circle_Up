@@ -20,25 +20,29 @@ const ChallengeDays = () => {
   const [selectedDay,setSelectedDay] = useState(null);
 
   /* ================= FETCH PROGRESS ================= */
+const fetchProgress = async () => {
+  try {
+    const res = await api.get(`/challenges/${challengeId}/progress`);
 
-  const fetchProgress = async () => {
+    setChallenge(res.data.challenge);
+    setProgress(res.data.progress);
+    setCanCheckIn(res.data.canCheckIn);
+    setIsCompleted(res.data.isCompleted);
+    setSelectedDay(res.data.progress.currentDay);
 
-    try{
+  } catch (err) {
 
-      const res = await api.get(`/challenges/${challengeId}/progress`);
+    if (err.response?.status === 404) {
+      console.log("User has not joined this challenge");
 
-      setChallenge(res.data.challenge);
-      setProgress(res.data.progress);
-      setCanCheckIn(res.data.canCheckIn);
-      setIsCompleted(res.data.isCompleted);
-
-      setSelectedDay(res.data.progress.currentDay);
-
-    }catch(err){
-      console.error(err);
+      // 🔥 redirect to join page OR show message
+      navigate("/challenges");
+      return;
     }
 
-  };
+    console.error(err);
+  }
+};
 
   useEffect(()=>{
     fetchProgress();

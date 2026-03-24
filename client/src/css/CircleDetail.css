@@ -4,7 +4,7 @@
   background-color: #f8faf5;
   min-height: 100vh;
   padding: 40px 20px;
-  font-family: "Inter", sans-serif;
+  font-family: sans-serif;
   display: flex;
   justify-content: center;
 }
@@ -24,7 +24,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  border-left: 6px solid #747bff;
+  border-left: 8px solid #372a7a;
 }
 
 .banner-info h1 {

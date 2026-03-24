@@ -25,8 +25,13 @@ const AdminComplaints = () => {
 
       const res = await api.get("/support/complaints");
 
-      setComplaints(res.data);
+const sorted = res.data.sort((a, b) => {
+  if (a.status === "pending" && b.status !== "pending") return -1;
+  if (a.status !== "pending" && b.status === "pending") return 1;
+  return 0;
+});
 
+setComplaints(sorted);
     }catch(err){
       console.error(err);
     }
@@ -36,36 +41,59 @@ const AdminComplaints = () => {
     fetchComplaints();
   },[]);
 
+const handleReply = async (complaintId) => {
 
-  const handleReply = async (complaintId) => {
+  const reply = replyText[complaintId]?.trim();
 
-    try{
+  // ❌ prevent empty reply
+  if (!reply) {
+    alert("Please enter a reply before submitting.");
+    return;
+  }
 
-      setLoading(true);
+  // ⚠️ confirmation (important since no edit option)
+  const confirmReply = window.confirm(
+    "Are you sure you want to send this reply?\nYou cannot edit it later."
+  );
 
-      await api.put(
-        `/support/complaint/reply/${complaintId}`,
-        {
-          reply: replyText[complaintId]
-        }
-      );
+  if (!confirmReply) return;
 
-      setReplyText(prev => ({
-        ...prev,
-        [complaintId]:""
-      }));
+  try {
 
-      fetchComplaints();
+    setLoading(true);
 
-    }catch(err){
-      console.error(
-        err.response?.data?.message || err.message
-      );
-    }finally{
-      setLoading(false);
-    }
+    await api.put(
+      `/support/complaint/reply/${complaintId}`,
+      { reply }
+    );
 
-  };
+    // ✅ success alert
+    alert("Reply sent successfully ✅");
+
+    // clear textarea
+    setReplyText(prev => ({
+      ...prev,
+      [complaintId]: ""
+    }));
+
+    // refresh data
+    fetchComplaints();
+
+  } catch (err) {
+
+    console.error(
+      err.response?.data?.message || err.message
+    );
+
+    // ❌ error alert
+    alert(
+      err.response?.data?.message || "Failed to send reply ❌"
+    );
+
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   return(

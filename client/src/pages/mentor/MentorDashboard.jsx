@@ -1,5 +1,3 @@
-// src/pages/mentor/MentorDashboard.jsx
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -34,10 +32,8 @@ const MentorDashboard = () => {
   return (
     <div className="dashboard-container">
       {/* HEADER */}
-
       <div className="dashboard-header">
         <h1>Welcome back{user?.name ? `, ${user.name}` : ""} 👋</h1>
-
         <p>Manage your circles, challenges and revenue</p>
       </div>
 
@@ -47,16 +43,20 @@ const MentorDashboard = () => {
 
       <div className="dashboard-circles-row">
         {/* IMAGE */}
-
         <div className="dashboard-circle-preview">
-<img src="/images/mentor-dashboard.jpg" alt="preview" />        </div>
+          <img src="/images/mentor-dashboard.svg" alt="preview" />
+        </div>
 
         {/* CIRCLES */}
-
         <div className="dashboard-circle-container">
           <div className="dashboard-icons">
-            <FiPlus onClick={() => navigate("/create-circle")} />
-            <FiEdit2 onClick={() => navigate("/mentor/circles")} />
+            <div className="icon-wrapper" data-tooltip="Create Circle">
+              <FiPlus onClick={() => navigate("/create-circle")} />
+            </div>
+
+            <div className="icon-wrapper" data-tooltip="Edit Circles">
+              <FiEdit2 onClick={() => navigate("/mentor/circles")} />
+            </div>
           </div>
 
           <div className="dashboard-circle-list">
@@ -66,19 +66,21 @@ const MentorDashboard = () => {
                 className="dashboard-circle-card"
                 onClick={() => navigate(`/circles/${circle._id}`)}
               >
-                <div className="dashboard-circle-header">
+                {/* ICON */}
+                <div className="circle-left">
                   <div className="dashboard-circle-icon">
                     <FiUsers />
                   </div>
-
-                  <h4>{circle.name}</h4>
                 </div>
 
-                <span className="dashboard-circle-level">{circle.level}</span>
-
-                <p className="dashboard-circle-description">
-                  {circle.description}
-                </p>
+                {/* TEXT */}
+                <div className="dashboard-circle-text">
+                  <h4>{circle.name}</h4>
+                  <span className="dashboard-circle-level">{circle.level}</span>
+                  <p className="dashboard-circle-description">
+                    {circle.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -98,39 +100,42 @@ const MentorDashboard = () => {
 
       <div className="dashboard-bottom-row">
         {/* CHALLENGES */}
-
         <div className="dashboard-challenge-container">
           <div className="dashboard-icons">
-            <FiPlus onClick={() => navigate("/mentor/create-challenge")} />
-            <FiEdit2 onClick={() => navigate("/mentor/challenges")} />
+            <div className="icon-wrapper" data-tooltip="Create Challenge">
+              <FiPlus onClick={() => navigate("/mentor/create-challenge")} />
+            </div>
+
+            <div className="icon-wrapper" data-tooltip="Edit Challenges">
+              <FiEdit2 onClick={() => navigate("/mentor/challenges")} />
+            </div>
           </div>
+
           <div className="dashboard-challenge-grid">
             {data.challenges.slice(0, 3).map((challenge) => (
+              <div
+                key={challenge._id}
+                className="dashboard-challenge-card"
+                onClick={() => navigate(`/edit-challenge/${challenge._id}`)}
+              >
+                {/* ICON */}
+                <div className="challenge-left">
+                  <div className="dashboard-challenge-icon">
+                    <FiTarget />
+                  </div>
+                </div>
 
-<div
-  key={challenge._id}
-  className="dashboard-challenge-card"
-  onClick={() => navigate(`/edit-challenge/${challenge._id}`)}
->
-
-  <div className="dashboard-challenge-header">
-
-    <div className="dashboard-challenge-icon">
-      <FiTarget />
-    </div>
-
-    <h4>{challenge.title}</h4>
-
-  </div>
-
-  <p className="dashboard-challenge-description">
-    {challenge.description}
-  </p>
-
-</div>
-
-))}
+                {/* TEXT */}
+                <div className="dashboard-challenge-text">
+                  <h4>{challenge.title}</h4>
+                  <p className="dashboard-challenge-description">
+                    {challenge.description}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
+
           <div
             className="dashboard-view-link"
             onClick={() => navigate("/mentor/challenges")}

@@ -97,7 +97,40 @@ font-size:26px;
 margin-top:6px;
 color:#9ca3af;
 }
+/* LOGO CONTAINER */
 
+.admin-logo{
+  display:flex;
+  align-items:center;
+flex-direction: column;
+  padding:10px 10px 12px;
+  font-size:18px;
+  font-weight:700;
+  color:#1f2937;
+
+  border-bottom:1px solid #e5e7eb;
+}
+
+/* LOGO IMAGE */
+
+.admin-logo-img{
+  width:60px;
+  height:60px;
+  object-fit:contain;
+  display: block;
+  margin-bottom:-20px;
+}
+
+/* LOGO TEXT */
+
+.admin-logo-text{
+  font-size:20px;
+  font-weight:700;
+  letter-spacing:0.5px;
+  color:#94a3b8;
+  margin: 0;
+  line-height: 1;
+}
 /* STATS CARDS */
 
 .admin-stats-grid{

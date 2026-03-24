@@ -23,28 +23,28 @@ const TopTabs = ({ data }) => {
           className={active==="circles" ? "active" : ""}
           onClick={()=>setActive("circles")}
         >
-          Circles
+          Top Circles
         </button>
 
         <button
           className={active==="challenges" ? "active" : ""}
           onClick={()=>setActive("challenges")}
         >
-          Challenges
+           Top Challenges
         </button>
 
         <button
           className={active==="users" ? "active" : ""}
           onClick={()=>setActive("users")}
         >
-          Users
+           Top Users
         </button>
 
         <button
           className={active==="mentors" ? "active" : ""}
           onClick={()=>setActive("mentors")}
         >
-          Mentors
+           Top Mentors
         </button>
 
       </div>
@@ -61,6 +61,7 @@ const TopTabs = ({ data }) => {
               <>
                 <h4>{item.name}</h4>
                 <p>Topic: {item.topic}</p>
+                
               </>
             )}
 

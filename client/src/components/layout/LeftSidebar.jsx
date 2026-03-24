@@ -61,21 +61,13 @@ const LeftSidebar = () => {
       <div>
         {/* Profile */}
         {/* CircleUp Logo */}
-
+{/* Logo Only */}
 <div className="sidebar-logo-box">
-
   <img
-    src="/icon.jpg"
+    src="/logo.png"
     className="sidebar-logo-img"
     alt="CircleUp"
   />
-
-  {!collapsed && (
-    <span className="sidebar-logo-text">
-      CircleUp
-    </span>
-  )}
-
 </div>
 
         {/* Navigation */}
@@ -147,7 +139,7 @@ const LeftSidebar = () => {
       </div>
 
       {/* Bottom Logo */}
-      <div className="sidebar-logo">{collapsed ? "CU" : "CircleUp"}</div>
+      {/* <div className="sidebar-logo">{collapsed ? "CU" : "CircleUp"}</div> */}
     </div>
   );
 };

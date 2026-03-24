@@ -9,47 +9,47 @@ import {
   FiDollarSign,
   FiClipboard,
   FiUser,
-  FiLogOut
+  FiLogOut,
 } from "react-icons/fi";
 
 import { useAuth } from "../../context/AuthContext";
 
 const AdminSidebar = () => {
-
   const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-
     logout();
 
     navigate("/login");
-
   };
 
   return (
-
     <div className="admin-sidebar">
-
-      <h2 className="admin-logo">Admin</h2>
-
+      {/* <h2 className="admin-logo">CIRCLEUP</h2> */}
+      <div className="admin-logo">
+        <img src="/admin-logo.png" alt="CircleUp Logo" className="admin-logo-img" />
+        <br/>
+        <span className="admin-logo-text">CIRCLEUP</span>
+      </div>
       <nav className="admin-nav">
-
         {/* DASHBOARD */}
 
         <NavLink to="/admin">
           <FiGrid /> Dashboard
         </NavLink>
-
+        <NavLink to="/admin/profile">
+          <FiUser /> Profile
+        </NavLink>
         {/* MANAGEMENT */}
 
         <NavLink to="/admin/users">
           <FiUsers /> Users
         </NavLink>
 
-        <NavLink to="/admin/mentors">
+        {/* <NavLink to="/admin/mentors">
           <FiAward /> Mentors
-        </NavLink>
+        </NavLink> */}
 
         <NavLink to="/admin/circles">
           <FiCircle /> Circles
@@ -78,14 +78,12 @@ const AdminSidebar = () => {
         <NavLink to="/admin/revenue">
           <FiDollarSign /> Revenue
         </NavLink>
-
       </nav>
-
 
       {/* BOTTOM SECTION */}
 
       <div className="admin-sidebar-bottom">
-{/* 
+        {/* 
         <NavLink to="/profile">
           <FiUser /> Profile
         </NavLink>
@@ -96,16 +94,9 @@ const AdminSidebar = () => {
         >
           <FiLogOut /> Logout
         </button> */}
-        <NavLink to="/admin/profile">
-  <FiUser /> Profile
-</NavLink>
-
       </div>
-
     </div>
-
   );
-
 };
 
 export default AdminSidebar;

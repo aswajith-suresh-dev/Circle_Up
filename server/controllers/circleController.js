@@ -175,24 +175,36 @@ export const getSuggestedCircles = async (req, res) => {
     });
   }
 };
-export const getTopCircles = async (req,res) => {
+export const getTopCircles = async (req, res) => {
+  try {
 
-try{
+    const circles = await Circle.aggregate([
+      {
+        $addFields: {
+          membersCount: { $size: { $ifNull: ["$members", []] } }
+        }
+      },
+      {
+        $addFields: {
+          score: {
+            $add: [
+              { $multiply: ["$membersCount", 2] },
+              "$postCount"
+            ]
+          }
+        }
+      },
+      { $sort: { score: -1 } },
+      { $limit: 5 },
+      { $project: { name: 1, membersCount: 1, postCount: 1 } }
+    ]);
 
-const circles = await Circle.find()
-.sort({ postCount: -1 })
-.limit(5)
-.select("name");
+    res.status(200).json(circles);
 
-res.status(200).json(circles);
-
-}catch(error){
-
-console.error(error);
-res.status(500).json({message:"Failed to load top circles"});
-
-}
-
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to load top circles" });
+  }
 };export const deleteCircle = async (req, res) => {
   try {
     const { circleId } = req.params;
