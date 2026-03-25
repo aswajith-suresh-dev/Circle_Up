@@ -20,17 +20,17 @@ const Challenges = () => {
   const [myCircles,setMyCircles] = useState([]);
 
   const [filter,setFilter] = useState("all");
-
-  // NEW FILTER STATES
   const [typeFilter,setTypeFilter] = useState("all");
   const [ratingFilter,setRatingFilter] = useState("all");
+  const [search,setSearch] = useState("");
 
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?._id;
+
   const fetchData = async () => {
-
     try{
-
       const allRes = await api.get("/challenges/all");
       const myRes = await api.get("/challenges/my");
       const circlesRes = await api.get("/circles/my");
@@ -40,53 +40,36 @@ const Challenges = () => {
       setMyCircles(circlesRes.data || []);
 
     }catch(err){
-
       console.error(err);
-
     }
-
   };
 
   useEffect(()=>{
     fetchData();
   },[]);
 
-
   const handleJoin = async (challengeId) => {
-
     try{
-
       await api.post(`/challenges/${challengeId}/join`);
       fetchData();
-
     }catch(err){
-
       console.error(err);
-
     }
-
   };
 
-
   const isJoined = (challengeId) => {
-
     return myProgress.find(
       (p)=>p?.challenge && p.challenge._id === challengeId
     );
-
   };
 
-
   const isCircleMember = (circleId) => {
-
     return myCircles.find(
       (circle)=>circle?._id === circleId
     );
-
   };
 
-
-  /* ---------- BASE FILTER (ALL / MY) ---------- */
+  /* FILTERS */
 
   let filteredChallenges =
     filter === "all"
@@ -99,30 +82,25 @@ const Challenges = () => {
           )
           .filter(Boolean);
 
-
-  /* ---------- TYPE FILTER ---------- */
-
   if(typeFilter !== "all"){
-
     filteredChallenges =
       filteredChallenges.filter(
         (c)=>c.type === typeFilter
       );
-
   }
 
-
-  /* ---------- RATING FILTER ---------- */
-
   if(ratingFilter !== "all"){
-
     filteredChallenges =
       filteredChallenges.filter(
         (c)=>(c.avgRating || 0) >= ratingFilter
       );
-
   }
 
+  if(search.trim() !== ""){
+    filteredChallenges = filteredChallenges.filter((c)=>
+      c.title.toLowerCase().includes(search.toLowerCase())
+    );
+  }
 
   return (
 
@@ -132,9 +110,7 @@ const Challenges = () => {
         Challenges
       </h2>
 
-
       {/* MAIN FILTER */}
-
       <div className="challengehub-filter">
 
         <button
@@ -161,68 +137,54 @@ const Challenges = () => {
 
       </div>
 
-
-      {/* EXTRA FILTERS */}
-
+      {/* FILTERS + SEARCH */}
       <div className="challengehub-extra-filters">
 
-        <select
-          value={typeFilter}
-          onChange={(e)=>setTypeFilter(e.target.value)}
-        >
-          <option value="all">
-            All Types
-          </option>
+        <div className="challengehub-filters-left">
 
-          <option value="free">
-            Free
-          </option>
+          <select
+            value={typeFilter}
+            onChange={(e)=>setTypeFilter(e.target.value)}
+          >
+            <option value="all">All Types</option>
+            <option value="free">Free</option>
+            <option value="paid">Paid</option>
+          </select>
 
-          <option value="paid">
-            Paid
-          </option>
+          <select
+            value={ratingFilter}
+            onChange={(e)=>
+              setRatingFilter(
+                e.target.value === "all"
+                  ? "all"
+                  : Number(e.target.value)
+              )
+            }
+          >
+            <option value="all">All Ratings</option>
+            <option value="4">⭐ 4+</option>
+            <option value="3">⭐ 3+</option>
+            <option value="2">⭐ 2+</option>
+          </select>
 
-        </select>
+        </div>
 
-
-        <select
-          value={ratingFilter}
-          onChange={(e)=>
-            setRatingFilter(
-              e.target.value === "all"
-                ? "all"
-                : Number(e.target.value)
-            )
-          }
-        >
-
-          <option value="all">
-            All Ratings
-          </option>
-
-          <option value="4">
-            ⭐ 4+
-          </option>
-
-          <option value="3">
-            ⭐ 3+
-          </option>
-
-          <option value="2">
-            ⭐ 2+
-          </option>
-
-        </select>
+        {/* 🔍 SEARCH */}
+        <input
+          type="text"
+          placeholder="Search..."
+          value={search}
+          onChange={(e)=>setSearch(e.target.value)}
+          className="challengehub-search"
+        />
 
       </div>
-
 
       {filteredChallenges.length === 0 && (
         <p className="challengehub-empty">
           No challenges found
         </p>
       )}
-
 
       <div className="challengehub-grid">
 
@@ -240,13 +202,15 @@ const Challenges = () => {
             challenge.circle?._id || challenge.circle
           );
 
+          const isOwner =
+            challenge.mentor?._id === userId;
+
           const progressPercent = progress
             ? Math.floor(
                 (progress.completedDays.length /
                   challenge.totalDays) * 100
               )
             : 0;
-
 
           return (
 
@@ -258,25 +222,17 @@ const Challenges = () => {
               <div className="challengehub-header">
 
                 <div>
-
-                  <h3>
-                    {challenge.title}
-                  </h3>
+                  <h3>{challenge.title}</h3>
 
                   <div className="challengehub-rating">
-
                     <span className="rating-stars">
                       ⭐ {challenge.avgRating?.toFixed(1) || "0"}
                     </span>
-
                     <span className="rating-count">
                       ({challenge.reviewCount || 0} reviews)
                     </span>
-
                   </div>
-
                 </div>
-
 
                 <span
                   className={
@@ -292,138 +248,108 @@ const Challenges = () => {
 
               </div>
 
-
               <div className="challengehub-meta">
-
-                <p>
-                  <FiBarChart2/>
-                  {challenge.level}
-                </p>
-
-                <p>
-                  <FiUsers/>
-                  {challenge.participants || 0} participants
-                </p>
-
-                <p>
-                  <FiBookOpen/>
-                  {challenge.circle?.name || "N/A"}
-                </p>
-
-                <p>
-                  <FiUser/>
-                  {challenge.mentor?.name || "Unknown"}
-                </p>
-
+                <p><FiBarChart2/> {challenge.level}</p>
+                <p><FiUsers/> {challenge.participants || 0} participants</p>
+                <p><FiBookOpen/> {challenge.circle?.name || "N/A"}</p>
+                <p><FiUser/> {challenge.mentor?.name || "Unknown"}</p>
               </div>
 
-
               {progress && (
-
                 <div className="challengehub-progress">
-
                   <div className="challengehub-progress-bg">
-
                     <div
                       className="challengehub-progress-fill"
                       style={{width:`${progressPercent}%`}}
                     />
-
                   </div>
-
                   <p className="challengehub-progress-text">
-
                     {progress.completedDays.length} /
                     {challenge.totalDays} days
-
                   </p>
-
                 </div>
-
               )}
 
-
-              {/* REVIEW PAGE */}
-
-              <button
-                className="challengehub-btn-reviews"
-                onClick={() =>
-                  navigate(
-                    `/challenges/${challenge._id}/all-reviews`
-                  )
-                }
-              >
-                All Reviews
-              </button>
-
-
-              {!progress &&
-                filter === "all" &&
-                circleMember &&
-                challenge.type === "free" && (
+              {/* ACTION BUTTONS */}
+              <div className="challengehub-actions">
 
                 <button
-                  className="challengehub-btn-join"
-                  onClick={()=>handleJoin(challenge._id)}
-                >
-                  Join Challenge
-                </button>
-
-              )}
-
-
-              {!progress &&
-                filter === "all" &&
-                circleMember &&
-                challenge.type === "paid" && (
-
-                <button
-                  className="challengehub-btn-join"
+                  className="challengehub-btn-reviews"
                   onClick={() =>
-                    navigate(`/payment/${challenge._id}`)
+                    navigate(`/challenges/${challenge._id}/all-reviews`)
                   }
                 >
-                  Purchase ₹{challenge.price}
+                  All Reviews
                 </button>
 
-              )}
+                {isOwner && (
+                  <button
+                    className="challengehub-btn-manage"
+                    onClick={() =>
+                      navigate(`/mentor/challenge/${challenge._id}/overview`)
+                    }
+                  >
+                    Manage Challenge
+                  </button>
+                )}
 
+                {!progress &&
+                  !isOwner &&
+                  filter === "all" &&
+                  circleMember &&
+                  challenge.type === "free" && (
+                  <button
+                    className="challengehub-btn-join"
+                    onClick={()=>handleJoin(challenge._id)}
+                  >
+                    Join Challenge
+                  </button>
+                )}
 
-              {!circleMember && !progress && (
+                {!progress &&
+                  !isOwner &&
+                  filter === "all" &&
+                  circleMember &&
+                  challenge.type === "paid" && (
+                  <button
+                    className="challengehub-btn-join"
+                    onClick={() =>
+                      navigate(`/payment/${challenge._id}`)
+                    }
+                  >
+                    Purchase ₹{challenge.price}
+                  </button>
+                )}
 
-                <p className="challengehub-note">
-                  Join the circle first
-                </p>
+                {!circleMember && !progress && !isOwner && (
+                  <p className="challengehub-note">
+                    Join the circle first
+                  </p>
+                )}
 
-              )}
+                {progress && !isCompleted && (
+                  <button
+                    className="challengehub-btn-continue"
+                    onClick={() =>
+                      navigate(`/challenges/${challenge._id}`)
+                    }
+                  >
+                    Continue
+                  </button>
+                )}
 
+                {isCompleted && (
+                  <button
+                    className="challengehub-btn-completed"
+                    onClick={() =>
+                      navigate(`/challenges/${challenge._id}`)
+                    }
+                  >
+                    Completed ✔
+                  </button>
+                )}
 
-              {progress && !isCompleted && (
-
-                <button
-                  className="challengehub-btn-continue"
-                  onClick={() =>
-                    navigate(`/challenges/${challenge._id}`)
-                  }
-                >
-                  Continue
-                </button>
-
-              )}
-
-
-              {isCompleted && (
-
-                <button
-                  className="challengehub-btn-completed"
-                  onClick={() =>
-                    navigate(`/challenges/${challenge._id}`)
-                  }
-                >
-                  Completed ✔
-                </button>
-
-              )}
+              </div>
 
             </div>
 

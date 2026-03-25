@@ -157,17 +157,16 @@ const MentorDashboard = () => {
 
             <div className="dashboard-revenue-card">
               <span>Total Income</span>
-              <h2>₹{data.revenue}</h2>
+              <h2>₹{Number(data.revenue).toFixed(2)}</h2>{" "}
             </div>
 
             <div className="dashboard-revenue-card">
               <span>This Month</span>
-              <h2>₹{data.monthRevenue || 0}</h2>
+              <h2>₹{Number(data.monthRevenue || 0).toFixed(2)}</h2>
             </div>
-
             <div className="dashboard-revenue-card">
               <span>Avg Sale</span>
-              <h2>₹{data.avgSale || 0}</h2>
+              <h2>₹{Number(data.avgSale || 0).toFixed(2)}</h2>
             </div>
           </div>
         </div>

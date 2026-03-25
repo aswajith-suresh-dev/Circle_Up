@@ -372,6 +372,7 @@ import AdminChangePassword from "./pages/admin/AdminChangepassword";
 // Support
 import Complaint from "./pages/support/Complaint";
 import Feedback from "./pages/support/Feedback";
+import FAQ from "./pages/FAQ";
 
 // Personal Space
 import PersonalSpace from "./pages/personal/PersonalSpace";
@@ -665,6 +666,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/faq"
+            element={
+              <ProtectedRoute>
+                <FAQ />
               </ProtectedRoute>
             }
           />

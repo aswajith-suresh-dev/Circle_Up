@@ -15,7 +15,7 @@ import {
   FiUsers,
   FiBookOpen,
 } from "react-icons/fi";
-
+import { FiLogOut } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
 
 const CircleDetail = () => {
@@ -90,7 +90,17 @@ const CircleDetail = () => {
       console.error(err);
     }
   };
+  const handleLeave = async () => {
+    const confirmLeave = window.confirm("Are you sure you want to leave?");
+    if (!confirmLeave) return;
 
+    try {
+      await api.put(`/circles/${circleId}/leave`);
+      await fetchCircle();
+    } catch (err) {
+      console.error(err);
+    }
+  };
   // Like post
   const handleLike = async (postId) => {
     try {
@@ -159,7 +169,16 @@ const CircleDetail = () => {
               </div>
             </div>
           </div>
-
+          {/* LEAVE BUTTON (top right) */}
+          {isMember && userId !== circle.mentor?._id && (
+            <div
+              className="leave-circle-btn"
+              onClick={handleLeave}
+              title="Leave Circle"
+            >
+              <FiLogOut />
+            </div>
+          )}
           {!isMember && (
             <button className="join-btn" onClick={handleJoin}>
               <FiUserPlus /> Join Circle
@@ -259,26 +278,26 @@ const CircleDetail = () => {
                 {activeTab === "discussion" && (
                   <>
                     <div
-  className="create-post-box"
-  onClick={() => navigate(`/circles/${circleId}/create-post`)}
->
+                      className="create-post-box"
+                      onClick={() =>
+                        navigate(`/circles/${circleId}/create-post`)
+                      }
+                    >
+                      <div className="create-post-avatar">
+                        {user?.photo ? (
+                          <img
+                            src={`http://localhost:5000${user.photo}`}
+                            alt="avatar"
+                          />
+                        ) : (
+                          <span>{user?.name?.charAt(0)}</span>
+                        )}
+                      </div>
 
-  <div className="create-post-avatar">
-    {user?.photo ? (
-      <img
-        src={`http://localhost:5000${user.photo}`}
-        alt="avatar"
-      />
-    ) : (
-      <span>{user?.name?.charAt(0)}</span>
-    )}
-  </div>
-
-  <div className="create-post-input">
-    Ask something to the community...
-  </div>
-
-</div>
+                      <div className="create-post-input">
+                        Ask something to the community...
+                      </div>
+                    </div>
 
                     {posts.length === 0 ? (
                       <p>No posts yet.</p>
@@ -287,31 +306,31 @@ const CircleDetail = () => {
                         <div key={post._id} className="post-card">
                           {/* POST HEADER */}
                           <div className="post-header">
-                           <div
-  className={`post-avatar
+                            <div
+                              className={`post-avatar
   ${
     post.author?._id === circle.mentor?._id
       ? "circle-mentor-avatar"
       : post.author?.role === "mentor"
-      ? "mentor-avatar"
-      : post.author?.role === "contributor"
-      ? "contributor-avatar"
-      : ""
+        ? "mentor-avatar"
+        : post.author?.role === "contributor"
+          ? "contributor-avatar"
+          : ""
   }
   `}
->
-  {post.author?.photo ? (
-    <img
-      src={`http://localhost:5000${post.author.photo}`}
-      alt="avatar"
-      className="avatar-img"
-    />
-  ) : (
-    <span className="avatar-letter">
-      {post.author?.name?.charAt(0)}
-    </span>
-  )}
-</div>
+                            >
+                              {post.author?.photo ? (
+                                <img
+                                  src={`http://localhost:5000${post.author.photo}`}
+                                  alt="avatar"
+                                  className="avatar-img"
+                                />
+                              ) : (
+                                <span className="avatar-letter">
+                                  {post.author?.name?.charAt(0)}
+                                </span>
+                              )}
+                            </div>
 
                             <div className="post-meta">
                               <div className="post-author">
@@ -418,24 +437,20 @@ const CircleDetail = () => {
 
                 {activeTab === "about" && (
                   <div className="circle-details-card">
+                    <h3 className="details-title">Full Circle Details</h3>
 
-  <h3 className="details-title">Full Circle Details</h3>
+                    <p className="details-description">{circle.description}</p>
 
-  <p className="details-description">
-    {circle.description}
-  </p>
+                    <div className="details-row">
+                      <span className="details-label">Topic</span>
+                      <span className="details-value">{circle.topic}</span>
+                    </div>
 
-  <div className="details-row">
-    <span className="details-label">Topic</span>
-    <span className="details-value">{circle.topic}</span>
-  </div>
-
-  <div className="details-row">
-    <span className="details-label">Difficulty</span>
-    <span className="details-value">{circle.level}</span>
-  </div>
-
-</div>
+                    <div className="details-row">
+                      <span className="details-label">Difficulty</span>
+                      <span className="details-value">{circle.level}</span>
+                    </div>
+                  </div>
                 )}
               </>
             )}

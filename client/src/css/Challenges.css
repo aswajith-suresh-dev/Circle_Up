@@ -209,9 +209,25 @@ background:#373A7A;
 color:white;
 }
 .challengehub-extra-filters{
-display:flex;
-gap:10px;
-margin-bottom:20px;
+  display:flex;
+  justify-content:flex-start;  /* 🔥 pushes search to right */
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+/* LEFT SIDE FILTER GROUP */
+.challengehub-filters-left{
+  display:flex;
+  gap:10px;
+}
+
+/* SEARCH RIGHT SIDE */
+.challengehub-search{
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid #E5E7EB;
+  width:220px;
 }
 
 .challengehub-extra-filters select{
@@ -220,4 +236,18 @@ border-radius:8px;
 border:1px solid #E5E7EB;
 background:white;
 cursor:pointer;
+}
+/* SEARCH */
+
+
+
+.challengehub-search:focus{
+  border-color:#373A7A;
+  box-shadow:0 0 0 2px rgba(55,58,122,0.1);
+}
+.challengehub-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;   /* 🔥 spacing between buttons */
+  margin-top:10px;
 }

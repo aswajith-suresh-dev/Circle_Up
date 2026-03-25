@@ -5,6 +5,7 @@ import {
   getMyCircles,
   searchCircles,getCircleById
 } from "../controllers/circleController.js";
+import { leaveCircle } from "../controllers/circleController.js";
 import protect from "../middlewares/authMiddleware.js";
 import { getSuggestedCircles } from "../controllers/circleController.js";
 import { getTopCircles } from "../controllers/circleController.js";
@@ -34,6 +35,7 @@ router.get(
 );
 router.get("/:circleId", protect, getCircleById);
 
+router.put("/:circleId/leave", protect, leaveCircle);
 
 
 

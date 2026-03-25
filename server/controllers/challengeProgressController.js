@@ -1,6 +1,5 @@
 import UserChallengeProgress from "../models/UserChallengeProgress.js";
-import Circle from "../models/Circle.js"; 
-
+import Circle from "../models/Circle.js";
 
 export const joinChallenge = async (req, res) => {
   try {
@@ -40,20 +39,19 @@ export const joinChallenge = async (req, res) => {
       startedAt: new Date(),
       isPaid: false,
     });
-await Challenge.findByIdAndUpdate(
-  challengeId,
-  { $inc: { participantsCount: 1 } }
-);
+    await Challenge.findByIdAndUpdate(challengeId, {
+      $inc: { participantsCount: 1 },
+    });
     res.status(201).json({
       message: "Challenge joined successfully",
       progress,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to join challenge" });
   }
-};export const getMyChallenges = async (req, res) => {
+};
+export const getMyChallenges = async (req, res) => {
   try {
     const progress = await UserChallengeProgress.find({
       user: req.user._id,
@@ -68,12 +66,12 @@ await Challenge.findByIdAndUpdate(
   }
 };
 
-
 export const checkInToday = async (req, res) => {
   try {
     const { challengeId } = req.params;
     const userId = req.user._id;
 
+    // 🔍 Find progress
     const progress = await UserChallengeProgress.findOne({
       user: userId,
       challenge: challengeId,
@@ -83,55 +81,84 @@ export const checkInToday = async (req, res) => {
       return res.status(404).json({ message: "Challenge not joined" });
     }
 
+    // 🔍 Find challenge
     const challenge = await Challenge.findById(challengeId);
     if (!challenge) {
       return res.status(404).json({ message: "Challenge not found" });
     }
 
+    // 📅 Normalize today's date
     const today = new Date();
-today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
-if (progress.lastCheckInAt) {
-  const last = new Date(progress.lastCheckInAt);
-  last.setHours(0, 0, 0, 0);
+    /* ================= STREAK LOGIC ================= */
 
-  const diffDays =
-    (today.getTime() - last.getTime()) / (1000 * 60 * 60 * 24);
+    if (progress.lastCheckInAt) {
+      const last = new Date(progress.lastCheckInAt);
+      last.setHours(0, 0, 0, 0);
 
-  if (diffDays === 0) {
-    return res.status(400).json({
-      message: "You have already checked in today",
-    });
-  }
+      const diffDays = Math.floor(
+        (today - last) / (1000 * 60 * 60 * 24)
+      );
 
- if (diffDays > 1) {
-  progress.streak = 1; // today starts new streak
-  progress.isBroken = true;
-} else {
-  // progress.streak += 1; // continue streak
-  progress.isBroken = false;
-}
-}
+      // ❌ Prevent invalid future date issues
+      if (diffDays < 0) {
+        progress.lastCheckInAt = today;
+      }
+
+      // ❌ Already checked today
+      if (diffDays === 0) {
+        return res.status(400).json({
+          message: "You have already checked in today",
+        });
+      }
+
+      // 🔥 Continue streak
+      if (diffDays === 1) {
+        progress.streak += 1;
+        progress.isBroken = false;
+
+      // 💔 Break streak
+      } else if (diffDays > 1) {
+        progress.streak = 1;
+        progress.isBroken = true;
+      }
+
+    } else {
+      // 🆕 First check-in
+      progress.streak = 1;
+      progress.isBroken = false;
+    }
+
+    /* ================= DAY PROGRESSION ================= */
 
     const todayDay = progress.currentDay;
 
-    // Prevent exceeding totalDays
+    // 🚫 Prevent overflow
     if (todayDay > challenge.totalDays) {
       return res.status(400).json({
         message: "Challenge already completed",
       });
     }
 
-    progress.completedDays.push(todayDay);
-
-    if (progress.currentDay < challenge.totalDays) {
-      progress.currentDay += 1;
+    // ✅ Avoid duplicate days
+    if (!progress.completedDays.includes(todayDay)) {
+      progress.completedDays.push(todayDay);
     }
 
-    progress.streak += 1;
-    progress.lastCheckInAt = new Date();
+    // ✅ Move to next day safely
+    progress.currentDay = Math.min(
+      progress.currentDay + 1,
+      challenge.totalDays
+    );
+
+    /* ================= SAVE ================= */
+
+    progress.lastCheckInAt = today;
 
     await progress.save();
+
+    /* ================= RESPONSE ================= */
 
     res.status(200).json({
       message: `Day ${todayDay} completed`,
@@ -179,8 +206,7 @@ export const getChallengeProgress = async (req, res) => {
       }
     }
 
-    const isCompleted =
-      progress.completedDays.length >= challenge.totalDays;
+    const isCompleted = progress.completedDays.length >= challenge.totalDays;
 
     res.status(200).json({
       challenge,
@@ -188,7 +214,6 @@ export const getChallengeProgress = async (req, res) => {
       canCheckIn,
       isCompleted,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to load progress" });
@@ -199,7 +224,6 @@ import Payment from "../models/Payment.js";
 
 export const purchaseChallenge = async (req, res) => {
   try {
-
     const { challengeId } = req.params;
     const userId = req.user._id;
 
@@ -207,24 +231,24 @@ export const purchaseChallenge = async (req, res) => {
 
     if (!challenge) {
       return res.status(404).json({
-        message: "Challenge not found"
+        message: "Challenge not found",
       });
     }
 
     if (challenge.type !== "paid") {
       return res.status(400).json({
-        message: "This challenge is free"
+        message: "This challenge is free",
       });
     }
 
     const existing = await UserChallengeProgress.findOne({
       user: userId,
-      challenge: challengeId
+      challenge: challengeId,
     });
 
     if (existing) {
       return res.status(400).json({
-        message: "Already purchased"
+        message: "Already purchased",
       });
     }
 
@@ -243,7 +267,7 @@ export const purchaseChallenge = async (req, res) => {
       mentor: challenge.mentor,
       amount: challenge.price,
       adminShare,
-      mentorShare
+      mentorShare,
     });
 
     /* ---------- Unlock Challenge ---------- */
@@ -256,49 +280,41 @@ export const purchaseChallenge = async (req, res) => {
       completedDays: [],
       streak: 0,
       isBroken: false,
-      startedAt: new Date()
+      startedAt: new Date(),
     });
 
     /* ---------- Increase Participants ---------- */
 
-    await Challenge.findByIdAndUpdate(
-      challengeId,
-      { $inc: { participantsCount: 1 } }
-    );
+    await Challenge.findByIdAndUpdate(challengeId, {
+      $inc: { participantsCount: 1 },
+    });
 
     res.status(200).json({
       message: "Payment successful. Challenge unlocked.",
-      progress
+      progress,
     });
-
   } catch (error) {
-
     console.error(error);
 
     res.status(500).json({
-      message: "Purchase failed"
+      message: "Purchase failed",
     });
-
   }
 };
 export const getMentorChallenges = async (req, res) => {
   try {
-
     const challenges = await Challenge.find({
-      mentor: req.user._id
+      mentor: req.user._id,
     })
-    .populate("circle","name")
-    .sort({createdAt:-1});
+      .populate("circle", "name")
+      .sort({ createdAt: -1 });
 
     res.status(200).json(challenges);
-
   } catch (error) {
-
     console.error(error);
 
     res.status(500).json({
-      message:"Failed to fetch mentor challenges"
+      message: "Failed to fetch mentor challenges",
     });
-
   }
 };

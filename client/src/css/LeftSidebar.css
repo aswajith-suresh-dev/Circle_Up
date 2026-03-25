@@ -17,7 +17,7 @@
   left: 0;
 
   height: 100vh;
-  overflow: hidden;
+  overflow: visible;
 
   transition: width 0.35s ease;
 }
@@ -146,7 +146,7 @@
   text-decoration: none;
   color: #374151;
 
-  overflow: hidden;
+  overflow: visible;
 
   transition: all 0.2s ease;
 }
@@ -227,4 +227,63 @@
   width: 110px;
   height: 110px;
   transform: scale(1.05);
+}
+/* 🔥 HARD RESET FOR ICON */
+.notif-icon-container{
+  position: relative;
+
+  width: 24px;
+  height: 24px;
+
+  flex-shrink: 0;
+}
+
+/* ICON */
+.notif-icon{
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* 🔥 HARD RESET BADGE */
+.notif-badge{
+  position: absolute !important;
+
+  top: -6px;
+  right: -6px;
+
+  width: 18px !important;
+  height: 18px !important;
+
+  background: #ef4444 !important;
+  color: white !important;
+
+  font-size: 10px !important;
+  font-weight: 600 !important;
+
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 2px solid white;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  line-height: 1 !important;
+
+  z-index: 9999;
+
+  /* 🔥 THIS PREVENTS STRETCHING */
+  flex: none !important;
+}
+/* 🔥 CENTER ICON IN COLLAPSED SIDEBAR */
+.collapsed .sidebar-link{
+  justify-content: center;   /* center horizontally */
+  padding: 0;                /* remove side padding */
+  gap: 0;                    /* remove spacing */
+}
+.collapsed .notif-icon-container{
+  margin: 0 auto;   /* ensures perfect centering */
 }

@@ -287,3 +287,53 @@ export const updateCircle = async (req, res) => {
     });
   }
 };
+/**
+ * @desc    Leave a circle
+ * @route   PUT /api/circles/:circleId/leave
+ * @access  Logged-in user
+ */
+export const leaveCircle = async (req, res) => {
+  try {
+    const { circleId } = req.params;
+    const userId = req.user._id;
+
+    const circle = await Circle.findById(circleId);
+
+    if (!circle) {
+      return res.status(404).json({
+        message: "Circle not found",
+      });
+    }
+
+    // ❌ If user is not a member
+    if (!circle.members.includes(userId)) {
+      return res.status(400).json({
+        message: "You are not a member of this circle",
+      });
+    }
+
+    // 🚫 Prevent mentor from leaving (important rule)
+    if (circle.mentor.toString() === userId.toString()) {
+      return res.status(400).json({
+        message: "Mentor cannot leave their own circle",
+      });
+    }
+
+    // ✅ Remove user from members
+    circle.members = circle.members.filter(
+      (member) => member.toString() !== userId.toString()
+    );
+
+    await circle.save();
+
+    res.status(200).json({
+      message: "Left circle successfully",
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to leave circle",
+    });
+  }
+};
