@@ -300,6 +300,17 @@ const Profile = () => {
               <span>{stats.challengesJoined}</span>
               <p>Challenges Joined</p>
             </div>
+            <div className="stat-card streak-special">
+            <span className="streak-number">
+  <span className="fire-wrapper">
+    🔥
+    <span className="spark"></span>
+    <span className="spark spark2"></span>
+  </span>
+  {user.activityStreak || 0}
+</span>
+              <p>Daily Streak</p>
+            </div>
           </div>
         )}
 
@@ -328,22 +339,16 @@ const Profile = () => {
             </button>
           </div>
         )}
-{activeTab === "support" && (
-  <div className="account-buttons">
-    <button onClick={() => navigate("/complaint")}>
-      Complaint
-    </button>
+        {activeTab === "support" && (
+          <div className="account-buttons">
+            <button onClick={() => navigate("/complaint")}>Complaint</button>
 
-    <button onClick={() => navigate("/feedback")}>
-      Feedback
-    </button>
+            <button onClick={() => navigate("/feedback")}>Feedback</button>
 
-    {/* ✅ NEW FAQ BUTTON */}
-    <button onClick={() => navigate("/faq")}>
-      FAQ
-    </button>
-  </div>
-)}
+            {/* ✅ NEW FAQ BUTTON */}
+            <button onClick={() => navigate("/faq")}>FAQ</button>
+          </div>
+        )}
       </div>
     </div>
   );

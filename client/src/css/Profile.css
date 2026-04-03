@@ -254,3 +254,69 @@ opacity:0.8;
 .mentor-banner-close:hover{
 opacity:1;
 }
+/* 🔥 STREAK SPECIAL CARD */
+
+.streak-special{
+  border:1px solid #f59e0b;
+  background:#fff7ed;
+}
+
+/* NUMBER + ICON */
+
+.streak-number{
+  font-size:24px;
+  font-weight:700;
+  color:#f97316;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+/* 🔥 FIRE WRAPPER */
+
+.fire-wrapper{
+  position:relative;
+  display:inline-block;
+}
+
+/* 🔥 SPARK BASE */
+
+.spark{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:#f97316;
+  border-radius:50%;
+
+  top:0;
+  left:50%;
+
+  opacity:0;
+
+  animation:sparkFly 1.5s infinite ease-out;
+}
+
+/* SECOND SPARK (DELAYED) */
+
+.spark2{
+  left:60%;
+  animation-delay:0.7s;
+}
+
+/* ✨ ANIMATION */
+
+@keyframes sparkFly{
+  0%{
+    transform:translate(-50%, 0) scale(0.5);
+    opacity:0.8;
+  }
+  50%{
+    transform:translate(-60%, -12px) scale(1);
+    opacity:0.6;
+  }
+  100%{
+    transform:translate(-70%, -22px) scale(0.3);
+    opacity:0;
+  }
+}

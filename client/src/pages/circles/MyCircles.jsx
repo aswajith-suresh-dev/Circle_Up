@@ -56,10 +56,20 @@ const MyCircles = () => {
   return (
 
     <div className="mycircles-container">
+<div className="mycircles-header">
 
-      <h2 className="mycircles-title">
-        My Circles
-      </h2>
+  <h2 className="mycircles-title">
+    My Circles
+  </h2>
+
+  <button
+    className="my-posts-btn"
+    onClick={() => navigate("/my-posts")}
+  >
+    My Posts
+  </button>
+
+</div>
 
       {circles.length === 0 ? (
 

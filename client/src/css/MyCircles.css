@@ -186,3 +186,32 @@
   }
 
 }
+.mycircles-header{
+  position:relative;
+  display:flex;
+  align-items:center;
+  margin-bottom:24px;
+}
+
+/* CENTER TITLE PERFECTLY */
+.mycircles-title{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+
+  font-size:26px;
+  font-weight:700;
+  color:#1F2937;
+}
+
+/* BUTTON RIGHT */
+.my-posts-btn{
+  margin-left:auto;
+
+  background:#373A7A;
+  color:white;
+  border:none;
+  padding:8px 16px;
+  border-radius:8px;
+  cursor:pointer;
+}
