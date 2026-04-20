@@ -193,8 +193,8 @@ const PersonalSpace = () => {
               )}
               <p>{folder.taskCount || 0} Tasks</p>
 
-              <div className="folder-bottom">
-                <div className="folder-divider"></div>
+{editingFolderId !== folder._id && (
+  <div className="folder-bottom">                <div className="folder-divider"></div>
 
                 <div
                   className="view-button"
@@ -204,6 +204,7 @@ const PersonalSpace = () => {
                   <span className="arrow">→</span>
                 </div>
               </div>
+)}
             </div>
           </div>
         ))}

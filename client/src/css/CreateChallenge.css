@@ -231,3 +231,9 @@ cursor:pointer;
 background:#23265c;
 
 }
+/* Bigger textarea */
+
+.large-textarea {
+  min-height: 140px;
+  resize: vertical;
+}

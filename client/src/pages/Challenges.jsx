@@ -14,15 +14,14 @@ import {
 import "../css/Challenges.css";
 
 const Challenges = () => {
+  const [allChallenges, setAllChallenges] = useState([]);
+  const [myProgress, setMyProgress] = useState([]);
+  const [myCircles, setMyCircles] = useState([]);
 
-  const [allChallenges,setAllChallenges] = useState([]);
-  const [myProgress,setMyProgress] = useState([]);
-  const [myCircles,setMyCircles] = useState([]);
-
-  const [filter,setFilter] = useState("all");
-  const [typeFilter,setTypeFilter] = useState("all");
-  const [ratingFilter,setRatingFilter] = useState("all");
-  const [search,setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [ratingFilter, setRatingFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
   const navigate = useNavigate();
 
@@ -30,7 +29,7 @@ const Challenges = () => {
   const userId = user?._id;
 
   const fetchData = async () => {
-    try{
+    try {
       const allRes = await api.get("/challenges/all");
       const myRes = await api.get("/challenges/my");
       const circlesRes = await api.get("/circles/my");
@@ -38,35 +37,32 @@ const Challenges = () => {
       setAllChallenges(allRes.data || []);
       setMyProgress(myRes.data || []);
       setMyCircles(circlesRes.data || []);
-
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchData();
-  },[]);
+  }, []);
 
   const handleJoin = async (challengeId) => {
-    try{
+    try {
       await api.post(`/challenges/${challengeId}/join`);
       fetchData();
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
   };
 
   const isJoined = (challengeId) => {
     return myProgress.find(
-      (p)=>p?.challenge && p.challenge._id === challengeId
+      (p) => p?.challenge && p.challenge._id === challengeId,
     );
   };
 
   const isCircleMember = (circleId) => {
-    return myCircles.find(
-      (circle)=>circle?._id === circleId
-    );
+    return myCircles.find((circle) => circle?._id === circleId);
   };
 
   /* FILTERS */
@@ -75,53 +71,44 @@ const Challenges = () => {
     filter === "all"
       ? allChallenges
       : myProgress
-          .map((p)=>
-            allChallenges.find(
-              (c)=>c._id === p.challenge?._id
-            )
-          )
+          .map((p) => allChallenges.find((c) => c._id === p.challenge?._id))
           .filter(Boolean);
-
-  if(typeFilter !== "all"){
-    filteredChallenges =
-      filteredChallenges.filter(
-        (c)=>c.type === typeFilter
-      );
+  filteredChallenges = filteredChallenges.filter(
+    (c) => c.approvalStatus === "approved",
+  );
+  if (typeFilter !== "all") {
+    filteredChallenges = filteredChallenges.filter(
+      (c) => c.type === typeFilter,
+    );
   }
 
-  if(ratingFilter !== "all"){
-    filteredChallenges =
-      filteredChallenges.filter(
-        (c)=>(c.avgRating || 0) >= ratingFilter
-      );
+  if (ratingFilter !== "all") {
+    filteredChallenges = filteredChallenges.filter(
+      (c) => (c.avgRating || 0) >= ratingFilter,
+    );
   }
 
-  if(search.trim() !== ""){
-    filteredChallenges = filteredChallenges.filter((c)=>
-      c.title.toLowerCase().includes(search.toLowerCase())
+  if (search.trim() !== "") {
+    filteredChallenges = filteredChallenges.filter((c) =>
+      c.title.toLowerCase().includes(search.toLowerCase()),
     );
   }
 
   return (
-
     <div className="challengehub-page">
-
-      <h2 className="challengehub-title">
-        Challenges
-      </h2>
+      <h2 className="challengehub-title">Challenges</h2>
 
       {/* MAIN FILTER */}
       <div className="challengehub-filter">
-
         <button
           className={
             filter === "all"
               ? "challengehub-filter-btn active"
               : "challengehub-filter-btn"
           }
-          onClick={()=>setFilter("all")}
+          onClick={() => setFilter("all")}
         >
-          <FiGrid/> All
+          <FiGrid /> All
         </button>
 
         <button
@@ -130,21 +117,18 @@ const Challenges = () => {
               ? "challengehub-filter-btn active"
               : "challengehub-filter-btn"
           }
-          onClick={()=>setFilter("my")}
+          onClick={() => setFilter("my")}
         >
-          <FiTarget/> My Challenges
+          <FiTarget /> My Challenges
         </button>
-
       </div>
 
       {/* FILTERS + SEARCH */}
       <div className="challengehub-extra-filters">
-
         <div className="challengehub-filters-left">
-
           <select
             value={typeFilter}
-            onChange={(e)=>setTypeFilter(e.target.value)}
+            onChange={(e) => setTypeFilter(e.target.value)}
           >
             <option value="all">All Types</option>
             <option value="free">Free</option>
@@ -153,11 +137,9 @@ const Challenges = () => {
 
           <select
             value={ratingFilter}
-            onChange={(e)=>
+            onChange={(e) =>
               setRatingFilter(
-                e.target.value === "all"
-                  ? "all"
-                  : Number(e.target.value)
+                e.target.value === "all" ? "all" : Number(e.target.value),
               )
             }
           >
@@ -166,7 +148,6 @@ const Challenges = () => {
             <option value="3">⭐ 3+</option>
             <option value="2">⭐ 2+</option>
           </select>
-
         </div>
 
         {/* 🔍 SEARCH */}
@@ -174,53 +155,39 @@ const Challenges = () => {
           type="text"
           placeholder="Search..."
           value={search}
-          onChange={(e)=>setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
           className="challengehub-search"
         />
-
       </div>
 
       {filteredChallenges.length === 0 && (
-        <p className="challengehub-empty">
-          No challenges found
-        </p>
+        <p className="challengehub-empty">No challenges found</p>
       )}
 
       <div className="challengehub-grid">
-
-        {filteredChallenges.map((challenge)=>{
-
-          if(!challenge) return null;
+        {filteredChallenges.map((challenge) => {
+          if (!challenge) return null;
 
           const progress = isJoined(challenge._id);
 
           const isCompleted =
-            progress &&
-            progress.completedDays.length >= challenge.totalDays;
+            progress && progress.completedDays.length >= challenge.totalDays;
 
           const circleMember = isCircleMember(
-            challenge.circle?._id || challenge.circle
+            challenge.circle?._id || challenge.circle,
           );
 
-          const isOwner =
-            challenge.mentor?._id === userId;
+          const isOwner = challenge.mentor?._id === userId;
 
           const progressPercent = progress
             ? Math.floor(
-                (progress.completedDays.length /
-                  challenge.totalDays) * 100
+                (progress.completedDays.length / challenge.totalDays) * 100,
               )
             : 0;
 
           return (
-
-            <div
-              key={challenge._id}
-              className="challengehub-card"
-            >
-
+            <div key={challenge._id} className="challengehub-card">
               <div className="challengehub-header">
-
                 <div>
                   <h3>{challenge.title}</h3>
 
@@ -241,18 +208,23 @@ const Challenges = () => {
                       : "challengehub-badge-paid"
                   }
                 >
-                  {challenge.type === "free"
-                    ? "Free"
-                    : `₹${challenge.price}`}
+                  {challenge.type === "free" ? "Free" : `₹${challenge.price}`}
                 </span>
-
               </div>
 
               <div className="challengehub-meta">
-                <p><FiBarChart2/> {challenge.level}</p>
-                <p><FiUsers/> {challenge.participants || 0} participants</p>
-                <p><FiBookOpen/> {challenge.circle?.name || "N/A"}</p>
-                <p><FiUser/> {challenge.mentor?.name || "Unknown"}</p>
+                <p>
+                  <FiBarChart2 /> {challenge.level}
+                </p>
+                <p>
+                  <FiUsers /> {challenge.participants || 0} participants
+                </p>
+                <p>
+                  <FiBookOpen /> {challenge.circle?.name || "N/A"}
+                </p>
+                <p>
+                  <FiUser /> {challenge.mentor?.name || "Unknown"}
+                </p>
               </div>
 
               {progress && (
@@ -260,19 +232,17 @@ const Challenges = () => {
                   <div className="challengehub-progress-bg">
                     <div
                       className="challengehub-progress-fill"
-                      style={{width:`${progressPercent}%`}}
+                      style={{ width: `${progressPercent}%` }}
                     />
                   </div>
                   <p className="challengehub-progress-text">
-                    {progress.completedDays.length} /
-                    {challenge.totalDays} days
+                    {progress.completedDays.length} /{challenge.totalDays} days
                   </p>
                 </div>
               )}
 
               {/* ACTION BUTTONS */}
               <div className="challengehub-actions">
-
                 <button
                   className="challengehub-btn-reviews"
                   onClick={() =>
@@ -298,41 +268,35 @@ const Challenges = () => {
                   filter === "all" &&
                   circleMember &&
                   challenge.type === "free" && (
-                  <button
-                    className="challengehub-btn-join"
-                    onClick={()=>handleJoin(challenge._id)}
-                  >
-                    Join Challenge
-                  </button>
-                )}
+                    <button
+                      className="challengehub-btn-join"
+                      onClick={() => handleJoin(challenge._id)}
+                    >
+                      Join Challenge
+                    </button>
+                  )}
 
                 {!progress &&
                   !isOwner &&
                   filter === "all" &&
                   circleMember &&
                   challenge.type === "paid" && (
-                  <button
-                    className="challengehub-btn-join"
-                    onClick={() =>
-                      navigate(`/payment/${challenge._id}`)
-                    }
-                  >
-                    Purchase ₹{challenge.price}
-                  </button>
-                )}
+                    <button
+                      className="challengehub-btn-join"
+                      onClick={() => navigate(`/payment/${challenge._id}`)}
+                    >
+                      Purchase ₹{challenge.price}
+                    </button>
+                  )}
 
                 {!circleMember && !progress && !isOwner && (
-                  <p className="challengehub-note">
-                    Join the circle first
-                  </p>
+                  <p className="challengehub-note">Join the circle first</p>
                 )}
 
                 {progress && !isCompleted && (
                   <button
                     className="challengehub-btn-continue"
-                    onClick={() =>
-                      navigate(`/challenges/${challenge._id}`)
-                    }
+                    onClick={() => navigate(`/challenges/${challenge._id}`)}
                   >
                     Continue
                   </button>
@@ -341,28 +305,18 @@ const Challenges = () => {
                 {isCompleted && (
                   <button
                     className="challengehub-btn-completed"
-                    onClick={() =>
-                      navigate(`/challenges/${challenge._id}`)
-                    }
+                    onClick={() => navigate(`/challenges/${challenge._id}`)}
                   >
                     Completed ✔
                   </button>
                 )}
-
               </div>
-
             </div>
-
           );
-
         })}
-
       </div>
-
     </div>
-
   );
-
 };
 
 export default Challenges;

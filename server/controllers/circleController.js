@@ -179,25 +179,42 @@ export const getTopCircles = async (req, res) => {
   try {
 
     const circles = await Circle.aggregate([
-      {
-        $addFields: {
-          membersCount: { $size: { $ifNull: ["$members", []] } }
-        }
+  {
+    $addFields: {
+      membersCount: {
+        $size: { $ifNull: ["$members", []] }
       },
-      {
-        $addFields: {
-          score: {
-            $add: [
-              { $multiply: ["$membersCount", 2] },
-              "$postCount"
-            ]
-          }
-        }
-      },
-      { $sort: { score: -1 } },
-      { $limit: 5 },
-      { $project: { name: 1, membersCount: 1, postCount: 1 } }
-    ]);
+      safePostCount: {
+        $ifNull: ["$postCount", 0]
+      }
+    }
+  },
+  {
+    $addFields: {
+      score: {
+        $add: [
+          { $multiply: ["$membersCount", 2] },
+          "$safePostCount"
+        ]
+      }
+    }
+  },
+  {
+    $sort: {
+      score: -1,
+      membersCount: -1   // 🔥 fallback sorting
+    }
+  },
+  { $limit: 5 },
+  {
+    $project: {
+      name: 1,
+      membersCount: 1,
+      postCount: "$safePostCount",
+      score: 1
+    }
+  }
+]);
 
     res.status(200).json(circles);
 

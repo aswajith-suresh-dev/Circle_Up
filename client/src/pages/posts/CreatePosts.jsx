@@ -94,8 +94,8 @@ const handleImageChange = (e) => {
 
             <input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
+              onChange={(e) => setTitle(e.target.value)} placeholder="Enter title"
+              required 
             />
           </div>
 
@@ -105,6 +105,7 @@ const handleImageChange = (e) => {
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter description..."
               required
             />
           </div>

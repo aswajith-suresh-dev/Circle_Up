@@ -97,9 +97,7 @@ export const checkInToday = async (req, res) => {
       const last = new Date(progress.lastCheckInAt);
       last.setHours(0, 0, 0, 0);
 
-      const diffDays = Math.floor(
-        (today - last) / (1000 * 60 * 60 * 24)
-      );
+      const diffDays = Math.floor((today - last) / (1000 * 60 * 60 * 24));
 
       // ❌ Prevent invalid future date issues
       if (diffDays < 0) {
@@ -118,12 +116,11 @@ export const checkInToday = async (req, res) => {
         progress.streak += 1;
         progress.isBroken = false;
 
-      // 💔 Break streak
+        // 💔 Break streak
       } else if (diffDays > 1) {
         progress.streak = 1;
         progress.isBroken = true;
       }
-
     } else {
       // 🆕 First check-in
       progress.streak = 1;
@@ -149,7 +146,7 @@ export const checkInToday = async (req, res) => {
     // ✅ Move to next day safely
     progress.currentDay = Math.min(
       progress.currentDay + 1,
-      challenge.totalDays
+      challenge.totalDays,
     );
 
     /* ================= SAVE ================= */
@@ -166,7 +163,6 @@ export const checkInToday = async (req, res) => {
       streak: progress.streak,
       isBroken: progress.isBroken,
     });
-
   } catch (error) {
     console.error("CHECK-IN ERROR:", error);
     res.status(500).json({ message: "Check-in failed" });
@@ -228,7 +224,11 @@ export const purchaseChallenge = async (req, res) => {
     const userId = req.user._id;
 
     const challenge = await Challenge.findById(challengeId);
-
+    if (challenge.approvalStatus !== "approved") {
+      return res.status(403).json({
+        message: "Challenge not approved yet",
+      });
+    }
     if (!challenge) {
       return res.status(404).json({
         message: "Challenge not found",

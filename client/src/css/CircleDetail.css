@@ -34,7 +34,7 @@
   align-items: center;
   margin-bottom: 24px;
   border-left: 8px solid #372a7a;
-
+position: relative;
   flex-shrink: 0;            /* 🔥 prevents movement */
 }
 
