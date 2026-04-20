@@ -19,10 +19,8 @@ const PostDetail = () => {
 
   const [data, setData] = useState(null);
   const [replyText, setReplyText] = useState("");
-
   const [editingReplyId, setEditingReplyId] = useState(null);
   const [editReplyText, setEditReplyText] = useState("");
-
   const [snackbar, setSnackbar] = useState("");
 
   const fetchPost = async () => {
@@ -103,17 +101,10 @@ const PostDetail = () => {
   const handleUpvote = async (replyId) => {
     try {
       const res = await api.put(`/replies/upvote/${replyId}`);
-
       fetchPost();
-
-      // show backend message
       showSnackbar(res.data.message);
     } catch (err) {
-      console.error(err.response?.data?.message || err.message);
-
-      if (err.response?.data?.message) {
-        showSnackbar(err.response.data.message);
-      }
+      showSnackbar(err.response?.data?.message || "Error");
     }
   };
 
@@ -121,16 +112,14 @@ const PostDetail = () => {
 
   return (
     <div className="postdetail-container">
-      {/* Post */}
 
+      {/* POST */}
       <div className="post-card">
         <h2>{data.post.title}</h2>
-
         <p className="post-description">{data.post.description}</p>
       </div>
 
-      {/* Replies */}
-
+      {/* REPLIES */}
       <h3 className="reply-title">
         <FiMessageSquare /> Replies
       </h3>
@@ -140,51 +129,73 @@ const PostDetail = () => {
       )}
 
       {data.replies.map((reply) => {
+
         const isSolvedReply = data.post.solvedBy === reply._id;
         const isPostAuthor = data.post.author._id === user?._id;
+        const isReplyAuthor = reply.author._id === user?._id;
         const isDoubt = data.post.type === "doubt";
         const alreadySolved = data.post.isSolved;
-        const isReplyAuthor = reply.author._id === user?._id;
+
+        const isReplyByPostAuthor =
+          reply.author._id === data.post.author._id;
 
         return (
           <div
             key={reply._id}
-            className={`reply-card ${isSolvedReply ? "solved" : ""}`}
+            className={`reply-card 
+              ${isSolvedReply ? "solved" : ""}
+              ${isReplyByPostAuthor ? "author-reply" : ""}
+            `}
           >
+
             {editingReplyId === reply._id ? (
-              <>
+
+              /* EDIT MODE */
+              <div className="reply-edit-mode">
+
                 <textarea
                   value={editReplyText}
                   onChange={(e) => setEditReplyText(e.target.value)}
                   className="reply-editor"
                 />
 
-                <button
-                  onClick={() => updateReply(reply._id)}
-                  className="btn-save"
-                >
-                  Save
-                </button>
+                <div className="edit-actions">
+                  <button
+                    onClick={() => updateReply(reply._id)}
+                    className="btn-save"
+                  >
+                    Save
+                  </button>
 
-                <button
-                  onClick={() => setEditingReplyId(null)}
-                  className="btn-cancel"
-                >
-                  Cancel
-                </button>
-              </>
+                  <button
+                    onClick={() => setEditingReplyId(null)}
+                    className="btn-cancel"
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+              </div>
+
             ) : (
+
               <>
-                {/* Author */}
+                {/* AUTHOR NAME + BADGE */}
+                <div className="reply-author">
+                  {reply.author.name}
 
-                <div className="reply-author">{reply.author.name}</div>
+                  {isReplyByPostAuthor && (
+                    <span className="author-badge">Author</span>
+                  )}
+                </div>
 
-                {/* Content Row */}
-
+                {/* CONTENT */}
                 <div className="reply-row">
                   <p className="reply-text">{reply.content}</p>
 
                   <div className="reply-actions">
+
+                    {/* UPVOTE */}
                     <button
                       className="upvote-btn"
                       onClick={() => handleUpvote(reply._id)}
@@ -193,6 +204,7 @@ const PostDetail = () => {
                       {reply.upvotes.length}
                     </button>
 
+                    {/* EDIT / DELETE */}
                     {isReplyAuthor && (
                       <>
                         <button
@@ -210,6 +222,8 @@ const PostDetail = () => {
                         </button>
                       </>
                     )}
+
+                    {/* SOLVE */}
                     {isDoubt &&
                       isPostAuthor &&
                       !alreadySolved &&
@@ -223,9 +237,13 @@ const PostDetail = () => {
                         </button>
                       )}
 
+                    {/* SOLVED LABEL */}
                     {isSolvedReply && (
-                      <span className="solved-label">✔ Solved Answer</span>
+                      <span className="solved-label">
+                        ✔ Solved Answer
+                      </span>
                     )}
+
                   </div>
                 </div>
               </>
@@ -234,8 +252,7 @@ const PostDetail = () => {
         );
       })}
 
-      {/* Reply input */}
-
+      {/* REPLY INPUT */}
       <div className="reply-input-box">
         <textarea
           rows="3"
@@ -249,9 +266,9 @@ const PostDetail = () => {
         </button>
       </div>
 
-      {/* Snackbar */}
-
+      {/* SNACKBAR */}
       {snackbar && <div className="snackbar">{snackbar}</div>}
+
     </div>
   );
 };

@@ -57,6 +57,7 @@
   font-size:14px;
   max-width:75%;
   margin:0;
+  white-space:pre-wrap;
 }
 
 .reply-actions{
@@ -134,4 +135,50 @@
   color:white;
   padding:10px 18px;
   border-radius:8px;
+}
+.reply-editor{
+  width:100%;
+  padding:12px;
+
+  border:1px solid #E5E7EB;
+  border-radius:8px;
+
+  margin-bottom:10px;
+
+  min-height:120px;   /* 🔥 bigger */
+  resize:vertical;    /* allow expand */
+
+  font-size:14px;
+  line-height:1.5;
+
+  outline:none;
+  transition:0.2s ease;
+}
+
+.reply-editor:focus{
+  border-color:#373A7A;
+  box-shadow:0 0 0 2px rgba(55,58,122,0.1);
+}
+.reply-edit-mode{
+  width:100%;
+}
+
+.reply-editor{
+  width:100%;
+  min-height:140px;
+  resize:vertical;
+
+  display:block;
+}
+.author-reply{
+  border-left:4px solid #373A7A;
+  background:#f9faff;
+}
+.author-badge{
+  background:#373A7A;
+  color:white;
+  font-size:11px;
+  padding:2px 8px;
+  border-radius:6px;
+  margin-left:6px;
 }

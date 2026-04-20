@@ -160,7 +160,7 @@ if (post.author.toString() !== req.user._id.toString()) {
 
     // 🔥 IMPORTANT: Return fully populated post
     const updatedPost = await Post.findById(postId)
-      .populate("author", "name")
+      .populate("author", "name photo role")
       .populate("circle", "name");
 
     res.status(200).json(updatedPost);

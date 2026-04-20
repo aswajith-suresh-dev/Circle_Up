@@ -8,8 +8,8 @@ export const checkAndPromoteContributor = async (userId) => {
     if (user.role === "contributor") return;
 
     const hasQualitySignal =
-  user.solvedRepliesCount >= 1 &&
-  user.replyUpvotesCount >= 1;
+  user.solvedRepliesCount >= 3 &&
+  user.replyUpvotesCount >= 5;
 
 const hasCircleDiversity = user.contributorCircles.length >= 1;
 

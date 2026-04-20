@@ -12,13 +12,13 @@ export const checkMentorEligibility = async (userId) => {
     if (user.role !== "contributor") return false;
 
     const meetsQualityDepth =
-      user.solvedRepliesCount >= 1;
+      user.solvedRepliesCount >= 5;
 
     const meetsCommunityValidation =
-      user.replyUpvotesCount >= 1;
+      user.replyUpvotesCount >= 10;
 
     const meetsCircleDiversity =
-      user.contributorCircles.length >= 1;
+      user.contributorCircles.length >= 2;
 
     return (
       meetsQualityDepth &&
