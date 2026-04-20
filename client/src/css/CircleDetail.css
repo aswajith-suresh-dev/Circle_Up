@@ -1,17 +1,26 @@
 /* CircleDetail.css */
 
+/* ---------------- PAGE WRAPPER ---------------- */
+
 .circle-page-wrapper {
   background-color: #f8faf5;
-  min-height: 100vh;
+  height: 100vh;              /* 🔥 lock screen */
+  overflow: hidden;           /* 🔥 no page scroll */
   padding: 40px 20px;
   font-family: sans-serif;
   display: flex;
   justify-content: center;
 }
 
+/* ---------------- CONTAINER ---------------- */
+
 .circle-container {
   width: 100%;
   max-width: 1100px;
+
+  height: 100%;              /* 🔥 full height */
+  display: flex;
+  flex-direction: column;    /* 🔥 vertical layout */
 }
 
 /* ---------------- BANNER ---------------- */
@@ -21,11 +30,12 @@
   border-radius: 16px;
   padding: 36px;
   display: flex;
-  position: relative;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
   border-left: 8px solid #372a7a;
+
+  flex-shrink: 0;            /* 🔥 prevents movement */
 }
 
 .banner-info h1 {
@@ -55,6 +65,8 @@
   gap: 30px;
   border-bottom: 1px solid #ddd;
   margin-bottom: 24px;
+
+  flex-shrink: 0; /* 🔥 fixed */
 }
 
 .tab-item {
@@ -72,9 +84,12 @@
 /* ---------------- LAYOUT ---------------- */
 
 .main-content-grid {
+  flex: 1;                     /* 🔥 fill remaining space */
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: 30px;
+
+  overflow: hidden;           /* 🔥 important */
 }
 
 /* ---------------- ABOUT CARD ---------------- */
@@ -85,7 +100,9 @@
   border-radius: 16px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-  height: fit-content;
+
+  height: 100%;              /* 🔥 fixed */
+  overflow: hidden;          /* 🔥 no scroll */
 }
 
 .about-card h3 {
@@ -139,10 +156,29 @@
 .info-desc {
   font-size: 13px;
   color: #6b7280;
-  margin-top: 2px;
 }
 
-/* ---------------- CREATE POST BOX ---------------- */
+/* ---------------- FEED (ONLY SCROLLABLE AREA) ---------------- */
+
+.feed-container {
+  height: 100%;               /* 🔥 fill grid space */
+  overflow-y: auto;           /* 🔥 ONLY THIS SCROLLS */
+
+  padding-right: 6px;
+}
+
+/* scrollbar */
+
+.feed-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.feed-container::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+/* ---------------- CREATE POST ---------------- */
 
 .create-post-box {
   display: flex;
@@ -154,12 +190,10 @@
   padding: 14px 16px;
   margin-bottom: 16px;
   cursor: pointer;
-  transition: 0.2s ease;
 }
 
 .create-post-box:hover {
   background: #f9fafb;
-  border-color: #d1d5db;
 }
 
 .create-post-avatar {
@@ -172,7 +206,6 @@
   align-items: center;
   justify-content: center;
   color: white;
-  font-weight: 600;
 }
 
 .create-post-avatar img {
@@ -206,7 +239,7 @@
   gap: 12px;
 }
 
-/* ---------------- AVATAR ---------------- */
+/* avatar */
 
 .post-avatar {
   width: 60px;
@@ -218,12 +251,6 @@
   align-items: center;
   justify-content: center;
   background: white;
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
-
-.post-avatar:hover {
-  transform: scale(1.05);
 }
 
 .avatar-img {
@@ -257,35 +284,16 @@
   border-color: #f59e0b;
 }
 
-/* ---------------- POST TYPE ---------------- */
-
-.post-type-badge {
-  display: inline-block;
-  padding: 3px 8px;
-  font-size: 12px;
-  border-radius: 6px;
-  margin-top: 8px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.post-type-badge.doubt {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.post-type-badge.discussion {
-  background: #dbeafe;
-  color: #373a7a;
-;
-}
+/* ---------------- TEXT ---------------- */
 
 .post-description {
   margin-top: 8px;
   color: #374151;
+
+  white-space: pre-wrap; /* 🔥 keeps spacing */
 }
 
-/* ---------------- POST IMAGE ---------------- */
+/* ---------------- IMAGE ---------------- */
 
 .post-images {
   display: flex;
@@ -299,15 +307,9 @@
   max-height: 220px;
   border-radius: 10px;
   object-fit: contain;
-  cursor: pointer;
-  transition: transform 0.2s ease;
 }
 
-.post-image:hover {
-  transform: scale(1.02);
-}
-
-/* ---------------- POST ACTIONS ---------------- */
+/* ---------------- ACTIONS ---------------- */
 
 .post-actions {
   display: flex;
@@ -327,7 +329,6 @@
   padding: 0 12px;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 14px;
 }
 
 .like-btn:hover,
@@ -346,7 +347,6 @@
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 18px;
-  margin-top: 10px;
 }
 
 .challenge-card {
@@ -355,46 +355,15 @@
   border-radius: 14px;
   padding: 18px;
   margin-bottom: 16px;
-  transition: 0.2s;
 }
 
-.challenge-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-}
-
-.challenge-card h4 {
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-
-.challenge-card p {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 12px;
-}
-
-.challenge-view-btn {
-  background: #6366f1;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.challenge-view-btn:hover {
-  background: #4f46e5;
-}
-
-/* ---------------- FULL CIRCLE DETAILS ---------------- */
+/* ---------------- GUIDELINES ---------------- */
 
 .circle-details-card {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   padding: 22px;
-  margin-top: 10px;
 }
 
 .details-title {
@@ -403,26 +372,20 @@
   margin-bottom: 12px;
 }
 
-.details-description {
+.guidelines-list {
+  list-style: none;
+  padding: 0;
+}
+
+.guidelines-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
   font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 16px;
-}
-
-.details-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-top: 1px solid #f3f4f6;
-}
-
-.details-label {
-  font-weight: 600;
   color: #374151;
 }
 
-.details-value {
-  color: #6b7280;
+.guidelines-list li strong {
+  color: #1f2937;
 }
 
 /* ---------------- SNACKBAR ---------------- */
@@ -436,11 +399,11 @@
   color: white;
   padding: 12px 18px;
   border-radius: 10px;
-  font-size: 14px;
 }
-/* 🔥 LEAVE BUTTON */
 
-.leave-circle-btn{
+/* ---------------- LEAVE BUTTON ---------------- */
+
+.leave-circle-btn {
   position: absolute;
   top: 16px;
   right: 16px;
@@ -453,23 +416,12 @@
   justify-content: center;
 
   border-radius: 10px;
-
   background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(6px);
-
   color: white;
-  font-size: 18px;
-
   cursor: pointer;
-
-  transition: all 0.25s ease;
 }
 
-/* HOVER EFFECT */
-
-.leave-circle-btn:hover{
+.leave-circle-btn:hover {
   background: #ef4444;
-  color: white;
   transform: scale(1.1);
-  z-index: 10;
 }

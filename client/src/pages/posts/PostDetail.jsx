@@ -114,10 +114,20 @@ const PostDetail = () => {
     <div className="postdetail-container">
 
       {/* POST */}
-      <div className="post-card">
-        <h2>{data.post.title}</h2>
-        <p className="post-description">{data.post.description}</p>
-      </div>
+    <div className="post-card">
+
+  {/* 🔥 TYPE BADGE */}
+  <div className={`post-type-badge ${data.post.type}`}>
+    {data.post.type === "doubt" ? "Doubt" : "Discussion"}
+  </div>
+
+  <h2>{data.post.title}</h2>
+
+  <p className="post-description">
+    {data.post.description}
+  </p>
+
+</div>
 
       {/* REPLIES */}
       <h3 className="reply-title">

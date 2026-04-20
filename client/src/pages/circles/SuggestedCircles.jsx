@@ -31,9 +31,7 @@ const SuggestedCircles = () => {
 
   return (
     <div className="suggested-page">
-
       <div className="suggested-container">
-
         <p className="step">Step 2 of 2</p>
 
         <h2>Suggested Circles</h2>
@@ -47,40 +45,33 @@ const SuggestedCircles = () => {
         )}
 
         <div className="circles-grid">
-
           {circles.map((circle) => (
             <div key={circle._id} className="circle-card">
 
-              <div className="circle-info">
-                <h4>{circle.name}</h4>
-              </div>
+  <div className="circle-avatar">
+    {circle.name.charAt(0).toUpperCase()}
+  </div>
 
-              <button
-                disabled={circle.isMember}
-                onClick={() => handleJoin(circle._id)}
-                className={`join-btn ${
-                  circle.isMember ? "joined" : ""
-                }`}
-              >
-                {circle.isMember ? "Joined" : "Join"}
-              </button>
+  <h4 className="circle-name">{circle.name}</h4>
 
-            </div>
+  <button
+    disabled={circle.isMember}
+    onClick={() => handleJoin(circle._id)}
+    className={`join-btn ${circle.isMember ? "joined" : ""}`}
+  >
+    {circle.isMember ? "Joined" : "Join"}
+  </button>
+
+</div>
           ))}
-
         </div>
 
         <div className="continue-wrapper">
-          <button
-            className="continue-btn"
-            onClick={() => navigate("/home")}
-          >
+          <button className="continue-btn" onClick={() => navigate("/home")}>
             Continue to Home
           </button>
         </div>
-
       </div>
-
     </div>
   );
 };

@@ -2,7 +2,11 @@
   max-width:750px;
   margin:auto;
   padding:30px;
+
+  display:block;
 }
+
+/* ---------------- POST ---------------- */
 
 .post-card{
   background:white;
@@ -10,12 +14,17 @@
   border-radius:12px;
   padding:20px;
   margin-bottom:25px;
+
+  display:block;
 }
 
 .post-description{
   color:#374151;
   margin-top:10px;
+  white-space:pre-wrap;
 }
+
+/* ---------------- REPLY TITLE ---------------- */
 
 .reply-title{
   display:flex;
@@ -24,12 +33,16 @@
   margin-bottom:14px;
 }
 
+/* ---------------- REPLY CARD ---------------- */
+
 .reply-card{
   background:white;
   border:1px solid #e5e7eb;
   border-radius:10px;
-  padding:14px;
+  padding:16px;
   margin-bottom:12px;
+
+  display:block;
 }
 
 .reply-card.solved{
@@ -37,44 +50,75 @@
   background:#f0fff4;
 }
 
+/* ---------------- AUTHOR ---------------- */
+
 .reply-author{
   font-weight:600;
   color:#1F2937;
   margin-bottom:6px;
 }
 
-/* main row */
+/* AUTHOR BADGE */
+
+.author-badge{
+  background:#373A7A;
+  color:white;
+  font-size:11px;
+  padding:2px 8px;
+  border-radius:6px;
+  margin-left:6px;
+}
+
+/* AUTHOR REPLY */
+
+.author-reply{
+  border-left:4px solid #373A7A;
+  background:#f9faff;
+}
+
+/* ---------------- REPLY CONTENT ---------------- */
 
 .reply-row{
   display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:20px;
+  flex-direction:column; /* 🔥 important fix */
+  gap:10px;
 }
 
 .reply-text{
   color:#374151;
   font-size:14px;
-  max-width:75%;
   margin:0;
+
+  max-width:100%;
+  word-break:break-word;
   white-space:pre-wrap;
 }
+
+/* ---------------- ACTIONS ---------------- */
 
 .reply-actions{
   display:flex;
   align-items:center;
   gap:10px;
+  flex-wrap:wrap;
 }
 
 .upvote-btn{
   display:flex;
   align-items:center;
   gap:4px;
+
   border:none;
   background:#f3f4f6;
   padding:5px 8px;
   border-radius:6px;
   cursor:pointer;
+
+  transition:0.2s;
+}
+
+.upvote-btn:hover{
+  background:#e5e7eb;
 }
 
 .icon-btn{
@@ -92,18 +136,88 @@
   display:flex;
   align-items:center;
   gap:5px;
+
   border:none;
   background:#747bff;
   color:white;
   padding:5px 10px;
   border-radius:6px;
   cursor:pointer;
+
+  transition:0.2s;
+}
+
+.solve-btn:hover{
+  background:#5c63ff;
 }
 
 .solved-label{
   color:#10b981;
   font-weight:600;
 }
+
+/* ---------------- EDIT MODE ---------------- */
+
+.reply-edit-mode{
+  width:100%;
+}
+
+.reply-editor{
+  width:100%;
+  padding:12px;
+
+  border:1px solid #E5E7EB;
+  border-radius:8px;
+
+  margin-bottom:10px;
+
+  min-height:140px;
+  resize:vertical;
+
+  font-size:14px;
+  line-height:1.5;
+
+  outline:none;
+  transition:0.2s ease;
+
+  display:block;
+}
+
+.reply-editor:focus{
+  border-color:#373A7A;
+  box-shadow:0 0 0 2px rgba(55,58,122,0.1);
+}
+
+.edit-actions{
+  display:flex;
+  gap:10px;
+}
+
+.btn-save{
+  background:#373A7A;
+  color:white;
+  border:none;
+  padding:6px 14px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.btn-cancel{
+  background:#e5e7eb;
+  border:none;
+  padding:6px 14px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+/* ---------------- EMPTY TEXT ---------------- */
+
+.empty-text{
+  color:#6b7280;
+  font-size:14px;
+}
+
+/* ---------------- INPUT BOX ---------------- */
 
 .reply-input-box{
   margin-top:20px;
@@ -114,71 +228,60 @@
   border:1px solid #e5e7eb;
   border-radius:8px;
   padding:10px;
+  font-size:14px;
+  resize:vertical;
 }
 
 .reply-submit-btn{
   margin-top:8px;
   padding:6px 14px;
+
   border:none;
   border-radius:6px;
   background:#373A7A;
   color:white;
   cursor:pointer;
+
+  transition:0.2s;
 }
+
+.reply-submit-btn:hover{
+  background:#2c2f6b;
+}
+
+/* ---------------- SNACKBAR ---------------- */
 
 .snackbar{
   position:fixed;
   bottom:30px;
   left:50%;
   transform:translateX(-50%);
+
   background:#1F2937;
   color:white;
+
   padding:10px 18px;
   border-radius:8px;
-}
-.reply-editor{
-  width:100%;
-  padding:12px;
-
-  border:1px solid #E5E7EB;
-  border-radius:8px;
-
-  margin-bottom:10px;
-
-  min-height:120px;   /* 🔥 bigger */
-  resize:vertical;    /* allow expand */
 
   font-size:14px;
-  line-height:1.5;
+}
+/* ---------------- POST TYPE BADGE ---------------- */
 
-  outline:none;
-  transition:0.2s ease;
-}
-
-.reply-editor:focus{
-  border-color:#373A7A;
-  box-shadow:0 0 0 2px rgba(55,58,122,0.1);
-}
-.reply-edit-mode{
-  width:100%;
-}
-
-.reply-editor{
-  width:100%;
-  min-height:140px;
-  resize:vertical;
-
-  display:block;
-}
-.author-reply{
-  border-left:4px solid #373A7A;
-  background:#f9faff;
-}
-.author-badge{
-  background:#373A7A;
-  color:white;
-  font-size:11px;
-  padding:2px 8px;
+.post-type-badge{
+  display:inline-block;
+  padding:4px 10px;
+  font-size:12px;
   border-radius:6px;
-  margin-left:6px;
+  margin-bottom:10px;
+  font-weight:600;
+}
+
+.post-type-badge.doubt{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.post-type-badge.discussion{
+  background:#dbeafe;
+  color:#373a7a;
 }

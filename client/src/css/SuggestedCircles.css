@@ -43,17 +43,20 @@
 
 .circle-card{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
+  flex-direction:column;   /* 🔥 vertical layout */
+  align-items:center;      /* 🔥 center everything */
+  justify-content:center;
 
-  padding:18px;
+  padding:22px;
 
   border:1px solid #e5e7eb;
-  border-radius:10px;
+  border-radius:12px;
 
   background:white;
 
   transition:all 0.25s ease;
+
+  gap:12px;                /* 🔥 spacing between items */
 }
 
 .circle-card:hover{
@@ -125,4 +128,25 @@
 .no-circles{
   color:#6b7280;
   margin-bottom:20px;
+}
+.circle-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.circle-avatar{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+
+  background:#1F2937;
+  color:white;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-weight:600;
+  font-size:18px;
 }

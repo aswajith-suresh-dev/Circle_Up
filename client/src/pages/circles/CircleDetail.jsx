@@ -195,13 +195,12 @@ const CircleDetail = () => {
           >
             Discussion
           </div>
-
-          <div
-            className={`tab-item ${activeTab === "about" ? "active" : ""}`}
-            onClick={() => setActiveTab("about")}
-          >
-            About
-          </div>
+<div
+  className={`tab-item ${activeTab === "guidelines" ? "active" : ""}`}
+  onClick={() => setActiveTab("guidelines")}
+>
+  Guidelines
+</div>
 
           <div
             className={`tab-item ${activeTab === "challenges" ? "active" : ""}`}
@@ -434,24 +433,41 @@ const CircleDetail = () => {
                 )}
 
                 {/* About */}
+{activeTab === "guidelines" && (
+  <div className="circle-details-card">
 
-                {activeTab === "about" && (
-                  <div className="circle-details-card">
-                    <h3 className="details-title">Full Circle Details</h3>
+    <h3 className="details-title">Community Guidelines</h3>
 
-                    <p className="details-description">{circle.description}</p>
+    <ul className="guidelines-list">
 
-                    <div className="details-row">
-                      <span className="details-label">Topic</span>
-                      <span className="details-value">{circle.topic}</span>
-                    </div>
+      <li>
+        <strong>Be respectful</strong> — Treat everyone kindly and avoid toxic behavior.
+      </li>
 
-                    <div className="details-row">
-                      <span className="details-label">Difficulty</span>
-                      <span className="details-value">{circle.level}</span>
-                    </div>
-                  </div>
-                )}
+      <li>
+        <strong>Stay on topic</strong> — Keep discussions related to the circle’s subject.
+      </li>
+
+      <li>
+        <strong>Help others</strong> — Share knowledge and support fellow learners.
+      </li>
+
+      <li>
+        <strong>No spam</strong> — Avoid irrelevant links or promotions.
+      </li>
+
+      <li>
+        <strong>Write clearly</strong> — Explain your doubts properly for better help.
+      </li>
+
+      <li>
+        <strong>Respect mentors</strong> — Follow guidance and maintain discipline.
+      </li>
+
+    </ul>
+
+  </div>
+)}
               </>
             )}
           </main>
