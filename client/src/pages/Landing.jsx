@@ -10,24 +10,30 @@ import Footer from "../components/landing/Footer";
 import LandingNavbar from "../components/landing/LandingNavbar";
 
 const Landing = () => {
-return (
-<div className="landing">
+  return (
+    <div className="landing">
+      {/* Navbar */}
+      <LandingNavbar />
 
-  {/* Navbar */}
-  <LandingNavbar /> 
-
-  {/* HERO COMPONENT */}
-  <Hero />
-  
-<AboutSection />
-<Features />
-<HowWorks />    
-<Testimonials />
-<CTA /> 
-<Footer />
-</div>
-
-);
+      {/* HERO COMPONENT */}
+      <Hero />
+      <div id="why">
+        <AboutSection />
+      </div>
+      <div id="features">
+        <Features />
+      </div>
+      <div id="how">
+        <HowWorks />
+      </div>
+      <div id="testimonials">
+        <Testimonials />
+      </div>
+      <CTA />
+      
+      <Footer />
+    </div>
+  );
 };
 
 export default Landing;

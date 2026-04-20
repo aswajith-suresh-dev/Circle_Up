@@ -19,8 +19,8 @@ return (
         knowledge, ask questions, and grow together every day.
       </p>
 
-      <button className="about-btn">
-        Explore Circles
+      <button className="about-btn" onClick={() => (window.location.href = "/signup")}>
+        Explore Circles 
       </button>
 
     </div>

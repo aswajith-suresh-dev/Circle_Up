@@ -1,61 +1,58 @@
+// src/pages/admin/AdminRevenue.jsx
+
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import "../../css/AdminRevenue.css";
 
 const AdminRevenue = () => {
 
-  const [stats,setStats] = useState(null);
-  const [rows,setRows] = useState([]);
+  const [stats, setStats] = useState(null);
+
+  const [paidRows, setPaidRows] = useState([]);
+  const [freeRows, setFreeRows] = useState([]);
+
+  /* FETCH STATS */
 
   const fetchStats = async () => {
-
-    try{
-
+    try {
       const res = await api.get("/admin/dashboard");
-
       setStats(res.data);
-
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
-
   };
+
+  /* FETCH REVENUE LIST */
 
   const fetchRevenueList = async () => {
-
-    try{
-
+    try {
       const res = await api.get("/admin/revenue-list");
 
-      setRows(res.data);
+      setPaidRows(res.data.paid || []);
+      setFreeRows(res.data.free || []);
 
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
-
   };
 
-  useEffect(()=>{
-
+  useEffect(() => {
     fetchStats();
     fetchRevenueList();
+  }, []);
 
-  },[]);
-
-  if(!stats){
+  if (!stats) {
     return <p>Loading revenue...</p>;
   }
 
-  return(
-
+  return (
     <div className="admin-revenue-page">
 
       <h2 className="admin-revenue-title">
         Platform Revenue
       </h2>
 
-
-      {/* TOP STATS */}
+      {/* ================= TOP STATS ================= */}
 
       <div className="admin-revenue-stats">
 
@@ -81,17 +78,15 @@ const AdminRevenue = () => {
 
       </div>
 
-
-      {/* REVENUE TABLE */}
+      {/* ================= PAID TABLE ================= */}
 
       <div className="admin-revenue-table-wrapper">
 
-        <h3>Challenge Revenue</h3>
+        <h3>Paid Challenges Revenue</h3>
 
         <table className="admin-revenue-table">
 
           <thead>
-
             <tr>
               <th>Mentor</th>
               <th>Challenge</th>
@@ -99,29 +94,50 @@ const AdminRevenue = () => {
               <th>Buyers</th>
               <th>Total Revenue</th>
             </tr>
-
           </thead>
 
           <tbody>
-
-            {rows.map((row,index)=>(
-
+            {paidRows.map((row, index) => (
               <tr key={index}>
-
                 <td>{row.mentor}</td>
-
                 <td>{row.challenge}</td>
-
                 <td>₹ {row.price}</td>
-
                 <td>{row.buyers}</td>
-
                 <td>₹ {row.totalRevenue}</td>
-
               </tr>
-
             ))}
+          </tbody>
 
+        </table>
+
+      </div>
+
+      {/* ================= FREE TABLE ================= */}
+
+      <div className="admin-revenue-table-wrapper">
+
+        <h3 style={{ marginTop: "30px" }}>
+          Free Challenges (Engagement)
+        </h3>
+
+        <table className="admin-revenue-table small-table">
+
+          <thead>
+            <tr>
+              <th>Mentor</th>
+              <th>Challenge</th>
+              <th>Participants</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {freeRows.map((row, index) => (
+              <tr key={index}>
+                <td>{row.mentor}</td>
+                <td>{row.challenge}</td>
+                <td>{row.buyers}</td>
+              </tr>
+            ))}
           </tbody>
 
         </table>
@@ -129,9 +145,7 @@ const AdminRevenue = () => {
       </div>
 
     </div>
-
   );
-
 };
 
 export default AdminRevenue;

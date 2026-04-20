@@ -26,6 +26,10 @@ const ChangePassword = () => {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-+=])[A-Za-z\d@$!%*?&#^()_\-+=]{8,}$/;
 
+      if (!currentPassword.trim() || !newPassword.trim() || !confirmPassword.trim()) {
+  setError("All fields are required");
+  return;
+}
     if (!passwordRegex.test(newPassword)) {
       setError(
         "Password must be at least 8 characters and include uppercase, lowercase, number and symbol.",
@@ -76,7 +80,7 @@ const ChangePassword = () => {
             placeholder="Current Password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
-            style={input}
+            style={input} required
           />
 
           <span style={eye} onClick={() => setShowCurrent(!showCurrent)}>
@@ -92,7 +96,7 @@ const ChangePassword = () => {
             placeholder="New Password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            style={input}
+            style={input} required
           />
 
           <span style={eye} onClick={() => setShowNew(!showNew)}>
@@ -108,7 +112,7 @@ const ChangePassword = () => {
             placeholder="Confirm New Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            style={input}
+            style={input} required
           />
 
           <span style={eye} onClick={() => setShowConfirm(!showConfirm)}>

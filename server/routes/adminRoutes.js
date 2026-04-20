@@ -35,7 +35,7 @@ router.patch(
   rejectChallenge,
 );
 router.get("/revenue", protect, adminOnly, getAdminRevenue);
-router.get("/dashboard", protect, adminOnly);
+// router.get("/dashboard", protect, adminOnly);
 router.get("/top-data", protect, adminOnly, getTopDashboardData);
 router.get("/dashboard", protect, adminOnly, getAdminDashboardStats);
 router.get("/revenue-list", getAdminRevenueList);

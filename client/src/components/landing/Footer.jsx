@@ -18,18 +18,29 @@ const Footer = () => {
 
         {/* Product Links */}
         <div className="footer-links">
-          <h4>Product</h4>
-          <Link to="#">Features</Link>
-          <Link to="#">Circles</Link>
-          <Link to="#">Challenges</Link>
+          <h4>Platform</h4>
+          <a href="/#why">Why CircleUp</a>
+          <a href="/#features">Features</a>
+          <a href="/#how">How It Works</a>
+          <a href="/#testimonials">Testimonials</a>
         </div>
 
         {/* Company Links */}
         <div className="footer-links">
-          <h4>Company</h4>
-          <Link to="#">About</Link>
-          <Link to="#">Contact</Link>
-        </div>
+          <h4>Community</h4>
+          <a href="#why">About</a>
+<a
+  href="#"
+  onClick={(e) => {
+    e.preventDefault();
+    window.open(
+      "https://mail.google.com/mail/?view=cm&fs=1&to=support@circleup.com&su=Support&body=Hello",
+      "_blank"
+    );
+  }}
+>
+  Contact
+</a>        </div>
 
         {/* Account */}
         <div className="footer-links">
