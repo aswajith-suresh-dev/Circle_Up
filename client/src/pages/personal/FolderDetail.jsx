@@ -7,58 +7,52 @@ import {
   FiTrash2,
   FiPlus,
   FiCalendar,
-  FiCheckCircle
+  FiCheckCircle,
 } from "react-icons/fi";
 
 import "../../css/personal/FolderDetail.css";
 
 const FolderDetail = () => {
-
   const { folderId } = useParams();
 
-  const [tasks,setTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
-  const [showCreateForm,setShowCreateForm] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const [taskTitle,setTaskTitle] = useState("");
-  const [taskDescription,setTaskDescription] = useState("");
-  const [taskSources,setTaskSources] = useState("");
+  const [taskTitle, setTaskTitle] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [taskSources, setTaskSources] = useState("");
 
-  const [editingTaskId,setEditingTaskId] = useState(null);
-  const [editTaskTitle,setEditTaskTitle] = useState("");
-  const [editTaskDescription,setEditTaskDescription] = useState("");
-  const [editTaskSources,setEditTaskSources] = useState("");
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editTaskTitle, setEditTaskTitle] = useState("");
+  const [editTaskDescription, setEditTaskDescription] = useState("");
+  const [editTaskSources, setEditTaskSources] = useState("");
 
-  const [showLogFormFor,setShowLogFormFor] = useState(null);
+  const [showLogFormFor, setShowLogFormFor] = useState(null);
 
-  const [logDate,setLogDate] = useState("");
-  const [logStartTime,setLogStartTime] = useState("");
-  const [logEndTime,setLogEndTime] = useState("");
+  const [logDate, setLogDate] = useState("");
+  const [logStartTime, setLogStartTime] = useState("");
+  const [logEndTime, setLogEndTime] = useState("");
 
-  const [editingLogId,setEditingLogId] = useState(null);
+  const [editingLogId, setEditingLogId] = useState(null);
 
-  const [snackbar,setSnackbar] = useState("");
+  const [snackbar, setSnackbar] = useState("");
 
   const today = new Date().toISOString().split("T")[0];
 
-
-
   /* SNACKBAR */
 
-  const showSnack = (msg)=>{
+  const showSnack = (msg) => {
     setSnackbar(msg);
-    setTimeout(()=>setSnackbar(""),3000);
+    setTimeout(() => setSnackbar(""), 3000);
   };
-
-
 
   /* TIME FORMAT */
 
-  const formatTime = (time)=>{
+  const formatTime = (time) => {
+    if (!time) return "";
 
-    if(!time) return "";
-
-    const [hour,minute] = time.split(":");
+    const [hour, minute] = time.split(":");
 
     let h = parseInt(hour);
 
@@ -68,48 +62,35 @@ const FolderDetail = () => {
     h = h ? h : 12;
 
     return `${h}:${minute} ${ampm}`;
-
   };
-
-
 
   /* FETCH TASKS */
 
-  const fetchTasks = async ()=>{
-
-    try{
-
+  const fetchTasks = async () => {
+    try {
       const res = await api.get(`/personal/tasks/${folderId}`);
 
       setTasks(res.data);
-
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
-
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchTasks();
-  },[folderId]);
-
-
+  }, [folderId]);
 
   /* CREATE TASK */
 
-  const handleCreateTask = async ()=>{
+  const handleCreateTask = async () => {
+    if (!taskTitle.trim()) return;
 
-    if(!taskTitle.trim()) return;
-
-    try{
-
-      await api.post("/personal/task",{
-        title:taskTitle,
-        description:taskDescription,
+    try {
+      await api.post("/personal/task", {
+        title: taskTitle,
+        description: taskDescription,
         folderId,
-        sources:taskSources
-          ? taskSources.split(",").map(s=>s.trim())
-          : []
+        sources: taskSources ? taskSources.split(",").map((s) => s.trim()) : [],
       });
 
       setTaskTitle("");
@@ -119,27 +100,21 @@ const FolderDetail = () => {
       fetchTasks();
 
       showSnack("Task created");
-
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
-
   };
-
-
 
   /* UPDATE TASK */
 
-  const handleUpdateTask = async(id)=>{
-
-    try{
-
-      await api.put(`/personal/task/${id}`,{
-        title:editTaskTitle,
-        description:editTaskDescription,
-        sources:editTaskSources
-          ? editTaskSources.split(",").map(s=>s.trim())
-          : []
+  const handleUpdateTask = async (id) => {
+    try {
+      await api.put(`/personal/task/${id}`, {
+        title: editTaskTitle,
+        description: editTaskDescription,
+        sources: editTaskSources
+          ? editTaskSources.split(",").map((s) => s.trim())
+          : [],
       });
 
       setEditingTaskId(null);
@@ -147,249 +122,186 @@ const FolderDetail = () => {
       fetchTasks();
 
       showSnack("Task updated");
-
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
-
   };
-
-
 
   /* DELETE TASK */
 
   const handleDeleteTask = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this task?",
+    );
 
-  const confirmDelete = window.confirm("Are you sure you want to delete this task?");
+    if (!confirmDelete) return;
 
-  if(!confirmDelete) return;
+    try {
+      await api.delete(`/personal/task/${id}`);
 
-  try{
+      fetchTasks();
 
-    await api.delete(`/personal/task/${id}`);
-
-    fetchTasks();
-
-    showSnack("Task deleted");
-
-  }catch(err){
-    console.error(err);
-  }
-
-};
-
-
+      showSnack("Task deleted");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   /* TOGGLE TASK COMPLETE */
 
-  const toggleComplete = async(id)=>{
-
-    try{
-
+  const toggleComplete = async (id) => {
+    try {
       await api.put(`/personal/task/${id}/toggle`);
 
       fetchTasks();
 
       showSnack("Task status updated");
-
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
-
   };
-
-
 
   /* ADD / UPDATE STUDY LOG */
 
-  const handleAddLog = async(taskId)=>{
+  const handleAddLog = async (taskId) => {
+    if (!logDate || !logStartTime || !logEndTime) return;
 
-    if(!logDate || !logStartTime || !logEndTime) return;
-
-    try{
-
-      if(editingLogId){
-
-        await api.put(
-          `/personal/task/${taskId}/log/${editingLogId}`,
-          {
-            date:logDate,
-            startTime:logStartTime,
-            endTime:logEndTime
-          }
-        );
+    try {
+      if (editingLogId) {
+        await api.put(`/personal/task/${taskId}/log/${editingLogId}`, {
+          date: logDate,
+          startTime: logStartTime,
+          endTime: logEndTime,
+        });
 
         showSnack("Study log updated");
-
-      }else{
-
-        await api.post(`/personal/task/${taskId}/log`,{
-          date:logDate,
-          startTime:logStartTime,
-          endTime:logEndTime
+      } else {
+        await api.post(`/personal/task/${taskId}/log`, {
+          date: logDate,
+          startTime: logStartTime,
+          endTime: logEndTime,
         });
 
         showSnack("Study log added");
-
       }
 
       setEditingLogId(null);
       setShowLogFormFor(null);
 
       fetchTasks();
-
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
-
   };
-
-
 
   /* DELETE STUDY LOG */
 
-const handleDeleteLog = async(taskId,logId)=>{
+  const handleDeleteLog = async (taskId, logId) => {
+    const confirmDelete = window.confirm("Delete this study log?");
 
-  const confirmDelete = window.confirm("Delete this study log?");
+    if (!confirmDelete) return;
 
-  if(!confirmDelete) return;
+    try {
+      await api.delete(`/personal/task/${taskId}/log/${logId}`);
 
-  try{
+      fetchTasks();
 
-    await api.delete(`/personal/task/${taskId}/log/${logId}`);
+      showSnack("Study log deleted");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-    fetchTasks();
-
-    showSnack("Study log deleted");
-
-  }catch(err){
-    console.error(err);
-  }
-
-};
-
-
-  return(
-
+  return (
     <div className="folder-detail-container">
-
       {/* HEADER */}
 
       <div className="task-header">
-
         <h2>Tasks</h2>
 
         <button
           className="add-task-btn"
-          onClick={()=>setShowCreateForm(!showCreateForm)}
+          onClick={() => setShowCreateForm(!showCreateForm)}
         >
-          <FiPlus/> Add Task
+          <FiPlus /> Add Task
         </button>
-
       </div>
-
-
 
       {/* CREATE TASK FORM */}
 
       {showCreateForm && (
-
         <div className="task-form">
-
           <input
             placeholder="Task Title"
             value={taskTitle}
-            onChange={(e)=>setTaskTitle(e.target.value)}
+            onChange={(e) => setTaskTitle(e.target.value)}
           />
 
           <textarea
             rows="3"
             placeholder="Task Description"
             value={taskDescription}
-            onChange={(e)=>setTaskDescription(e.target.value)}
+            onChange={(e) => setTaskDescription(e.target.value)}
           />
 
           <textarea
             rows="2"
             placeholder="Source links (comma separated)"
             value={taskSources}
-            onChange={(e)=>setTaskSources(e.target.value)}
+            onChange={(e) => setTaskSources(e.target.value)}
           />
 
           <button
-            onClick={async()=>{
+            onClick={async () => {
               await handleCreateTask();
               setShowCreateForm(false);
             }}
           >
             Create Task
           </button>
-
         </div>
-
       )}
-
-
 
       {/* TASK LIST */}
 
-      {tasks.map(task=>(
-
+      {tasks.map((task) => (
         <div
           key={task._id}
           className={`task-card ${task.completed ? "completed" : ""}`}
         >
-
           {editingTaskId === task._id ? (
-
             <div className="edit-task-form">
-
               <input
                 value={editTaskTitle}
-                onChange={(e)=>setEditTaskTitle(e.target.value)}
+                onChange={(e) => setEditTaskTitle(e.target.value)}
               />
 
               <textarea
                 rows="2"
                 value={editTaskDescription}
-                onChange={(e)=>setEditTaskDescription(e.target.value)}
+                onChange={(e) => setEditTaskDescription(e.target.value)}
               />
 
               <textarea
                 rows="2"
                 value={editTaskSources}
-                onChange={(e)=>setEditTaskSources(e.target.value)}
+                onChange={(e) => setEditTaskSources(e.target.value)}
               />
 
               <div className="edit-buttons">
+                <button onClick={() => handleUpdateTask(task._id)}>Save</button>
 
-                <button
-                  onClick={()=>handleUpdateTask(task._id)}
-                >
-                  Save
-                </button>
-
-                <button
-                  onClick={()=>setEditingTaskId(null)}
-                >
-                  Cancel
-                </button>
-
+                <button onClick={() => setEditingTaskId(null)}>Cancel</button>
               </div>
-
             </div>
-
           ) : (
-
             <>
-
               <div className="task-top">
-
                 {/* BIG CHECK BUTTON */}
 
                 <div
                   className={`task-check ${task.completed ? "done" : ""}`}
-                  onClick={()=>toggleComplete(task._id)}
+                  onClick={() => toggleComplete(task._id)}
                 >
                   {task.completed && <FiCheckCircle />}
                 </div>
@@ -397,20 +309,17 @@ const handleDeleteLog = async(taskId,logId)=>{
                 {/* TASK CONTENT */}
 
                 <div className="task-content">
-
                   <strong>{task.title}</strong>
 
                   <p>{task.description}</p>
-
                 </div>
 
                 {/* ICONS */}
 
                 <div className="task-icons">
-
                   <span data-label="Edit Task">
                     <FiEdit2
-                      onClick={()=>{
+                      onClick={() => {
                         setEditingTaskId(task._id);
                         setEditTaskTitle(task.title);
                         setEditTaskDescription(task.description || "");
@@ -420,14 +329,12 @@ const handleDeleteLog = async(taskId,logId)=>{
                   </span>
 
                   <span data-label="Delete Task">
-                    <FiTrash2
-                      onClick={()=>handleDeleteTask(task._id)}
-                    />
+                    <FiTrash2 onClick={() => handleDeleteTask(task._id)} />
                   </span>
 
                   <span data-label="Add Study Log">
                     <FiCalendar
-                      onClick={()=>{
+                      onClick={() => {
                         setShowLogFormFor(task._id);
                         setLogDate("");
                         setLogStartTime("");
@@ -435,85 +342,64 @@ const handleDeleteLog = async(taskId,logId)=>{
                       }}
                     />
                   </span>
-
                 </div>
-
               </div>
-
-
 
               {/* SOURCES */}
 
               {task.sources?.length > 0 && (
-
                 <div className="sources">
-
                   <strong>Sources</strong>
 
-                  {task.sources.map((s,i)=>(
+                  {task.sources.map((s, i) => (
                     <a key={i} href={s} target="_blank" rel="noreferrer">
                       {s}
                     </a>
                   ))}
-
                 </div>
-
               )}
-
-
 
               {/* STUDY LOG FORM */}
 
               {showLogFormFor === task._id && (
-
                 <div className="log-form">
-
                   <input
                     type="date"
                     min={today}
                     value={logDate}
-                    onChange={(e)=>setLogDate(e.target.value)}
+                    onChange={(e) => setLogDate(e.target.value)}
                   />
 
                   <input
                     type="time"
                     value={logStartTime}
-                    onChange={(e)=>setLogStartTime(e.target.value)}
+                    onChange={(e) => setLogStartTime(e.target.value)}
                   />
 
                   <input
                     type="time"
                     value={logEndTime}
-                    onChange={(e)=>setLogEndTime(e.target.value)}
+                    onChange={(e) => setLogEndTime(e.target.value)}
                   />
-
-                  <button
-                    onClick={()=>handleAddLog(task._id)}
-                  >
-                    Save
-                  </button>
-
+{/* 🔥 ADD HERE */}
+    {(logStartTime || logEndTime) && (
+      <p className="time-preview">
+        {logStartTime && formatTime(logStartTime)}
+        {logEndTime && " - " + formatTime(logEndTime)}
+      </p>
+    )}
+                  <button onClick={() => handleAddLog(task._id)}>Save</button>
                 </div>
-
               )}
-
-
 
               {/* STUDY LOG LIST */}
 
               {task.studyLogs?.length > 0 && (
-
                 <div className="study-logs">
-
                   <strong>Study Logs</strong>
 
-                  {task.studyLogs.map(log=>(
-
-                    <div
-                      key={log._id}
-                      className="study-log"
-                    >
-
+                  {task.studyLogs.map((log) => (
+                    <div key={log._id} className="study-log">
                       <span>
                         {new Date(log.date).toLocaleDateString()}
                         {" | "}
@@ -523,10 +409,9 @@ const handleDeleteLog = async(taskId,logId)=>{
                       </span>
 
                       <div className="log-icons">
-
                         <span data-label="Edit Log">
                           <FiEdit2
-                            onClick={()=>{
+                            onClick={() => {
                               setShowLogFormFor(task._id);
                               setLogDate(log.date.split("T")[0]);
                               setLogStartTime(log.startTime);
@@ -538,50 +423,30 @@ const handleDeleteLog = async(taskId,logId)=>{
 
                         <span data-label="Delete Log">
                           <FiTrash2
-                            onClick={()=>
-                              handleDeleteLog(task._id,log._id)
-                            }
+                            onClick={() => handleDeleteLog(task._id, log._id)}
                           />
                         </span>
-
                       </div>
-
                     </div>
-
                   ))}
-
                 </div>
-
               )}
-
             </>
-
           )}
-
         </div>
-
       ))}
-
-
 
       {/* SNACKBAR */}
 
       {snackbar && (
-
         <div className="snackbar">
-
-          <FiCheckCircle/>
+          <FiCheckCircle />
 
           {snackbar}
-
         </div>
-
       )}
-
     </div>
-
   );
-
 };
 
 export default FolderDetail;

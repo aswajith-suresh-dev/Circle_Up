@@ -323,3 +323,8 @@ transform:translate(-50%,0);
 opacity:1;
 }
 }
+.time-preview{
+  font-size:14px;
+  color:#6b7280;
+  margin-top:6px;
+}

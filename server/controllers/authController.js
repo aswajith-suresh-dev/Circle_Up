@@ -80,24 +80,36 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 // 🔥 LOGIN STREAK LOGIC
+// 🔥 FIXED LOGIN STREAK LOGIC
+
 const today = new Date();
-const lastActive = user.lastActiveAt;
+today.setHours(0, 0, 0, 0); // remove time
+
+const lastActive = user.lastActiveAt
+  ? new Date(user.lastActiveAt)
+  : null;
+
+if (lastActive) lastActive.setHours(0, 0, 0, 0); // remove time
 
 if (!lastActive) {
   user.activityStreak = 1;
 } else {
-  const diffTime = today - new Date(lastActive);
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor(
+    (today - lastActive) / (1000 * 60 * 60 * 24)
+  );
 
   if (diffDays === 1) {
-    // Logged in yesterday → increase streak
+    // yesterday → today
     user.activityStreak += 1;
   } else if (diffDays > 1) {
-    // Missed days → reset streak
+    // missed days
     user.activityStreak = 1;
   }
-  // If diffDays === 0 → same day login → do nothing
+  // diffDays === 0 → same day → do nothing
 }
+
+user.lastActiveAt = new Date(); // update actual time
+await user.save();
 
 user.lastActiveAt = today;
 await user.save();

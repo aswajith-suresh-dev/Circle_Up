@@ -10,7 +10,7 @@ const faqData = {
     },
     {
       q: "How do I join a circle?",
-      a: "Users can browse circles and join them by clicking the join button."
+      a: "Users can browse circles using search and filter options and join them by clicking the join button."
     },
     {
       q: "Is CircleUp free?",
@@ -25,11 +25,11 @@ const faqData = {
     },
     {
       q: "Can I leave a circle?",
-      a: "Yes, users can leave a circle at any time. However, the creator cannot leave unless ownership is transferred."
+      a: "Yes, users can leave a circle at any time by clicking the leave button on circle homepage."
     },
     {
       q: "How do I become a contributor?",
-      a: "Active participation and meaningful contributions can help users gain contributor recognition."
+      a: "Active participation and meaningful contributions can help users gain contributor recognition.The system automatically identifies and promotes active members to contributors based on stats like upvotes,circle participation,solved doubts."
     }
   ],
 
@@ -51,7 +51,7 @@ const faqData = {
   "Mentorship": [
     {
       q: "How can I become a mentor?",
-      a: "Users can apply for mentorship and get approved by the admin."
+      a: "Users needs to complete certain requirements and after that they can apply for mentorship and get approved by the admin."
     },
     {
       q: "Can mentors earn money?",
@@ -70,11 +70,11 @@ const faqData = {
     },
     {
       q: "What is personal space?",
-      a: "Personal space allows users to organize notes, files, and resources."
+      a: "Personal space allows users to organize folders,tasks, and resources."
     },
     {
       q: "How do notifications work?",
-      a: "Users receive updates about posts, replies, and activities within circles."
+      a: "Users receive updates about posts, replies, and role promotions."
     }
   ],
 
@@ -170,10 +170,16 @@ const FAQ = () => {
         <div className="faq-footer">
           <h3>Still have a question?</h3>
           <p>Feel free to reach out to us.</p>
-          <button onClick={() => navigate("/support")}>
-          {/* <button onClick={() => navigate("/support")}> */}
-            Contact Us
-          </button>
+         <button
+  onClick={() =>
+    window.open(
+      "https://mail.google.com/mail/?view=cm&fs=1&to=support@circleup.com&su=Support&body=Hello",
+      "_blank"
+    )
+  }
+>
+  Contact Us
+</button>
         </div>
 
       </div>
