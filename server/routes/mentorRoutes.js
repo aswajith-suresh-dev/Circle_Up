@@ -16,6 +16,8 @@ import { deleteChallenge } from "../controllers/mentorController.js";
 import { getMentorDashboard } from "../controllers/mentorDashboardController.js";
 import { getMentorCircles } from "../controllers/mentorController.js";
 import { getApplicationStatus } from "../controllers/mentorController.js";
+import { getCircleMembers } from "../controllers/mentorController.js";
+import { removeUserFromCircle } from "../controllers/mentorController.js";
 const router = express.Router();
 
 router.get("/check-eligibility", protect, checkEligibility);
@@ -34,5 +36,11 @@ router.get("/circles", protect, getMentorCircles);
 router.get("/dashboard", protect, getMentorDashboard);
 router.get("/all", getAllMentors);
 router.get("/revenue", protect, mentorOnly, getMentorRevenue);
+router.get("/circle/:circleId/members", protect, getCircleMembers);
 
+router.delete(
+  "/circle/:circleId/remove/:userId",
+  protect,
+  removeUserFromCircle
+);
 export default router;

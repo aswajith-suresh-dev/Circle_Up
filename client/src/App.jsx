@@ -338,6 +338,7 @@ import CreateCircle from "./pages/circles/CreateCircle";
 import MyCircles from "./pages/circles/MyCircles";
 import SuggestedCircles from "./pages/circles/SuggestedCircles";
 import EditCircle from "./pages/mentor/EditCircles";
+import CircleMembers from "./pages/mentor/CircleMembers";
 
 // Posts
 import CreatePost from "./pages/posts/CreatePosts";
@@ -522,6 +523,14 @@ function App() {
               </MentorRoute>
             }
           />
+          <Route
+  path="/mentor/circle/:circleId/members"
+  element={
+    <MentorRoute>
+      <CircleMembers />
+    </MentorRoute>
+  }
+/>
           <Route
             path="/mentor/challenge/:challengeId/overview"
             element={

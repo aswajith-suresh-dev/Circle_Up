@@ -348,3 +348,69 @@ message:"Failed to load status"
 }
 
 };
+export const getCircleMembers = async (req, res) => {
+  try {
+    const { circleId } = req.params;
+
+    const circle = await Circle.findById(circleId)
+      .populate("members", "name email photo role");
+
+    if (!circle) {
+      return res.status(404).json({
+        message: "Circle not found",
+      });
+    }
+
+    // 🔒 Ensure only mentor can access
+    if (circle.mentor.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Not authorized",
+      });
+    }
+
+    res.status(200).json(circle.members);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to load members",
+    });
+  }
+};
+export const removeUserFromCircle = async (req, res) => {
+  try {
+    const { circleId, userId } = req.params;
+
+    const circle = await Circle.findById(circleId);
+
+    if (!circle) {
+      return res.status(404).json({
+        message: "Circle not found",
+      });
+    }
+
+    // 🔒 Only mentor can remove
+    if (circle.mentor.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Not authorized",
+      });
+    }
+
+    // ❌ Remove user
+    circle.members = circle.members.filter(
+      (member) => member.toString() !== userId
+    );
+
+    await circle.save();
+
+    res.status(200).json({
+      message: "User removed from circle",
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to remove user",
+    });
+  }
+};
