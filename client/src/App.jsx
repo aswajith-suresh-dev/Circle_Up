@@ -319,7 +319,7 @@ import LeftSidebar from "./components/layout/LeftSidebar";
 
 // Auth
 import Login from "./pages/auth/Login";
-import Signup from "./pages/auth/SignUp";
+import Signup from "./pages/auth/Signup";
 import ChangePassword from "./pages/auth/ChangePassword";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
