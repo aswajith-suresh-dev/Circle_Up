@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../api/axios";
-import "../../css/ChallengeReviews.css";
+import "../../css/challengeReviews.css";
 
 const ChallengeAllReviews = () => {
 
