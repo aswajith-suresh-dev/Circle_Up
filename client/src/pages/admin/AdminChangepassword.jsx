@@ -1,6 +1,6 @@
 import { useState } from "react";
 import api from "../../api/axios";
-import "../../css/AdminChangePassword.css";
+import "../../css/AdminChangepassword.css";
 
 const AdminChangePassword = () => {
 
