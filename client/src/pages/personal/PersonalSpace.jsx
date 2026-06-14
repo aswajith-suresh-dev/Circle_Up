@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-import "../../css/personal/personalSpace.css";
+import "../../css/personal/PersonalSpace.css";
 
 import {
   FiEdit2,
