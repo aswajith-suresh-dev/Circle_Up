@@ -24,7 +24,7 @@
 
 //   const photoUrl = useMemo(() => {
 //     if (!user?.photo) return "/profile.png";
-//     return `http://localhost:5000${user.photo}`;
+//     return `https://circle-up-sfx3.onrender.com${user.photo}`;
 //   }, [user?.photo]);
 //   const handleMouseEnter = () => {
 //     setHovering(true);
@@ -179,7 +179,7 @@ const LeftSidebar = () => {
 
   const photoUrl = useMemo(() => {
     if (!user?.photo) return "/profile.png";
-    return `http://localhost:5000${user.photo}`;
+    return `https://circle-up-sfx3.onrender.com${user.photo}`;
   }, [user?.photo]);
 
   /* FETCH NOTIFICATIONS */

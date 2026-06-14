@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://circle-up-sfx3.onrender.com/api",
 });
 
 // Automatically attach token if exists

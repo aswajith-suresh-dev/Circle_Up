@@ -146,7 +146,7 @@ const Profile = () => {
           className="profile-avatar"
           src={
             user.photo
-              ? `http://localhost:5000${user.photo}`
+              ? `https://circle-up-sfx3.onrender.com${user.photo}`
               : "https://via.placeholder.com/150"
           }
           alt="profile"

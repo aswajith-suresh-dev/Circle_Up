@@ -112,7 +112,7 @@ const Home = () => {
               >
                 {post.author?.photo ? (
                   <img
-                    src={`http://localhost:5000${post.author.photo}`}
+                    src={`https://circle-up-sfx3.onrender.com${post.author.photo}`}
                     alt="avatar"
                     className="avatar-img"
                   />
@@ -160,7 +160,7 @@ const Home = () => {
             {post.images && post.images.length > 0 && (
               <div className="post-images">
                 <img
-                  src={`http://localhost:5000${post.images[0]}`}
+                  src={`https://circle-up-sfx3.onrender.com${post.images[0]}`}
                   alt="post"
                   className="post-image"
                 />
